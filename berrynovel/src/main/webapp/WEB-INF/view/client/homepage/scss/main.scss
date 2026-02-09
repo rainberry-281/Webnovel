@@ -1,0 +1,31 @@
+@import "variables";
+@import "hero";
+@import "novel";
+
+body {
+    color: $text-main;
+    background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
+}
+
+.navbar {
+    background-color: #FFFDF9;
+    border-bottom: 1px solid #E8E1D6;
+}
+
+.navbar {
+    background-color: #FFFDF9;
+    border-bottom: 1px solid #E8E1D6;
+}
+
+.nav-link {
+    color: #555;
+    font-weight: 500;
+
+    &:hover {
+        color: #e74c3c;
+    }
+}
+
+.nav-link.active {
+    color: #e74c3c;
+}

@@ -1,0 +1,17 @@
+.novel-card {
+    width: 100%;
+}
+
+.novel-thumb {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.novel-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
