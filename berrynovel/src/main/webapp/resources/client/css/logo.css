@@ -1,0 +1,41 @@
+.logo {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1000;
+    display: flex;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #000;
+    user-select: none;
+    margin-left: 50px;
+}
+
+
+/* Icon dâu */
+
+.logo img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+
+/* Chữ berryNovel */
+
+.logo span {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    letter-spacing: 0.3px;
+}
+
+
+/* Hover nhẹ cho navbar */
+
+.logo:hover {
+    opacity: 0.85;
+    cursor: pointer;
+}
