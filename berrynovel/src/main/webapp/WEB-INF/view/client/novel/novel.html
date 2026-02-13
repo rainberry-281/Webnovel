@@ -82,12 +82,13 @@
                             to lớn, với khả năng dùng ma pháp Tử vong và một bể mana khổng lồ, nhưng cũng phải gánh chịu những mối nguy hiểm không kém. Cảm thấy không thể chết theo mong muốn của vị thần, Hiroto quyết tâm sống. Cậu không chỉ phải đối mặt
                             với cái chết từ lời nguyền, mà còn phải học cách kiểm soát sức mạnh nguy hiểm của mình, chiến đấu với những thế lực muốn tiêu diệt cậu, và trên hết, tìm một lý do để sống, một lý do để vượt qua số phận đã được an bài.
                         </p>
+                        <button id="toggleBtn">Xem thêm</button>
                     </div>
                 </div>
             </div>
 
             <div class="row mt-5">
-                <div class="col-12 bg-light">
+                <div class="col-12">
                     <div class="chapter-box container">
                         <div class="row title">
                             <h4 class="fw-bold">
@@ -125,6 +126,10 @@
                     </div>
                 </div>
             </div>
+
+            <div class="row mt-5">
+                <div class="col-12 bg-light"></div>
+            </div>
         </div>
     </div>
 
@@ -154,6 +159,21 @@
                 this.classList.remove('fa-solid');
                 this.classList.add('fa-regular');
                 this.style.color = "";
+            }
+        });
+    </script>
+
+    <script>
+        const btn = document.getElementById("toggleBtn");
+        const text = document.getElementById("introText");
+
+        btn.addEventListener("click", function() {
+            text.classList.toggle("expanded");
+
+            if (text.classList.contains("expanded")) {
+                btn.innerText = "Thu gọn";
+            } else {
+                btn.innerText = "Xem thêm";
             }
         });
     </script>

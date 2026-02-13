@@ -23,9 +23,16 @@ body {
 }
 
 .intro-text {
-    text-align: justify;
+    max-height: 120px;
+    overflow: hidden;
+    transition: 0.3s ease;
+    /* text-align: justify;
     line-height: 1.8;
-    color: #555;
+    color: #555; */
+}
+
+.intro-text.expanded {
+    max-height: 1000px;
 }
 
 .fa-bookmark {
