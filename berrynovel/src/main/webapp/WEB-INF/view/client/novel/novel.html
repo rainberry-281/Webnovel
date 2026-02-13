@@ -58,6 +58,7 @@
                             <a href="#" class="btn btn-outline-primary me-2">
                                 <i class="fa-solid fa-book-open me-1"></i> Đọc từ đầu
                             </a>
+
                             <a href="#" class="btn btn-outline-secondary">
                                 <i class="fa-solid fa-bolt me-1"></i> Chương mới nhất
                             </a>
@@ -70,6 +71,7 @@
                 <div class="col-12">
                     <div class="intro-card p-4 p-md-5">
                         <h4 class="fw-bold mb-4">Giới thiệu</h4>
+
                         <p class="intro-text" id="introText">
                             Amamiya Hiroto, một chàng trai không may mắn, có lẽ là người xui xẻo nhất trong số những người xui xẻo. Cuộc đời cậu là một chuỗi dài những bất hạnh, từ những sự cố nhỏ nhặt cho đến những biến cố lớn lao, mà đỉnh điểm là cái chết trong một chuyến dã ngoại
                             mà cậu chẳng quen biết ai ngoài vài người bạn trong lớp. Cố gắng cứu một cô gái hoàn toàn xa lạ trong cơn hỗn loạn, Hiroto đã phải trả giá bằng chính mạng sống của mình. Nhưng, thật kỳ lạ, cái chết ấy chưa phải là kết thúc
@@ -82,6 +84,7 @@
                             to lớn, với khả năng dùng ma pháp Tử vong và một bể mana khổng lồ, nhưng cũng phải gánh chịu những mối nguy hiểm không kém. Cảm thấy không thể chết theo mong muốn của vị thần, Hiroto quyết tâm sống. Cậu không chỉ phải đối mặt
                             với cái chết từ lời nguyền, mà còn phải học cách kiểm soát sức mạnh nguy hiểm của mình, chiến đấu với những thế lực muốn tiêu diệt cậu, và trên hết, tìm một lý do để sống, một lý do để vượt qua số phận đã được an bài.
                         </p>
+
                         <button id="toggleBtn">Xem thêm</button>
                     </div>
                 </div>
@@ -128,55 +131,33 @@
             </div>
 
             <div class="row mt-5">
-                <div class="col-12 bg-light"></div>
+                <div class="col-12 bg-light">
+                    <div class="comment-box container">
+                        <div class="row title">
+                            <h4 class="fw-bold">
+                                Bình luận
+                            </h4>
+                        </div>
+
+                        <div class="mt-2 mb-3">
+                            <input type="text" id="username" class="form-control mb-2" placeholder="Tên của bạn">
+                            <textarea id="commentInput" class="form-control mb-2" rows="3" placeholder="Viết bình luận..."></textarea>
+                            <button id="submitComment" class="btn btn-primary">Gửi bình luận</button>
+                        </div>
+
+                        <div id="commentList"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
 
     <script src="/src/main/webapp/resources/client/js/include.js"></script>
+
     <script src="/src/main/webapp/resources/client/js/logo.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const intro = document.getElementById("introText");
-            let content = intro.innerText;
-            content = content.replace(/\. /g, ".<br>");
-            intro.innerHTML = content;
-        });
-    </script>
-
-    <script>
-        const icon = document.querySelector('.bookmark');
-
-        icon.addEventListener('click', function() {
-            this.classList.toggle('active');
-
-            if (this.classList.contains('active')) {
-                this.classList.remove('fa-regular');
-                this.classList.add('fa-solid');
-            } else {
-                this.classList.remove('fa-solid');
-                this.classList.add('fa-regular');
-                this.style.color = "";
-            }
-        });
-    </script>
-
-    <script>
-        const btn = document.getElementById("toggleBtn");
-        const text = document.getElementById("introText");
-
-        btn.addEventListener("click", function() {
-            text.classList.toggle("expanded");
-
-            if (text.classList.contains("expanded")) {
-                btn.innerText = "Thu gọn";
-            } else {
-                btn.innerText = "Xem thêm";
-            }
-        });
-    </script>
+    <script src="/src/main/webapp/resources/client/js/novel-detail.js"></script>
 
 </body>
 

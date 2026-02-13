@@ -85,3 +85,28 @@ body {
     top: 4px;
     white-space: nowrap;
 }
+
+.comment-box {
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.comment-item {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+}
+
+.comment-name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.comment-time {
+    font-size: 12px;
+    color: #999;
+}
+
+.comment-text {
+    margin-top: 5px;
+    color: #555;
+}
