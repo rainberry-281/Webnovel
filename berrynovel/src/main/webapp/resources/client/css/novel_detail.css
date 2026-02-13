@@ -39,3 +39,14 @@ body {
     font-size: 25px;
     color: #FFB6C1;
 }
+
+.chapter-box {
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    height: 200px;
+}
+
+.title {
+    background-color: #e4caf1;
+    padding: 0.3%;
+}
