@@ -1,0 +1,41 @@
+body {
+    background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
+}
+
+.page-wrapper {
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+    width: 65%;
+    min-height: 100vh;
+    padding: 40px 0;
+    margin: auto;
+}
+
+.info-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.intro-card {
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.intro-text {
+    text-align: justify;
+    line-height: 1.8;
+    color: #555;
+}
+
+.fa-bookmark {
+    margin-top: 10px;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.fa-bookmark:hover {
+    font-size: 25px;
+    color: #FFB6C1;
+}
