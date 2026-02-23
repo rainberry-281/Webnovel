@@ -6,6 +6,7 @@ body {
 .rd-page-wrapper {
     color: #333;
     background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
+    min-height: 100vh;
     padding-top: 0;
     padding-left: 0;
     padding-bottom: 0;
@@ -41,10 +42,38 @@ body {
     width: 20px;
 }
 
-.rd-side-icons .side-icons a:last-child {
+.rd-side-icons a:last-child {
     border-bottom: none;
 }
 
 .rd-side-icons a:hover {
     color: #1ABC9C;
+}
+
+.rd_sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 320px;
+    height: 100vh;
+    background: #f4f4f4;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: 0.4s ease;
+}
+
+.rd_sidebar.on {
+    transform: translateX(0);
+}
+
+.black-click {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+    display: none;
+}
+
+.rd_sidebar.on+.black-click {
+    display: block;
 }
