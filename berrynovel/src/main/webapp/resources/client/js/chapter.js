@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
 
     const sidebar = document.querySelector(".rd_sidebar");
     const toggleBtn = document.getElementById("rd-info-btn");
@@ -25,10 +25,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
     overlay.addEventListener("click", closeSidebar);
 
-    document.addEventListener("keydown", function(e) {
+    document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
             closeSidebar();
         }
     });
 
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("chapter-content");
+
+    // Lấy text gốc
+    const rawText = container.textContent.trim();
+
+    // Tách theo dòng trống
+    const paragraphs = rawText.split(/\n\s*\n/);
+
+    // Tạo lại HTML
+    container.innerHTML = paragraphs
+        .map(p => `<p>${p.trim()}</p>`)
+        .join("");
 });
