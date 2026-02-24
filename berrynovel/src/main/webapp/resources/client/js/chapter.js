@@ -21,13 +21,10 @@ document.addEventListener("DOMContentLoaded", function() {
         sidebar.setAttribute("aria-hidden", !isOpen);
     }
 
-    // Click icon
     toggleBtn.addEventListener("click", toggleSidebar);
 
-    // Click nền đen
     overlay.addEventListener("click", closeSidebar);
 
-    // Nhấn ESC để đóng
     document.addEventListener("keydown", function(e) {
         if (e.key === "Escape") {
             closeSidebar();

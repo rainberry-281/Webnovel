@@ -1,0 +1,11 @@
+.font-bold {
+    font-weight: 700;
+}
+
+.text-xl {
+    font-size: 1.25rem;
+}
+
+.text-base {
+    font-size: 1rem;
+}
