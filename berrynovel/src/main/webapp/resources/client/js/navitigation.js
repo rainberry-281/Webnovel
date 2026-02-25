@@ -3,7 +3,7 @@ let lastScroll = 0;
 window.addEventListener("scroll", function () {
 
     const navbar = document.getElementById("mainNavbar");
-    if (!navbar) return; // nếu chưa load thì bỏ qua
+    if (!navbar) return;
 
     let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
 
