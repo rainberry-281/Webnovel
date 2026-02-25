@@ -1,3 +1,8 @@
+body {
+    color: #333;
+    background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
+}
+
 .hero-title {
     font-size: 64px;
     font-weight: 800;
@@ -28,30 +33,23 @@
     display: block;
 }
 
-body {
-    color: #333;
-    background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
+.novel-list .novel {
+    text-decoration: none;
 }
 
-.navbar {
-    background-color: #FFFDF9;
-    border-bottom: 1px solid #E8E1D6;
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px;
+
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.8),
+            rgba(0, 0, 0, 0.4),
+            transparent);
 }
 
-.navbar {
-    background-color: #FFFDF9;
-    border-bottom: 1px solid #E8E1D6;
-}
-
-.nav-link {
-    color: #555;
-    font-weight: 500;
-}
-
-.nav-link:hover {
-    color: #e74c3c;
-}
-
-.nav-link.active {
-    color: #e74c3c;
+.overlay h6 {
+    font-size: 14px;
 }

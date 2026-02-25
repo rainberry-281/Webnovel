@@ -11,6 +11,8 @@
 
     <link rel="stylesheet" href="/src/main/webapp/resources/client/css/main.css">
 
+    <link rel="stylesheet" href="/src/main/webapp/resources/client/css/navitigation.css">
+
 </head>
 
 <body>
@@ -44,17 +46,19 @@
             <a href="../category/category.html" class="text-muted small">Xem thêm</a>
         </div>
 
-        <div class="row g-4 ">
-            <div class="col-3 col-md-3">
-                <div class="novel-card">
-                    <div class="novel-thumb">
-                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c" alt="Dám nghĩ lớn">
+        <div class="row g-4">
+            <a class="novel col-4 col-md-3 col-xl-2" href="#">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                    <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 203345.png"
+                        class="card-img-top" alt="Tên truyện">
+                    <div class="overlay">
+                        <h6 class="mb-1 fw-bold text-white text-truncate">
+                            Around 40 Kenja no Isekai Seikatsu Nikki
+                        </h6>
+                        <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
                     </div>
-                    <h6 class="mt-2">Dám nghĩ lớn</h6>
-                    <small class="text-muted">David T. Schwartz</small>
                 </div>
-
-            </div>
+            </a>
         </div>
     </section>
 
@@ -68,6 +72,7 @@
 
     <script src="/src/main/webapp/resources/client/js/logo.js"></script>
 
+    <script src="/src/main/webapp/resources/client/js/navitigation.js"></script>
 </body>
 
 </html>

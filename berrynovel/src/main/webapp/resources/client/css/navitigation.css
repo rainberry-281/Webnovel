@@ -1,0 +1,31 @@
+.navbar {
+    background-color: #FFFDF9;
+    border-bottom: 1px solid #E8E1D6;
+}
+
+.navbar {
+    background-color: #FFFDF9;
+    border-bottom: 1px solid #E8E1D6;
+}
+
+.nav-link {
+    color: #555;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #e74c3c;
+}
+
+.nav-link.active {
+    color: #e74c3c;
+}
+
+#mainNavbar {
+    transition: transform 0.35s ease, box-shadow 0.3s ease;
+
+}
+
+.navbar-hide {
+    transform: translateY(-100%);
+}

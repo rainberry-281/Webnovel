@@ -6,11 +6,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function openSidebar() {
         sidebar.classList.add("on");
+        document.body.classList.add("sidebar-open");
         sidebar.setAttribute("aria-hidden", "false");
     }
 
     function closeSidebar() {
         sidebar.classList.remove("on");
+        document.body.classList.remove("sidebar-open");
         sidebar.setAttribute("aria-hidden", "true");
     }
 
@@ -18,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         sidebar.classList.toggle("on");
 
         const isOpen = sidebar.classList.contains("on");
+        document.body.classList.toggle("sidebar-open", isOpen);
         sidebar.setAttribute("aria-hidden", !isOpen);
     }
 
