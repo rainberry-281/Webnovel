@@ -62,6 +62,7 @@ body {
     border-bottom: 1px solid #eee;
     align-content: center;
     display: flex;
+    padding: 2px;
 }
 
 .list-chapter li:hover {

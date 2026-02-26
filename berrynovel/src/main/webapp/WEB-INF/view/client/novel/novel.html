@@ -20,7 +20,7 @@
 <body>
     <div id="navbar"></div>
     <div class="page-wrapper">
-        <nav aria-label="breadcrumb">
+        <nav aria-label="breadcrumb" class="pt-4">
             <ol class="breadcrumb ms-3">
                 <li class="breadcrumb-item"><a href="../homepage/homepage.html"
                         class="text-decoration-none text-dark">Homepage</a></li>
@@ -30,7 +30,7 @@
             </ol>
         </nav>
 
-        <div class="novel container py-5">
+        <div class="novel container pb-5">
 
             <div class="row align-items-stretch g-4">
                 <div class="col-lg-3">
@@ -118,9 +118,9 @@
 
             <div class="row mt-5">
                 <div class="col-12">
-                    <div class="chapter-box container">
-                        <div class="row title">
-                            <h4 class="fw-bold">
+                    <div class="chapter-box container py-4 rounded-4">
+                        <div class="row title d-flex align-items-center rounded-2">
+                            <h4 class="fw-bold pt-2">
                                 Vol.1: Khiên quốc Mirg
                             </h4>
                         </div>
@@ -159,16 +159,15 @@
             </div>
 
             <div class="row mt-5">
-                <div class="col-12 bg-light">
-                    <div class="comment-box container">
-                        <div class="row title">
-                            <h4 class="fw-bold">
+                <div class="col-12">
+                    <div class="comment-box container py-4 rounded-4">
+                        <div class="row title rounded-2">
+                            <h4 class="fw-bold pt-2">
                                 Bình luận
                             </h4>
                         </div>
 
-                        <div class="mt-2 mb-3">
-                            <input type="text" id="username" class="form-control mb-2" placeholder="Tên của bạn">
+                        <div class="mt-2 px-3">
                             <textarea id="commentInput" class="form-control mb-2" rows="3"
                                 placeholder="Viết bình luận..."></textarea>
                             <button id="submitComment" class="btn btn-primary">Gửi bình luận</button>

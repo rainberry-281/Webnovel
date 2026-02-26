@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" href="/src/main/webapp/resources/client/css/navitigation.css">
+
+    <link rel="stylesheet" href="/src/main/webapp/resources/client/css/library.css">
+
+    <link rel="stylesheet" href="/src/main/webapp/resources/client/css/font.css">
+</head>
+
+<body>
+    <div id="navbar"></div>
+
+    <main class="library-page" style="min-height: 622px;">
+        <div class="container">
+            <div class="row d-block clearfix">
+                <div class="col-12 col-lg-3 float-end">
+                    <section class="private-tabs">
+                        <header>
+                            <h4 class="section-name">Tài khoản</h4>
+                            <span class="user-name">rainberry</span>
+                        </header>
+                        <ul class="user-private-tabs">
+                            <li class="current">
+                                <a href="ke-sach">
+                                    <span class="d-none d-lg-inline">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+
+                                    <span class="d-lg-none float-end">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </span>
+                                    Kệ sách
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="bookmark">
+                                    <span class="d-none d-lg-inline">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+
+                                    <span class="d-lg-none float-end">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </span>
+                                    Bookmark
+                                </a>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+
+                <div class="col-12 col-lg-9 float-start">
+                    <div class="pad-bottom-20" style="padding-bottom: 20px;">
+                        <div class="delete-button-container d-flex justify-content-start" style="">
+                            <button class="btn btn-danger rounded-pill fw-bold px-3">Xóa đã chọn</button>
+                        </div>
+                    </div>
+
+                    <table class="table table-borderless listext-table has-covers">
+                        <tbody>
+                            <tr>
+                                <th class="w-8"></th>
+                                <th class="col-10 col-md-8">Tên truyện</th>
+                                <th class="none table-cell-m col-md-4">Mới nhất</th>
+                            </tr>
+
+                            <tr>
+                                <td class="text-clip">
+                                    <input type="checkbox" class="select-item">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="text-align: center; margin: 0 auto 10px auto;"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/src/main/webapp/resources/client/js/include.js"></script>
+
+    <script src="/src/main/webapp/resources/client/js/logo.js"></script>
+</body>
+
+</html>
