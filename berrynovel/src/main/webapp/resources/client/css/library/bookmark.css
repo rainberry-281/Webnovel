@@ -1,0 +1,99 @@
+.bookmark-section {
+    background-color: hsla(0, 0%, 100%, .9);
+    border-color: #e4e5e7 #dadbdd hsla(214, 4%, 80%, .8);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+}
+
+.bookmark-section .sect-header {
+    background-color: #f4f5f6;
+    border-bottom: 1px solid #dadbdd;
+    padding: 10px;
+    font-weight: 700;
+    display: block;
+}
+
+.bookmark-section .sect-title {
+    display: inline-block;
+    margin-left: 0;
+    padding-right: 0;
+    font-size: 1.125rem;
+    line-height: 1.625rem;
+}
+
+.bookmark-item {
+    border-bottom: 1px solid #d4dae2;
+    padding: 10px 0;
+    position: relative;
+    display: block;
+    /* grid-template-columns: 40px 1fr;
+    gap: 10px; */
+}
+
+.bookmark-item .series-cover {
+    float: left;
+    width: 44px;
+    height: 63.06px;
+}
+
+.bookmark-item .series-cover .a6-ratio {
+    height: 63.06px;
+}
+
+.bookmark-item .series-title {
+    font-weight: 700;
+    line-height: 60px;
+    padding-left: 10px;
+    padding-right: 20px;
+    position: relative;
+    /* width: 100%; */
+}
+
+.bookmark-item .series-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bm-toggle_symbol {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.bookmarks-list {
+    display: inline-block;
+    margin-bottom: 6px;
+    margin-top: 20px;
+    padding-left: 0;
+    width: 100%;
+}
+
+/* .bm-toggel {
+    width: 100%;
+    grid-column: 1 / -1;
+}  */
+
+.bookmarks-list li {
+    padding: 4px 10px;
+}
+
+.bookmarks-list li:nth-of-type(odd) {
+    background-color: #eee;
+    border-radius: 4px;
+}
+
+.bookmarks-list .chapter-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bookmarks_list .volume-title {
+    color: #777;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

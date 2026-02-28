@@ -53,11 +53,18 @@ h6 {
 }
 
 a {
+    -webkit-text-decoration-skip: objects;
+    background-color: transparent;
     color: inherit;
-    text-decoration: inherit;
+    text-decoration: none;
 }
 
 .button,
 .button:hover {
     text-decoration: none;
+}
+
+small {
+    font-size: 80%;
+    line-height: 1rem;
 }

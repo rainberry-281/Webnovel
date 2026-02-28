@@ -3,11 +3,11 @@ body {
     background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
 }
 
-.filter-box {
+/* .filter-box {
     position: sticky;
     top: 90px;
     align-self: flex-start;
-}
+} */
 
 /* Box lọc */
 .filter-box {

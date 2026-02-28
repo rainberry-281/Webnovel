@@ -18,222 +18,224 @@
     <!-- navbar -->
     <div id="navbar"></div>
 
-    <div class="container py-5">
-        <nav aria-label="breadcrumb" style="padding-top: 20px;">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="../homepage/homepage.html"
-                        class="text-decoration-none text-dark">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Category</li>
-            </ol>
-        </nav>
+    <div class="page-wrapper" style="padding-top: 65px;">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="../homepage/homepage.html"
+                            class="text-decoration-none text-dark">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Category</li>
+                </ol>
+            </nav>
 
-        <div class="row">
-            <div class="col-lg-2 d-none d-lg-block filter-box">
-                <h6>Nguồn truyện</h6>
-                <div>
-                    <label>
-                        <input type="checkbox" name="type" value="sang-tac">
-                        Truyện sáng tác
-                    </label>
+            <div class="row d-block clearfix">
+                <div class="col-12 col-lg-2 d-block filter-box float-start">
+                    <h6>Nguồn truyện</h6>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="type" value="sang-tac">
+                            Truyện sáng tác
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="type" value="dich">
+                            Truyện dịch
+                        </label>
+                    </div>
+                    <hr>
+                    <h6>Thể loại</h6>
+                    <div>
+                        <label><input type="checkbox" name="genre" value="tien-hiep"> Tiên Hiệp</label>
+                    </div>
+                    <div>
+                        <label><input type="checkbox" name="genre" value="kiem-hiep"> Kiếm Hiệp</label>
+                    </div>
+                    <div>
+                        <label><input type="checkbox" name="genre" value="ngon-tinh"> Ngôn Tình</label>
+                    </div>
+                    <div>
+                        <label><input type="checkbox" name="genre" value="huyen-huyen"> Huyền Huyễn</label>
+                    </div>
                 </div>
-                <div>
-                    <label>
-                        <input type="checkbox" name="type" value="dich">
-                        Truyện dịch
-                    </label>
-                </div>
-                <hr>
-                <h6>Thể loại</h6>
-                <div>
-                    <label><input type="checkbox" name="genre" value="tien-hiep"> Tiên Hiệp</label>
-                </div>
-                <div>
-                    <label><input type="checkbox" name="genre" value="kiem-hiep"> Kiếm Hiệp</label>
-                </div>
-                <div>
-                    <label><input type="checkbox" name="genre" value="ngon-tinh"> Ngôn Tình</label>
-                </div>
-                <div>
-                    <label><input type="checkbox" name="genre" value="huyen-huyen"> Huyền Huyễn</label>
-                </div>
-            </div>
 
 
-            <div class="col-lg-9">
-                <h2 class="fw-bold mb-4">Tất cả truyện</h2>
+                <div class="col-12 col-lg-9 float-end">
+                    <h2 class="fw-bold mb-4">Tất cả truyện</h2>
 
-                <div class="novel-list row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
-                    <a class="" href="../novel/novel.html">
-                        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 202954.png"
-                                class="card-img-top" alt="Tên truyện">
-                            <div class="overlay">
-                                <h6 class="mb-1 fw-bold text-white text-truncate">
-                                    Yondome wa Iyana Shi Zokusei Majutsushi
-                                </h6>
-                                <small class="text-light">Densuke</small>
+                    <div class="novel-list row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
+                        <a class="" href="../novel/novel.html">
+                            <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 202954.png"
+                                    class="card-img-top" alt="Tên truyện">
+                                <div class="overlay">
+                                    <h6 class="mb-1 fw-bold text-white text-truncate">
+                                        Yondome wa Iyana Shi Zokusei Majutsushi
+                                    </h6>
+                                    <small class="text-light">Densuke</small>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 203345.png"
-                                class="card-img-top" alt="Tên truyện">
-                            <div class="overlay">
-                                <h6 class="mb-1 fw-bold text-white text-truncate">
-                                    Around 40 Kenja no Isekai Seikatsu Nikki
-                                </h6>
-                                <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 203345.png"
+                                    class="card-img-top" alt="Tên truyện">
+                                <div class="overlay">
+                                    <h6 class="mb-1 fw-bold text-white text-truncate">
+                                        Around 40 Kenja no Isekai Seikatsu Nikki
+                                    </h6>
+                                    <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="../novel/novel.html">
-                        <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 202954.png"
-                                class="card-img-top" alt="Tên truyện">
-                            <div class="overlay">
-                                <h6 class="mb-1 fw-bold text-white text-truncate">
-                                    Yondome wa Iyana Shi Zokusei Majutsushi
-                                </h6>
-                                <small class="text-light">Densuke</small>
+                        <a class="" href="../novel/novel.html">
+                            <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 202954.png"
+                                    class="card-img-top" alt="Tên truyện">
+                                <div class="overlay">
+                                    <h6 class="mb-1 fw-bold text-white text-truncate">
+                                        Yondome wa Iyana Shi Zokusei Majutsushi
+                                    </h6>
+                                    <small class="text-light">Densuke</small>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="#" class="card-img-top" alt="Tên truyện">
-                            <div class="card-body">
-                                <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
-                                <p class="card-text small text-muted"></p>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="#" class="card-img-top" alt="Tên truyện">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold mb-1 text-truncate"></h6>
+                                    <p class="card-text small text-muted"></p>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
 
-                    <a class="" href="#">
-                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                            <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 203345.png"
-                                class="card-img-top" alt="Tên truyện">
-                            <div class="overlay">
-                                <h6 class="mb-1 fw-bold text-white text-truncate">
-                                    Around 40 Kenja no Isekai Seikatsu Nikki
-                                </h6>
-                                <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
+                        <a class="" href="#">
+                            <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 203345.png"
+                                    class="card-img-top" alt="Tên truyện">
+                                <div class="overlay">
+                                    <h6 class="mb-1 fw-bold text-white text-truncate">
+                                        Around 40 Kenja no Isekai Seikatsu Nikki
+                                    </h6>
+                                    <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -246,6 +248,8 @@
     <script src="/src/main/webapp/resources/client/js/logo.js"></script>
 
     <script src="/src/main/webapp/resources/client/js/navitigation.js"></script>
+
+    <script src="https://unpkg.com/headroom.js"></script>
 </body>
 
 </html>
