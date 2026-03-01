@@ -1,0 +1,44 @@
+.upload-box {
+    border: 2px dashed #0d6efd;
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 100%;
+    min-height: 150px;
+    height: auto;
+}
+
+.upload-box i {
+    font-size: 28px;
+    color: #0d6efd;
+    margin-bottom: 8px;
+}
+
+.col-md-12 {
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+label {
+    margin-bottom: 0;
+}
+
+.btn {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
