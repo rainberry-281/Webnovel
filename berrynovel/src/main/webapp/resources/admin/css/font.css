@@ -1,0 +1,70 @@
+.font-bold {
+    font-weight: 700;
+}
+
+.text-xl {
+    font-size: 1.25rem;
+}
+
+.text-base {
+    font-size: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'OpenSans', sans-serif;
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+}
+
+h2,
+h3,
+h4 {
+    color: #333;
+}
+
+h4 {
+    color: #333;
+    line-height: 1.625rem;
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--bs-heading-color);
+}
+
+a {
+    -webkit-text-decoration-skip: objects;
+    background-color: transparent;
+    color: inherit;
+    text-decoration: none;
+}
+
+.button,
+.button:hover {
+    text-decoration: none;
+}
+
+small {
+    font-size: 80%;
+    line-height: 1rem;
+}

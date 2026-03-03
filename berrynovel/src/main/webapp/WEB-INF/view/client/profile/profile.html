@@ -10,13 +10,60 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="/src/main/webapp/resources/client/css/navitigation.css">
+    <!-- <link rel="stylesheet" href="/src/main/webapp/resources/client/css/navitigation.css"> -->
 
     <link rel="stylesheet" href="/src/main/webapp/resources/client/css/profile/profile.css">
+
+    <link rel="stylesheet" href="/src/main/webapp/resources/client/css/profile/login-navbar.css">
 </head>
 
 <body>
-    <div id="navbar"></div>
+    <!-- <div id="navbar"></div> -->
+
+    <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light custom-navbar shadow-sm fixed-top headroom">
+        <div class="container align-items-center">
+
+            <div class="d-flex align-items-center gap-3 flex-grow-1">
+
+                <div id="logo"></div>
+
+                <form class="search-form d-none d-md-flex">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-end-0">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" placeholder="Tìm truyện">
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../homepage/homepage.html">Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../category/category.html">Category</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link active" href="../library/bookshelf.html">Library</a>
+                    </li>
+
+                    <a class="nav-link d-flex align-items-center gap-2 user-menu" href="profile.html">
+
+                        <img src="/src/main/webapp/resources/client/image/novel/image.png" class="user-avatar">
+
+                        <span class="username">rainberry</span>
+                    </a>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
 
     <div class="page-wrapper">
         <div class="container profile-card">
@@ -26,7 +73,7 @@
 
                         <div class="card-header theme-gradient-bg text-white p-4 rounded-top-3">
                             <h4 class="mb-0">
-                                <i class="bi bi-person-badge-fill me-2"></i> Hồ sơ cá nhân
+                                <i class="bi bi-person-badge-fill me-2"></i> User profile
                             </h4>
                         </div>
 
@@ -41,28 +88,28 @@
                             <div class="row g-4">
 
                                 <div class="username col-md-6">
-                                    <p class="info-label">Tên đăng nhập (Username)</p>
+                                    <p class="info-label">Username</p>
                                     <div class="info-value">
                                         <i class="fa-solid fa-circle-user icon"></i> rainberry
                                     </div>
                                 </div>
 
                                 <div class="fullname col-md-6">
-                                    <p class="info-label">Họ và Tên</p>
+                                    <p class="info-label">Fullname</p>
                                     <div class="info-value">
                                         <i class="fa-solid fa-id-card icon"></i> Nguyen Nhat Anh
                                     </div>
                                 </div>
 
                                 <div class="email col-md-6">
-                                    <p class="info-label">Địa chỉ Email</p>
+                                    <p class="info-label">Email</p>
                                     <div class="info-value">
                                         <i class="fa-solid fa-envelope icon"></i> nguyennhatanh533@gmail.com
                                     </div>
                                 </div>
 
                                 <div class="sdt col-md-6">
-                                    <p class="info-label">Số điện thoại</p>
+                                    <p class="info-label">Phone Number</p>
                                     <div class="info-value">
                                         <i class="fa-solid fa-phone icon"></i> 0796560405
                                     </div>
@@ -71,8 +118,8 @@
                             </div>
 
                             <div class="d-flex justify-content-end mt-5 pt-4 border-top gap-3">
-                                <a href="update.html" class="btn fw-semibold theme-gradient-bg">
-                                    <i class="bi bi-pencil-square me-1"></i> Chỉnh sửa hồ sơ
+                                <a href="update.html" class="btn fw-bold theme-gradient-bg">
+                                    <i class="bi bi-pencil-square me-1"></i> Edit profile
                                 </a>
                             </div>
 
@@ -86,6 +133,10 @@
     <script src="/src/main/webapp/resources/client/js/include.js"></script>
 
     <script src="/src/main/webapp/resources/client/js/logo.js"></script>
+
+    <script src="/src/main/webapp/resources/client/js/navitigation.js"></script>
+
+    <script src="https://unpkg.com/headroom.js"></script>
 </body>
 
 </html>

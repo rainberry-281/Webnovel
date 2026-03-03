@@ -1,0 +1,187 @@
+body {
+    background: #f4f6fb;
+    font-family: 'OpenSans', sans-serif;
+    margin: 0;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* CARD */
+
+.create-user-card {
+    background: white;
+    padding: 35px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* HEADER */
+
+.form-header {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    padding: 18px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+
+/* FORM */
+
+.form-control {
+    height: 45px;
+    border-radius: 8px;
+    font-size: 1.25rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #ff9900;
+}
+
+.form-control {
+    height: 45px;
+    border-radius: 8px;
+    font-size: 1.25rem;
+}
+
+
+/* SELECT */
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-wrapper select {
+    width: 100%;
+    padding-right: 40px;
+    appearance: none;
+}
+
+.select-wrapper i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666;
+}
+
+/* GENRE */
+
+.genre-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.genre-item {
+    background: #f3f4f6;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.genre-item:hover {
+    background: #e5e7eb;
+}
+
+.genre-item input {
+    cursor: pointer;
+}
+
+/* INTRODUCTION (TÓM TẮT TRUYỆN) */
+
+textarea.form-control {
+    height: 180px;
+    /* lớn hơn */
+    resize: vertical;
+    /* cho phép kéo */
+    padding: 12px;
+    line-height: 1.6;
+    font-size: 1.25rem;
+}
+
+
+/* UPLOAD BOX */
+
+.upload-box {
+    border: 2px dashed #3b82f6;
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    transition: 0.2s;
+}
+
+.upload-box:hover {
+    background: #f0f6ff;
+}
+
+.upload-box input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.upload-icon {
+    font-size: 30px;
+    color: #3b82f6;
+    margin-bottom: 10px;
+}
+
+
+/* BUTTON */
+
+.submit-box {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.btn-create {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: white;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 20px;
+    transition: 0.2s;
+}
+
+.btn-create:hover {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    color: rgb(61, 61, 61);
+}

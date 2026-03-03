@@ -1,0 +1,234 @@
+body {
+    background: #f4f6fb;
+    font-family: 'OpenSans', sans-serif;
+    margin: 0;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* NOVEL CARD */
+
+.novel-card {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* HEADER */
+
+.novel-header {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: white;
+    font-size: 30px;
+    font-weight: 700;
+    padding: 20px 25px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+}
+
+/* CREATE BUTTON */
+
+.create-btn {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: white;
+    font-size: 20px;
+    padding: 12px 26px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+}
+
+.create-btn:hover {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    color: rgb(61, 61, 61);
+}
+
+/* TABLE */
+
+.novel-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin-top: 20px;
+}
+
+/* HEADER */
+
+.novel-table thead th {
+    background: #f1f1f1;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 18px 15px;
+    text-align: left;
+}
+
+/* BODY */
+
+.novel-table tbody td {
+    vertical-align: middle;
+    padding: 22px 18px;
+    font-size: 20px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* ID + STATUS CENTER */
+
+.novel-table th:first-child,
+.novel-table td:first-child,
+.novel-table th:nth-child(5),
+.novel-table td:nth-child(5) {
+    text-align: center;
+    width: 90px;
+}
+
+/* NOVEL NAME */
+.novel-table th:nth-child(2),
+.novel-table td:nth-child(2) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 240px;
+}
+
+/* AUTHOR */
+.novel-table th:nth-child(3),
+.novel-table td:nth-child(3) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 200px;
+}
+
+/* UPLOADER */
+
+.novel-table td:nth-child(4),
+.novel-table th:nth-child(4) {
+    width: 150px;
+    text-align: center;
+}
+
+/* ACTION */
+
+.novel-table th:last-child,
+.novel-table td:last-child {
+    text-align: center;
+    width: 230px;
+}
+
+/* ACTION BUTTON */
+
+.action {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.action .btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* BUTTON COLORS */
+
+.btn-view {
+    background: #2d8cf0;
+    color: white;
+}
+
+.btn-edit {
+    background: #ffb000;
+    color: white;
+}
+
+.btn-delete {
+    background: #e53935;
+    color: white;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-view:hover {
+    background: #1a73e8;
+}
+
+.btn-edit:hover {
+    background: #ff9900;
+}
+
+.btn-delete:hover {
+    background: #c62828;
+}
+
+.btn-success:hover {
+    background-color: #198754;
+    color: black;
+}
+
+/* STATUS BADGE */
+
+.status-published {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+.status-hidden {
+    color: #c62828;
+    font-weight: 600;
+}
+
+/* PAGINATION */
+
+.pagination-box {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 12px;
+}
+
+.page-btn {
+    padding: 10px 16px;
+    border-radius: 50%;
+    background: #eee;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+.page-btn.active {
+    background: #2d6cdf;
+    color: white;
+}
+
+.page-btn.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.status {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+}
+
+td.status {
+    font-weight: normal !important;
+}
