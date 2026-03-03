@@ -26,9 +26,11 @@
                 </button>
 
                 <ul>
-                    <li class="current">Vol.1: Khiên quốc Mirg
+                    <li class="current">
+                        <a href="chapter.html">Vol.1: Khiên quốc Mirg</a>
                         <ul>
-                            <li class=""><a href="">Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai</a></li>
+                            <li class="curent-chap"><a href="update.html">Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ
+                                    hai</a></li>
                             <li class=""><a href="">Chương 1: Sự khởi đầu của kiếp thứ ba</a></li>
                         </ul>
                     </li>
@@ -150,6 +152,21 @@ Kể cả khi Hiroto chết, sẽ không có ai thương tiếc cho cậu. Cha m
         // khi user nhập
         textarea.addEventListener("input", () => {
             autoResize(textarea);
+        });
+    </script>
+
+    <script>
+        const volumes = document.querySelectorAll(".chapter-tree > ul > li");
+
+        volumes.forEach(vol => {
+            vol.addEventListener("click", function (e) {
+
+                // bỏ current ở tất cả
+                volumes.forEach(v => v.classList.remove("current"));
+
+                // thêm current cho volume được click
+                this.classList.add("current");
+            });
         });
     </script>
 </body>

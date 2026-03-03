@@ -18,64 +18,16 @@
     <div class="layout">
 
         <!-- SIDEBAR -->
-        <div class="sidebar">
-
-            <h4 class="logo">Novel Admin</h4>
-
-            <ul class="menu">
-
-                <li>
-                    <a href="../dashboard/dashboard.html">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="../user/user.html">
-                        <i class="fa-solid fa-users"></i>
-                        <span>User</span>
-                    </a>
-                </li>
-
-                <li class="active">
-                    <a href="../novel/novel.html">
-                        <i class="fa-solid fa-book"></i>
-                        <span>Novel</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="">
-                        <i class="fa-solid fa-comments"></i>
-                        <span>Comment</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="">
-                        <i class="fa-solid fa-layer-group"></i>
-                        <span>Category</span>
-                    </a>
-                </li>
-
-            </ul>
-
-        </div>
+        <div id="sidebar"></div>
 
         <!-- MAIN -->
         <div class="main-content">
-
             <div class="create-user-card">
-
                 <div class="form-header">
                     Update Novel
                 </div>
-
                 <form>
-
                     <div class="row">
-
                         <!-- NOVEL NAME -->
                         <div class="col-md-6 form-group">
                             <label>Novel name:</label>
@@ -90,9 +42,7 @@
 
                         <!-- STATUS -->
                         <div class="col-md-6 form-group select-role">
-
                             <label>Status</label>
-
                             <div class="select-wrapper">
                                 <select class="form-control">
                                     <option>-----</option>
@@ -100,34 +50,26 @@
                                     <option>Completed</option>
                                     <option>Dropped</option>
                                 </select>
-
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
-
                         </div>
 
                         <!-- TYPE -->
                         <div class="col-md-6 form-group select-role">
-
                             <label>Type</label>
-
                             <div class="select-wrapper">
                                 <select class="form-control">
                                     <option>-----</option>
                                     <option>Translated</option>
                                     <option selected>Original story</option>
                                 </select>
-
                                 <i class="fa-solid fa-chevron-down"></i>
                             </div>
-
                         </div>
 
                         <!-- GENRE -->
                         <div class="form-group genre-group">
-
                             <label>Genre</label>
-
                             <div class="genre-box">
 
                                 <label class="genre-item">
@@ -153,11 +95,8 @@
                                 <label class="genre-item">
                                     <input type="checkbox" checked> Magic
                                 </label>
-
                             </div>
-
                         </div>
-
                     </div>
 
                     <!-- DESCRIPTION -->
@@ -187,11 +126,8 @@ Cảm thấy không thể chết theo mong muốn của vị thần, Hiroto quy�
 
                     <!-- COVER IMAGE -->
                     <div class="form-group">
-
                         <label>Cover image:</label>
-
                         <div class="upload-box">
-
                             <img src="/src/main/webapp/resources/client/image/novel/Screenshot 2026-02-10 202954.png"
                                 style="width:120px;border-radius:8px;margin-bottom:10px">
 
@@ -200,27 +136,21 @@ Cảm thấy không thể chết theo mong muốn của vị thần, Hiroto quy�
                             <p>Change cover image</p>
 
                             <input type="file">
-
                         </div>
-
                     </div>
 
                     <!-- BUTTON -->
                     <div class="submit-box">
-
                         <button type="submit" class="btn-create">
                             UPDATE
                         </button>
-
                     </div>
-
                 </form>
-
             </div>
-
         </div>
-
     </div>
+
+    <script src="/src/main/webapp/resources/admin/js/sidebar.js"></script>
 
 </body>
 

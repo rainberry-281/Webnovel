@@ -28,7 +28,9 @@
                 <ul>
                     <li class="current">Vol.1: Khiên quốc Mirg
                         <ul>
-                            <li class=""><a href="">Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai</a></li>
+                            <li class="">
+                                <a href="update.html">Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai</a>
+                            </li>
                             <li class=""><a href="">Chương 1: Sự khởi đầu của kiếp thứ ba</a></li>
                         </ul>
                     </li>
@@ -110,6 +112,21 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const volumes = document.querySelectorAll(".chapter-tree > ul > li");
+
+        volumes.forEach(vol => {
+            vol.addEventListener("click", function (e) {
+
+                // bỏ current ở tất cả
+                volumes.forEach(v => v.classList.remove("current"));
+
+                // thêm current cho volume được click
+                this.classList.add("current");
+            });
+        });
+    </script>
 
     <script>
         const textarea = document.querySelector("textarea");

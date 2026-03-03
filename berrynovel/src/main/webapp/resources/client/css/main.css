@@ -10,8 +10,14 @@ body {
 }
 
 .hero-img {
+    width: 650px;
+    height: auto;
     border-radius: 8px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+    font-size: 24px;
 }
 
 .novel-card {
