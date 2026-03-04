@@ -181,22 +181,27 @@
     <!-- POPUP ADD GENRE -->
     <div class="popup-overlay" id="genrePopup">
         <div class="popup-box">
+
             <div class="popup-header">
-                <h2 class="fw-semibold">Add New Genre</h2>
+                <h2 class="fw-semibold" id="popupTitle">Add New Genre</h2>
                 <span class="close-btn" onclick="closePopup()">×</span>
             </div>
 
             <div class="popup-body">
 
+                <!-- hidden id dùng cho edit -->
+                <input type="hidden" id="genreId">
+
                 <label>Genre Name</label>
-                <input type="text" placeholder="Enter category name">
+                <input type="text" id="genreName" placeholder="Enter genre name">
 
                 <label>Code</label>
-                <input type="text" placeholder="Enter code">
+                <input type="text" id="genreCode" placeholder="Enter code">
 
                 <div class="popup-action">
-                    <button class="create-btn">CREATE</button>
+                    <button class="create-btn" id="saveGenreBtn">CREATE</button>
                 </div>
+
             </div>
         </div>
     </div>
@@ -232,6 +237,47 @@
                     this.classList.add("btn-success");
                 }
             });
+        });
+    </script>
+
+    <script>
+        function openPopup() {
+
+            document.getElementById("popupTitle").innerText = "Add New Genre";
+
+            document.getElementById("genreId").value = "";
+            document.getElementById("genreName").value = "";
+            document.getElementById("genreCode").value = "";
+
+            document.getElementById("saveGenreBtn").innerText = "CREATE";
+
+            document.getElementById("genrePopup").style.display = "flex";
+        }
+    </script>
+
+    <script>
+        document.querySelectorAll(".btn-edit").forEach(btn => {
+
+            btn.addEventListener("click", function () {
+
+                const row = this.closest("tr");
+
+                const id = row.children[0].innerText;
+                const name = row.children[1].innerText;
+                const code = row.children[2].innerText;
+
+                document.getElementById("popupTitle").innerText = "Edit Genre";
+
+                document.getElementById("genreId").value = id;
+                document.getElementById("genreName").value = name;
+                document.getElementById("genreCode").value = code;
+
+                document.getElementById("saveGenreBtn").innerText = "UPDATE";
+
+                document.getElementById("genrePopup").style.display = "flex";
+
+            });
+
         });
     </script>
 

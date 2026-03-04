@@ -185,6 +185,10 @@ body {
     font-weight: 600;
 }
 
+td.status {
+    font-weight: normal !important;
+}
+
 /* PAGINATION */
 
 .pagination-box {
