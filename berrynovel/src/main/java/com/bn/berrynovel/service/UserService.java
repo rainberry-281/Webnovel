@@ -1,10 +1,55 @@
 package com.bn.berrynovel.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.bn.berrynovel.domain.User;
+import com.bn.berrynovel.domain.Role;
+import com.bn.berrynovel.repository.UserRepository;
+import com.bn.berrynovel.repository.RoleRepository;
+
+import java.util.List;
 
 @Service
 public class UserService {
-    public String handelhello() {
-        return "Hell World!";
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final ImageService imageService;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,
+            ImageService imageService) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.imageService = imageService;
+    }
+
+    public void adminCreateUser(User user, MultipartFile file) {
+        Role roleInDataBase = this.roleRepository.findByName(user.getRole().getName());
+        user.setRole(roleInDataBase);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        String imageName = "image.png";
+        if (file != null && !file.isEmpty()) {
+            // Nếu người dùng có upload ảnh
+            imageName = this.imageService.handleImage(file, "avatar");
+        }
+        user.setImage(imageName);
+
+        User savedUser = this.userRepository.save(user);
+    }
+
+    public List<User> getUserList() {
+        return this.userRepository.findAll();
+    }
+
+    public User getUserByID(int id) {
+        return this.userRepository.findFirstById(id);
+    }
+
+    public User getUserByUsername(String username) {
+        return this.userRepository.findByUsername(username);
     }
 }
