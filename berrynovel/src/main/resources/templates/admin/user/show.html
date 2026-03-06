@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Manager</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/admin/css/user/manageuser.css}">
+
+    <link rel="stylesheet" th:href="@{/admin/css/font.css}">
+
+    <link rel="stylesheet" th:href="@{/admin/css/sidebar.css}">
+</head>
+
+<body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <div th:replace="admin/layout/sidebar :: sidebar"></div>
+
+
+        <!-- MAIN -->
+        <div class="main-content">
+            <div class="user-card">
+                <div class="user-header">
+                    Manager User
+                </div>
+
+                <a th:href="@{/admin/user/create}" class="btn create-btn fw-bold">
+                    Create User
+                </a>
+                <div class="table-wrapper">
+                    <table class="table user-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <!-- <th>Status</th> -->
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.id}"></td>
+
+                                <td th:text="${user.username}"></td>
+
+                                <td th:text="${user.email}"></td>
+
+                                <td th:text="${user.phoneNumber}"></td>
+
+                                <!-- <td class="status" th:text="${user.active ? 'Active' : 'Inactive'}"
+                                    th:classappend="${user.active} ? 'status-active' : 'status-inactive'"> -->
+                                </td>
+
+                                <td class="action">
+
+                                    <button class="btn btn-view" data-bs-toggle="modal"
+                                        data-bs-target="#userDetailModal" th:data-id="${user.id}"
+                                        th:data-name="${user.fullName}" th:data-username="${user.username}"
+                                        th:data-email="${user.email}" th:data-phone="${user.phoneNumber}"
+                                        th:data-avatar="${user.image}">
+                                        <i class="fa-solid fa-id-card"></i>
+                                    </button>
+
+                                    <a th:href="@{/admin/user/update/{id}(id=${user.id})}" class="btn btn-edit">
+                                        <i class="fa-solid fa-user-pen"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <!-- Pagination -->
+
+                <div class="pagination-box">
+
+                    <a class="page-btn disabled">«</a>
+
+                    <a class="page-btn active">1</a>
+
+                    <a class="page-btn disabled">»</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="userDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">User Information</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body user-modal-body">
+
+                    <h4 class="user-name">Nguyen Nhat Anh</h4>
+
+                    <div class="avatar-box">
+                        <img id="userAvatar" src="">
+                        <p class="user-id">ID: 1</p>
+                        <span class="role-badge">ADMIN</span>
+                    </div>
+
+                    <div class="info-box">
+
+                        <h6 class="info-title">
+                            <i class="fa-solid fa-circle-info"></i> Account Information
+                        </h6>
+
+                        <div class="info-grid">
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-user"></i>
+                                <div>
+                                    <span class="label">Username:</span>
+                                    <p>@rainberry</p>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-envelope"></i>
+                                <div>
+                                    <span class="label">Email:</span>
+                                    <p>nguyennhatanh533@gmail.com</p>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-phone"></i>
+                                <div>
+                                    <span class="label">Phone:</span>
+                                    <p>0796560405</p>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <div>
+                                    <span class="label">Status:</span>
+                                    <p class="status">Active</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll(".btn-view").forEach(btn => {
+
+            btn.addEventListener("click", function () {
+
+                document.querySelector(".user-name").textContent = this.dataset.name;
+
+                document.querySelector(".user-id").textContent =
+                    "ID: " + this.dataset.id;
+
+                document.querySelector(".info-item:nth-child(1) p").textContent =
+                    "@" + this.dataset.username;
+
+                document.querySelector(".info-item:nth-child(2) p").textContent =
+                    this.dataset.email;
+
+                document.querySelector(".info-item:nth-child(3) p").textContent =
+                    this.dataset.phone;
+
+                document.getElementById("userAvatar").src =
+                    "/images/" + this.dataset.avatar;
+
+            });
+
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll(".btn-toggle-lock").forEach(button => {
+            button.addEventListener("click", function () {
+                const icon = this.querySelector("i");
+                if (icon.classList.contains("fa-lock-open")) {
+                    // chuyển sang lock
+                    icon.classList.remove("fa-lock-open");
+                    icon.classList.add("fa-lock");
+
+                    this.classList.remove("btn-success");
+                    this.classList.add("btn-delete");
+                } else {
+                    // chuyển sang unlock
+                    icon.classList.remove("fa-lock");
+                    icon.classList.add("fa-lock-open");
+
+                    this.classList.remove("btn-delete");
+                    this.classList.add("btn-success");
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll(".btn-toggle-status").forEach(button => {
+            button.addEventListener("click", function () {
+
+                const row = this.closest("tr");
+                const statusCell = row.querySelector(".status");
+
+                const modalStatus = document.querySelector("#userDetailModal .status");
+
+                if (statusCell.textContent === "Active") {
+
+                    statusCell.textContent = "Inactive";
+                    statusCell.classList.remove("status-active");
+                    statusCell.classList.add("status-inactive");
+
+                    if (modalStatus) {
+                        modalStatus.textContent = "Inactive";
+                        modalStatus.classList.remove("status-active");
+                        modalStatus.classList.add("status-inactive");
+                    }
+
+                } else {
+
+                    statusCell.textContent = "Active";
+                    statusCell.classList.remove("status-inactive");
+                    statusCell.classList.add("status-active");
+
+                    if (modalStatus) {
+                        modalStatus.textContent = "Active";
+                        modalStatus.classList.remove("status-inactive");
+                        modalStatus.classList.add("status-active");
+                    }
+
+                }
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- <script th:src="@{/admin/js/sidebar.js}"></script> -->
+
+</body>
+
+</html>
