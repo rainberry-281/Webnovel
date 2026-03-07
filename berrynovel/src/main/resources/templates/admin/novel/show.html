@@ -8,11 +8,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <link rel="stylesheet" href="/src/main/resources/static/admin/css/novel/novel.css">
+    <link rel="stylesheet" th:href="@{/admin/css/novel/novel.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/admin/css/font.css">
+    <link rel="stylesheet" th:href="@{/admin/css/font.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/admin/css/sidebar.css">
+    <link rel="stylesheet" th:href="@{/admin/css/sidebar.css}">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
     <div class="layout">
 
         <!-- SIDEBAR -->
-        <div id="sidebar"></div>
+        <div th:replace="admin/layout/sidebar :: sidebar"></div>
 
 
         <!-- MAIN CONTENT -->
@@ -32,7 +32,7 @@
                     Manager Novel
                 </div>
 
-                <a href="create.html" class="btn create-btn fw-bold">
+                <a th:href="@{/admin/novel/create}" class="btn create-btn fw-bold">
                     Create Novel
                 </a>
 
@@ -54,48 +54,17 @@
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>1</td>
+                            <tr th:each="novel : ${novels}">
 
-                                <td>Yondomewa Iyana Shi Zokusei Majutsushi</td>
+                                <td th:text="${novel.id}"></td>
 
-                                <td>Densuke</td>
+                                <td th:text="${novel.title}"></td>
 
-                                <td>1</td>
+                                <td th:text="${novel.author}"></td>
 
-                                <td class="status">Published</td>
+                                <td th:text="${novel.user?.id ?: '-'}"></td>
 
-                                <td class="action">
-                                    <a href="../chapter/chapter.html">
-                                        <button class="btn btn-view">
-                                            <i class="fa-solid fa-eye"></i>
-                                        </button>
-                                    </a>
-
-                                    <a href="update.html" class="btn btn-edit">
-                                        <i class="fa-solid fa-pen"></i>
-                                    </a>
-
-                                    <button class="btn btn-success btn-toggle-status">
-                                        <i class="fa-solid fa-circle-check"></i>
-                                    </button>
-
-                                </td>
-
-                            </tr>
-
-
-                            <tr>
-
-                                <td>2</td>
-
-                                <td>Around 40 Kenja no Isekai Seikatsu Nikki</td>
-
-                                <td>Kotobuki Yasukiyo</td>
-
-                                <td>2</td>
-
-                                <td class="status">Hidden</td>
+                                <td class="status" th:text="${novel.status ? 'Active' : 'Inactive'}"></td>
 
                                 <td class="action">
 
@@ -139,7 +108,6 @@
 
     </div>
 
-
     <script>
         document.querySelectorAll(".btn-toggle-status").forEach(button => {
             button.addEventListener("click", function () {
@@ -181,7 +149,7 @@
         });
     </script>
 
-    <script src="/src/main/resources/static/admin/js/sidebar.js"></script>
+    <!-- <script th:src="@{/admin/js/sidebar.js}"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

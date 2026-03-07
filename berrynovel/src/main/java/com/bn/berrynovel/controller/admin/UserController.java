@@ -2,7 +2,6 @@ package com.bn.berrynovel.controller.admin;
 
 import java.util.List;
 import org.springframework.ui.Model;
-import org.apache.catalina.connector.Request;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,6 @@ import org.springframework.validation.FieldError;
 
 import com.bn.berrynovel.domain.Role;
 import com.bn.berrynovel.domain.User;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping("/admin/user")
@@ -64,14 +62,15 @@ public class UserController {
     @GetMapping("/update/{id}")
     public String getUpdatePage(Model model, @PathVariable int id) {
         User user = this.userService.getUserByID(id);
-        model.addAttribute("user", user);
+        model.addAttribute("newUser", user);
         return "admin/user/update";
     }
 
-    @PostMapping("")
-    public String postMethodName(@RequestBody String entity) {
-
-        return entity;
+    @PostMapping("/update/{id}")
+    public String updateUserPage(@PathVariable int id, @ModelAttribute("newUser") User user,
+            @RequestParam(value = "imageFile", required = false) MultipartFile file) {
+        this.userService.updateUser(user, file);
+        return "redirect:/admin/user";
     }
 
 }

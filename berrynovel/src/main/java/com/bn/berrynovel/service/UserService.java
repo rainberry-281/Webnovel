@@ -41,6 +41,23 @@ public class UserService {
         User savedUser = this.userRepository.save(user);
     }
 
+    public User updateUser(User user, MultipartFile file) {
+        User currentUser = this.userRepository.findById(user.getId()).get();
+
+        currentUser.setRole(this.roleRepository.findByName(user.getRole().getName()));
+
+        currentUser.setFullName(user.getFullName());
+
+        currentUser.setPhoneNumber(user.getPhoneNumber());
+
+        if (file != null && !file.isEmpty()) {
+            String imageName = this.imageService.handleImage(file, "avatar");
+            currentUser.setImage(imageName);
+        }
+
+        return this.userRepository.save(currentUser);
+    }
+
     public List<User> getUserList() {
         return this.userRepository.findAll();
     }

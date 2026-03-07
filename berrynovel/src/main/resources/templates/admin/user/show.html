@@ -20,7 +20,7 @@
     <div class="layout">
 
         <!-- SIDEBAR -->
-        <div th:replace="admin/layout/sidebar :: sidebar"></div>
+        <div th:replace="~{admin/layout/sidebar :: sidebar}"></div>
 
 
         <!-- MAIN -->
@@ -58,8 +58,8 @@
                                 <td th:text="${user.phoneNumber}"></td>
 
                                 <!-- <td class="status" th:text="${user.active ? 'Active' : 'Inactive'}"
-                                    th:classappend="${user.active} ? 'status-active' : 'status-inactive'"> -->
-                                </td>
+                                    th:classappend="${user.active} ? 'status-active' : 'status-inactive'">
+                                </td> -->
 
                                 <td class="action">
 
@@ -67,13 +67,17 @@
                                         data-bs-target="#userDetailModal" th:data-id="${user.id}"
                                         th:data-name="${user.fullName}" th:data-username="${user.username}"
                                         th:data-email="${user.email}" th:data-phone="${user.phoneNumber}"
-                                        th:data-avatar="${user.image}">
+                                        th:data-role="${user.role.name}" th:data-avatar="${user.image}">
                                         <i class="fa-solid fa-id-card"></i>
                                     </button>
 
                                     <a th:href="@{/admin/user/update/{id}(id=${user.id})}" class="btn btn-edit">
                                         <i class="fa-solid fa-user-pen"></i>
                                     </a>
+
+                                    <button class="btn btn-success btn-toggle-lock">
+                                        <i class="fa-solid fa-lock-open"></i>
+                                    </button>
 
                                 </td>
                             </tr>
@@ -107,12 +111,13 @@
 
                 <div class="modal-body user-modal-body">
 
-                    <h4 class="user-name">Nguyen Nhat Anh</h4>
+                    <h4 class="user-name"></h4>
 
                     <div class="avatar-box">
-                        <img id="userAvatar" src="">
-                        <p class="user-id">ID: 1</p>
-                        <span class="role-badge">ADMIN</span>
+                        <img id="userAvatar" src="" alt="User Avatar"
+                            style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;">
+                        <p class="user-id"></p>
+                        <span class="role-badge">USER</span>
                     </div>
 
                     <div class="info-box">
@@ -127,7 +132,7 @@
                                 <i class="fa-solid fa-user"></i>
                                 <div>
                                     <span class="label">Username:</span>
-                                    <p>@rainberry</p>
+                                    <p class="user-username"></p>
                                 </div>
                             </div>
 
@@ -135,7 +140,7 @@
                                 <i class="fa-solid fa-envelope"></i>
                                 <div>
                                     <span class="label">Email:</span>
-                                    <p>nguyennhatanh533@gmail.com</p>
+                                    <p class="user-email"></p>
                                 </div>
                             </div>
 
@@ -143,7 +148,7 @@
                                 <i class="fa-solid fa-phone"></i>
                                 <div>
                                     <span class="label">Phone:</span>
-                                    <p>0796560405</p>
+                                    <p class="user-phone"></p>
                                 </div>
                             </div>
 
@@ -151,7 +156,7 @@
                                 <i class="fa-solid fa-circle-check"></i>
                                 <div>
                                     <span class="label">Status:</span>
-                                    <p class="status">Active</p>
+                                    <p class="status user-status">Active</p>
                                 </div>
                             </div>
 
@@ -167,28 +172,31 @@
 
     <script>
         document.querySelectorAll(".btn-view").forEach(btn => {
-
             btn.addEventListener("click", function () {
+                // Populate modal with user data from database
+                const userName = this.dataset.name || "N/A";
+                const userId = this.dataset.id;
+                const username = this.dataset.username || "N/A";
+                const email = this.dataset.email || "N/A";
+                const phone = this.dataset.phone || "N/A";
+                const role = this.dataset.role || "USER";
+                const avatar = this.dataset.avatar;
 
-                document.querySelector(".user-name").textContent = this.dataset.name;
+                // Update modal content
+                document.querySelector(".user-name").textContent = userName;
+                document.querySelector(".user-id").textContent = "ID: " + userId;
+                document.querySelector(".user-username").textContent = "@" + username;
+                document.querySelector(".user-email").textContent = email;
+                document.querySelector(".user-phone").textContent = phone;
+                document.querySelector(".role-badge").textContent = role;
 
-                document.querySelector(".user-id").textContent =
-                    "ID: " + this.dataset.id;
-
-                document.querySelector(".info-item:nth-child(1) p").textContent =
-                    "@" + this.dataset.username;
-
-                document.querySelector(".info-item:nth-child(2) p").textContent =
-                    this.dataset.email;
-
-                document.querySelector(".info-item:nth-child(3) p").textContent =
-                    this.dataset.phone;
-
-                document.getElementById("userAvatar").src =
-                    "/images/" + this.dataset.avatar;
-
+                // Set avatar image
+                if (avatar) {
+                    document.getElementById("userAvatar").src = "/images/user/" + avatar;
+                } else {
+                    document.getElementById("userAvatar").src = "/images/user/default-avatar.png";
+                }
             });
-
         });
     </script>
 
