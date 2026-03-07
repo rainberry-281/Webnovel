@@ -42,7 +42,7 @@
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Phone</th>
-                                <!-- <th>Status</th> -->
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -57,9 +57,9 @@
 
                                 <td th:text="${user.phoneNumber}"></td>
 
-                                <!-- <td class="status" th:text="${user.active ? 'Active' : 'Inactive'}"
-                                    th:classappend="${user.active} ? 'status-active' : 'status-inactive'">
-                                </td> -->
+                                <td class="status" th:text="${user.status ? 'Active' : 'Inactive'}"
+                                    th:classappend="${user.status} ? 'status-active' : 'status-inactive'">
+                                </td>
 
                                 <td class="action">
 
@@ -75,9 +75,15 @@
                                         <i class="fa-solid fa-user-pen"></i>
                                     </a>
 
-                                    <button class="btn btn-success btn-toggle-lock">
-                                        <i class="fa-solid fa-lock-open"></i>
-                                    </button>
+                                    <form th:action="@{/admin/user/toggle-status/{id}(id=${user.id})}" method="POST"
+                                        style="display:inline;">
+                                        <button type="submit"
+                                            th:classappend="${user.status} ? 'btn-success' : 'btn-delete'"
+                                            class="btn btn-toggle-lock">
+                                            <i th:classappend="${user.status} ? 'fa-lock-open' : 'fa-lock'"
+                                                class="fa-solid"></i>
+                                        </button>
+                                    </form>
 
                                 </td>
                             </tr>
@@ -195,67 +201,6 @@
                     document.getElementById("userAvatar").src = "/images/user/" + avatar;
                 } else {
                     document.getElementById("userAvatar").src = "/images/user/default-avatar.png";
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.querySelectorAll(".btn-toggle-lock").forEach(button => {
-            button.addEventListener("click", function () {
-                const icon = this.querySelector("i");
-                if (icon.classList.contains("fa-lock-open")) {
-                    // chuyển sang lock
-                    icon.classList.remove("fa-lock-open");
-                    icon.classList.add("fa-lock");
-
-                    this.classList.remove("btn-success");
-                    this.classList.add("btn-delete");
-                } else {
-                    // chuyển sang unlock
-                    icon.classList.remove("fa-lock");
-                    icon.classList.add("fa-lock-open");
-
-                    this.classList.remove("btn-delete");
-                    this.classList.add("btn-success");
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.querySelectorAll(".btn-toggle-status").forEach(button => {
-            button.addEventListener("click", function () {
-
-                const row = this.closest("tr");
-                const statusCell = row.querySelector(".status");
-
-                const modalStatus = document.querySelector("#userDetailModal .status");
-
-                if (statusCell.textContent === "Active") {
-
-                    statusCell.textContent = "Inactive";
-                    statusCell.classList.remove("status-active");
-                    statusCell.classList.add("status-inactive");
-
-                    if (modalStatus) {
-                        modalStatus.textContent = "Inactive";
-                        modalStatus.classList.remove("status-active");
-                        modalStatus.classList.add("status-inactive");
-                    }
-
-                } else {
-
-                    statusCell.textContent = "Active";
-                    statusCell.classList.remove("status-inactive");
-                    statusCell.classList.add("status-active");
-
-                    if (modalStatus) {
-                        modalStatus.textContent = "Active";
-                        modalStatus.classList.remove("status-inactive");
-                        modalStatus.classList.add("status-active");
-                    }
-
                 }
             });
         });

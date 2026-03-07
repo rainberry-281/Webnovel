@@ -79,7 +79,8 @@
                             <label>Genre</label>
                             <div class="genre-box">
                                 <label class="genre-item" th:each="genre : ${genres}">
-                                    <input type="checkbox" name="genreNames" th:value="${genre.name}">
+                                    <input type="checkbox" name="genreIds" th:value="${genre.id}"
+                                        th:checked="${#lists.contains(newNovel.genres, genre)}">
                                     <span th:text="${genre.name}"></span>
                                 </label>
                             </div>

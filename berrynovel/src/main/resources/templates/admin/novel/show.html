@@ -76,9 +76,15 @@
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
 
-                                    <button class="btn btn-delete btn-toggle-status">
-                                        <i class="fa-solid fa-circle-xmark"></i>
-                                    </button>
+                                    <form th:action="@{/admin/novel/toggle-status/{id}(id=${novel.id})}" method="POST"
+                                        style="display:inline;">
+                                        <button type="submit"
+                                            th:classappend="${novel.status} ? 'btn-success' : 'btn-delete'"
+                                            class="btn btn-toggle-status">
+                                            <i th:classappend="${novel.status} ? 'fa-circle-check' : 'fa-circle-xmark'"
+                                                class="fa-solid"></i>
+                                        </button>
+                                    </form>
 
                                 </td>
 
@@ -107,49 +113,6 @@
         </div>
 
     </div>
-
-    <script>
-        document.querySelectorAll(".btn-toggle-status").forEach(button => {
-            button.addEventListener("click", function () {
-                const icon = this.querySelector("i");
-                if (icon.classList.contains("fa-circle-check")) {
-                    icon.classList.remove("fa-circle-check");
-                    icon.classList.add("fa-circle-xmark");
-
-                    this.classList.remove("btn-success");
-                    this.classList.add("btn-delete");
-                } else {
-                    icon.classList.remove("fa-circle-xmark");
-                    icon.classList.add("fa-circle-check");
-
-                    this.classList.remove("btn-delete");
-                    this.classList.add("btn-success");
-
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.querySelectorAll(".btn-toggle-status").forEach(button => {
-            button.addEventListener("click", function () {
-                const row = this.closest("tr");
-                const statusCell = row.querySelector(".status");
-
-                if (statusCell.textContent === "Published") {
-                    statusCell.textContent = "Hidden";
-                    statusCell.classList.remove("status-published");
-                    statusCell.classList.add("status-hidden");
-                } else {
-                    statusCell.textContent = "Published";
-                    statusCell.classList.remove("status-hidden");
-                    statusCell.classList.add("status-published");
-                }
-            });
-        });
-    </script>
-
-    <!-- <script th:src="@{/admin/js/sidebar.js}"></script> -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

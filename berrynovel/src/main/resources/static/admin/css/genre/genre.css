@@ -274,12 +274,22 @@ td.status {
     font-weight: 600;
 }
 
-.popup-body input {
+.popup-body input,
+.popup-body select {
     width: 100%;
     padding: 12px;
     border-radius: 8px;
     border: 1px solid #ccc;
     margin-bottom: 20px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.popup-body input:focus,
+.popup-body select:focus {
+    outline: none;
+    border-color: #a18cd1;
+    box-shadow: 0 0 5px rgba(161, 140, 209, 0.3);
 }
 
 /* BUTTON */
@@ -287,16 +297,50 @@ td.status {
 .popup-action {
     display: flex;
     justify-content: flex-end;
+    gap: 10px;
 }
 
 .popup-action button {
-    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
     border: none;
     padding: 12px 28px;
     border-radius: 10px;
-    color: white;
     font-weight: 700;
     cursor: pointer;
+    transition: all 0.3s;
+}
+
+.popup-action .create-btn {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    color: white;
+    font-size: 14px;
+    margin-bottom: 0;
+    padding: 12px 28px;
+}
+
+.popup-action .create-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.popup-action .btn-secondary {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.popup-action .btn-secondary:hover {
+    background: #d0d0d0;
+}
+
+@keyframes popupShow {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /* ANIMATION */
@@ -311,4 +355,31 @@ td.status {
         transform: scale(1);
         opacity: 1;
     }
+}
+
+/* RADIO BUTTON STYLING */
+
+.status-radio-group {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-weight: 500;
+}
+
+.radio-label input[type="radio"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.radio-label input[type="radio"]:focus {
+    outline: 2px solid #a18cd1;
 }

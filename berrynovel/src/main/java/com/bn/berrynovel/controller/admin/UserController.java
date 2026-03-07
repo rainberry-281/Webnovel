@@ -73,4 +73,10 @@ public class UserController {
         return "redirect:/admin/user";
     }
 
+    @PostMapping("/toggle-status/{id}")
+    public String toggleUserStatus(@PathVariable Integer id) {
+        this.userService.toggleUserStatus(id);
+        return "redirect:/admin/user";
+    }
+
 }

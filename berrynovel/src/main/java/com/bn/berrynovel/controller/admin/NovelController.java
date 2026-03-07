@@ -50,7 +50,15 @@ public class NovelController {
 
     @PostMapping("/create")
     public String postCreateNovel(@ModelAttribute("newNovel") Novel novel,
-            @RequestParam(value = "images", required = false) MultipartFile file) {
+            @RequestParam(value = "images", required = false) MultipartFile file,
+            @RequestParam(value = "genreIds", required = false) List<Integer> genreIds) {
+        if (genreIds != null && !genreIds.isEmpty()) {
+            List<Genre> genres = genreIds.stream()
+                    .map(id -> this.genreRepository.findById(id).orElse(null))
+                    .filter(g -> g != null)
+                    .toList();
+            novel.setGenres(genres);
+        }
         this.novelService.updateNovel(novel, file);
         return "redirect:/admin/novel";
     }
@@ -66,8 +74,22 @@ public class NovelController {
 
     @PostMapping("/update")
     public String updateNovelPage(@ModelAttribute("newNovel") Novel novel,
-            @RequestParam(value = "images", required = false) MultipartFile file) {
+            @RequestParam(value = "images", required = false) MultipartFile file,
+            @RequestParam(value = "genreIds", required = false) List<Integer> genreIds) {
+        if (genreIds != null && !genreIds.isEmpty()) {
+            List<Genre> genres = genreIds.stream()
+                    .map(id -> this.genreRepository.findById(id).orElse(null))
+                    .filter(g -> g != null)
+                    .toList();
+            novel.setGenres(genres);
+        }
         this.novelService.updateNovel(novel, file);
+        return "redirect:/admin/novel";
+    }
+
+    @PostMapping("/toggle-status/{id}")
+    public String toggleNovelStatus(@PathVariable Integer id) {
+        this.novelService.toggleNovelStatus(id);
         return "redirect:/admin/novel";
     }
 }

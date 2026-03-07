@@ -2,7 +2,6 @@ package com.bn.berrynovel.service;
 
 import java.util.Optional;
 import java.util.List;
-import java.util.Locale.Category;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,5 +53,33 @@ public class NovelService {
 
     public List<Genre> getAllGenres() {
         return this.genreRepository.findAll();
+    }
+
+    public void saveGenre(Genre genre) {
+        this.genreRepository.save(genre);
+    }
+
+    public void actionGenre(int id) {
+        Genre genreInDataBase = this.genreRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Genre not found"));
+        genreInDataBase.setStatus(!genreInDataBase.getStatus());
+        this.genreRepository.save(genreInDataBase);
+    }
+
+    public void updateGenre(Genre genre) {
+        Genre genreInDataBase = this.genreRepository.findById(genre.getId())
+                .orElseThrow(() -> new RuntimeException("Genre not found"));
+        if (genreInDataBase != null) {
+            genreInDataBase.setName(genre.getName());
+            genreInDataBase.setCode(genre.getCode());
+            this.genreRepository.save(genreInDataBase);
+        }
+    }
+
+    public void toggleNovelStatus(int id) {
+        Novel novelInDataBase = this.novelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Novel not found"));
+        novelInDataBase.setStatus(!novelInDataBase.getStatus());
+        this.novelRepository.save(novelInDataBase);
     }
 }

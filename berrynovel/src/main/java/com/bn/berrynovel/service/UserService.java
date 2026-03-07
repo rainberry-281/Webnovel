@@ -69,4 +69,11 @@ public class UserService {
     public User getUserByUsername(String username) {
         return this.userRepository.findByUsername(username);
     }
+
+    public void toggleUserStatus(int id) {
+        User userInDataBase = this.userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userInDataBase.setStatus(!userInDataBase.getStatus());
+        this.userRepository.save(userInDataBase);
+    }
 }

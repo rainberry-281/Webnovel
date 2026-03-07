@@ -18,7 +18,7 @@ import jakarta.persistence.FetchType;
 public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String name;
 
@@ -31,11 +31,11 @@ public class Genre {
     @Column(nullable = false)
     private boolean status = true;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -69,5 +69,9 @@ public class Genre {
 
     public void setNovels(List<Novel> novels) {
         this.novels = novels;
+    }
+
+    public boolean getStatus() {
+        return status;
     }
 }
