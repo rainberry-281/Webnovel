@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -22,7 +22,7 @@
     <div class="layout">
 
         <!-- SIDEBAR -->
-        <div th:insert="admin/layout/sidebar :: sidebar"></div>
+        <div th:replace="~{admin/layout/sidebar :: sidebar}"></div>
 
         <!-- MAIN -->
         <div class="main-content">

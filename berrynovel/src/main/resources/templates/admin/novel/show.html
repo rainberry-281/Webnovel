@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,7 @@
     <div class="layout">
 
         <!-- SIDEBAR -->
-        <div th:replace="admin/layout/sidebar :: sidebar"></div>
+        <div th:replace="~{admin/layout/sidebar :: sidebar}"></div>
 
 
         <!-- MAIN CONTENT -->
@@ -72,7 +72,7 @@
                                         <i class="fa-solid fa-eye"></i>
                                     </button>
 
-                                    <a href="updateNovel.html" class="btn btn-edit">
+                                    <a th:href="@{/admin/novel/update/{id}(id=${novel.id})}" class="btn btn-edit">
                                         <i class="fa-solid fa-pen"></i>
                                     </a>
 

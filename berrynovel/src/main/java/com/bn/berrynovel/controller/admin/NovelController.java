@@ -6,16 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.bn.berrynovel.repository.GenreRepository;
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.domain.Novel;
+import com.bn.berrynovel.domain.Genre;
 
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import com.bn.berrynovel.service.ImageService;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 @RequestMapping("/admin/novel")
@@ -47,10 +49,25 @@ public class NovelController {
     }
 
     @PostMapping("/create")
-    public String postCreateNovel(@ModelAttribute("novel") Novel novel,
+    public String postCreateNovel(@ModelAttribute("newNovel") Novel novel,
             @RequestParam(value = "images", required = false) MultipartFile file) {
-        this.novelService.saveNovel(novel, file);
+        this.novelService.updateNovel(novel, file);
         return "redirect:/admin/novel";
     }
 
+    @GetMapping("/update/{id}")
+    public String getNovelUpdatePage(@PathVariable("id") int id, Model model) {
+        Novel novel = this.novelService.getNovelById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid novel id: " + id));
+        model.addAttribute("newNovel", novel);
+        model.addAttribute("genres", this.novelService.getAllGenres());
+        return "admin/novel/update";
+    }
+
+    @PostMapping("/update")
+    public String updateNovelPage(@ModelAttribute("newNovel") Novel novel,
+            @RequestParam(value = "images", required = false) MultipartFile file) {
+        this.novelService.updateNovel(novel, file);
+        return "redirect:/admin/novel";
+    }
 }

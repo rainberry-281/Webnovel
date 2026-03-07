@@ -23,7 +23,7 @@ public class NovelService {
         this.imageService = imageService;
     }
 
-    public void saveNovel(Novel novel, MultipartFile file) {
+    public void updateNovel(Novel novel, MultipartFile file) {
         // if (novel.getGenres() != null && !novel.getGenres().isEmpty()) {
         // Genre genreInDataBase =
         // this.genreRepository.findByCode(novel.getGenres().get(0).getCode());
