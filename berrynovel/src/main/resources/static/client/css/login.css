@@ -22,18 +22,45 @@ body {
 .login-container h2 {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 1.6rem !important;
 }
 
 .form-group {
     margin-bottom: 15px;
+    position: relative;
 }
 
 input {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 5px;
+    padding: 12px 10px;
+    border-radius: 12px;
     border: 1px solid #ccc;
+    font-size: 1.2rem;
+}
+
+label {
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    color: #999;
+    /* background: #F1EEE3; */
+    padding: 0 5px;
+}
+
+input:focus,
+input:valid {
+    border: 1.5px solid #667eea;
+    outline: none;
+}
+
+input:focus~label,
+input:not(:placeholder-shown)~label {
+    transform: translateY(-22px) scale(0.85);
+    color: #667eea;
+    background: #F1EEE3;
+    padding: 0 5px;
 }
 
 button {
@@ -43,6 +70,6 @@ button {
     border: none;
     color: white;
     font-size: 16px;
-    border-radius: 5px;
+    border-radius: 12px;
     cursor: pointer;
 }

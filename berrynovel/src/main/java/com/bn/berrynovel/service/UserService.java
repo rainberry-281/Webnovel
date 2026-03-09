@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.bn.berrynovel.domain.User;
 import com.bn.berrynovel.domain.Role;
+import com.bn.berrynovel.domain.dto.RegisterDTO;
 import com.bn.berrynovel.repository.UserRepository;
 import com.bn.berrynovel.repository.RoleRepository;
 
@@ -24,6 +25,19 @@ public class UserService {
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
+    }
+
+    public void createUserByClient(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setUsername(registerDTO.getUsername());
+        user.setFullName(registerDTO.getFullName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPhoneNumber(registerDTO.getPhoneNumber());
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
+        user.setRole(this.roleRepository.findByName("USER"));
+        String imageName = "defaultavatar.png";
+        user.setImage(imageName);
+        User savedUser = this.userRepository.save(user);
     }
 
     public void adminCreateUser(User user, MultipartFile file) {

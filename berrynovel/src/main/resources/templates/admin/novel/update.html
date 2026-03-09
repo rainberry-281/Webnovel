@@ -138,14 +138,12 @@
         const uploadBox = document.querySelector('.upload-box');
         const currentImageElement = document.getElementById('currentImage');
 
-        // Check if there's a current image on page load
         if (currentImageElement && currentImageElement.value) {
             const currentImageName = currentImageElement.value;
             const imagePath = currentImageElement.dataset.imagepath || '/images/novel/';
             imagePreview.src = imagePath + currentImageName;
             previewContainer.style.display = 'flex';
 
-            // Set up flex layout
             uploadContainer.style.display = 'flex';
             uploadContainer.style.gap = '20px';
             uploadContainer.style.alignItems = 'flex-start';
@@ -168,7 +166,7 @@
                     imagePreview.src = e.target.result;
                     previewContainer.style.display = 'block';
 
-                    // Change layout to flex when image is selected
+
                     uploadContainer.style.display = 'flex';
                     uploadContainer.style.gap = '20px';
                     uploadContainer.style.alignItems = 'flex-start';
@@ -184,7 +182,6 @@
                 reader.readAsDataURL(file);
             } else {
                 previewContainer.style.display = 'none';
-                // Reset to full width when file is removed
                 uploadContainer.style.display = 'block';
                 uploadBox.style.flex = '';
                 uploadBox.style.margin = '';

@@ -15,27 +15,25 @@
 </head>
 
 <body>
-    <div th id="logo">
-        <!-- <img src="https://www.svgrepo.com/show/404187/strawberry.svg" class="strawberry" alt="strawberry">
-        <div class="berrynovel">berryNovel</div> -->
-    </div>
+    <div th:replace="~{client/layout/logo :: logo}"></div>
+
     <div class="login-container">
         <h2>Login</h2>
-        <form action="/login">
+        <form th:action="@{/login}" th:object="${loginUser}" method="post">
             <div class="form-group">
+                <input th:field="*{username}" type="text" id="username" placeholder=" ">
                 <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Nhập username">
             </div>
 
             <div class="form-group">
+                <input th:field="*{password}" type="password" id="password" placeholder=" ">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Nhập password">
             </div>
             <button type="submit">Login</button>
         </form>
     </div>
 
-    <script src="/src/main/resources/static/client/js/logo.js"></script>
+    <!-- <script th:src="@{/client/js/logo.js}"></script> -->
 </body>
 
 </html>

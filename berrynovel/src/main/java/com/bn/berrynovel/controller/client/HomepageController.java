@@ -1,0 +1,48 @@
+package com.bn.berrynovel.controller.client;
+
+import org.springframework.stereotype.Controller;
+import com.bn.berrynovel.service.UserService;
+
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.bn.berrynovel.service.NovelService;
+import com.bn.berrynovel.domain.dto.RegisterDTO;
+import com.bn.berrynovel.domain.User;
+
+@Controller
+public class HomepageController {
+    private final UserService userService;
+    private final NovelService novelService;
+
+    public HomepageController(UserService userService, NovelService novelService) {
+        this.userService = userService;
+        this.novelService = novelService;
+    }
+
+    @GetMapping("/")
+    public String autoDirectHomePage() {
+        return "redirect:/home";
+    }
+
+    @GetMapping("/register")
+    public String getRegistrationPage(Model model) {
+        model.addAttribute("newUser", new RegisterDTO());
+        return "client/auth/register";
+    }
+
+    @PostMapping("/register")
+    public String handelRegister(@ModelAttribute("newUser") RegisterDTO registerDTO) {
+
+        this.userService.createUserByClient(registerDTO);
+        return "redirect:/login";
+    }
+
+    @GetMapping("/login")
+    public String getLoginPage(Model model) {
+        model.addAttribute("loginUser", new User());
+        return "client/auth/login";
+    }
+}

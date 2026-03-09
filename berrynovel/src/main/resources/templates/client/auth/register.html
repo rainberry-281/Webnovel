@@ -1,64 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>register</title>
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/register.css">
+    <link rel="stylesheet" th:href="@{/client/css/register.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/logo.css">
+    <link rel="stylesheet" th:href="@{/client/css/logo.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/main.css">
+    <link rel="stylesheet" th:href="@{/client/css/main.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/font.css">
+    <link rel="stylesheet" th:href="@{/client/css/font.css}">
 </head>
 
 <body>
-    <div id="logo">
-        <!-- <img src="https://www.svgrepo.com/show/404187/strawberry.svg" class="strawberry" alt="strawberry">
-        <div class="berrynovel">berryNovel</div> -->
-    </div>
+    <div th:replace="~{client/layout/logo :: logo}"></div>
 
     <div class="register-box">
         <h2>Register</h2>
 
-        <form action="/register">
+        <form th:action="@{/register}" method="post" th:object="${newUser}">
             <div class="form-group">
-                <label for="fullname">Fullname</label>
-                <input type="text" id="fullname" placeholder="Nhập fullname">
+                <input th:field="*{fullName}" type="text" id="fullName" placeholder=" ">
+                <label for="fullName">Fullname</label>
             </div>
 
             <div class="form-group">
+                <input th:field="*{username}" type="text" id="username" placeholder=" ">
                 <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Nhập username">
             </div>
 
             <div class="form-group">
+                <input th:field="*{email}" type="text" id="email" placeholder=" ">
                 <label for="email">Email</label>
-                <input type="text" id="email" placeholder="Nhập email">
             </div>
 
             <div class="form-group">
-                <label for="phonenumber">Phone Number</label>
-                <input type="tel" id="phonenumber" placeholder="Nhập phone number">
+                <input th:field="*{phoneNumber}" type="tel" id="phoneNumber" placeholder=" ">
+                <label for="phoneNumber">Phone Number</label>
             </div>
 
             <div class="form-group">
+                <input th:field="*{password}" type="password" id="password" placeholder=" ">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Nhập password">
             </div>
 
             <div class="form-group">
-                <label for="comfirmpassword">Comfirm Password</label>
-                <input type="password" id="confirmpassword" placeholder="Xác nhận password">
+                <input th:field="*{confirmPassword}" type="password" id="confirmPassword" placeholder=" ">
+                <label for="confirmPassword">Confirm Password</label>
             </div>
 
             <button type="submit">Register</button>
         </form>
     </div>
 
-    <script src="/src/main/resources/static/client/js/logo.js"></script>
+    <!-- <script th:src="@{/client/js/logo.js}"></script> -->
 </body>
 
 </html>

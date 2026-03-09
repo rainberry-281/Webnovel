@@ -77,7 +77,8 @@
 
                     <div class="form-group">
                         <label>Avatar:</label>
-                        <input type="hidden" id="currentImage" th:value="*{image}" th:if="*{image}">
+                        <input type="hidden" id="currentImage" th:value="*{image}" th:if="*{image}"
+                            th:data-imagepath="@{/images/avatar/}">
                         <div id="uploadContainer" style="width: 100%;">
                             <div class="upload-box">
                                 <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
@@ -117,9 +118,10 @@
         const currentImageElement = document.getElementById('currentImage');
 
         // Check if there's a current image on page load
-        if (currentImageElement) {
+        if (currentImageElement && currentImageElement.value) {
             const currentImageName = currentImageElement.value;
-            imagePreview.src = '/images/user/' + currentImageName;
+            const imagePath = currentImageElement.dataset.imagepath || '/images/avatar/';
+            imagePreview.src = imagePath + currentImageName;
             previewContainer.style.display = 'flex';
 
             // Set up flex layout
