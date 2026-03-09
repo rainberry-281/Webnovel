@@ -137,12 +137,11 @@ textarea.form-control {
     text-align: center;
     cursor: pointer;
     position: relative;
-    transition: 0.2s;
 }
 
-.upload-box:hover {
+/* .upload-box:hover {
     background: #f0f6ff;
-}
+} */
 
 .upload-box input {
     position: absolute;

@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/login.css">
+    <link rel="stylesheet" th:href="@{/client/css/login.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/logo.css">
+    <link rel="stylesheet" th:href="@{/client/css/logo.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/main.css">
+    <link rel="stylesheet" th:href="@{/client/css/main.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/font.css">
+    <link rel="stylesheet" th:href="@{/client/css/font.css}">
 </head>
 
 <body>
-    <div id="logo">
+    <div th id="logo">
         <!-- <img src="https://www.svgrepo.com/show/404187/strawberry.svg" class="strawberry" alt="strawberry">
         <div class="berrynovel">berryNovel</div> -->
     </div>

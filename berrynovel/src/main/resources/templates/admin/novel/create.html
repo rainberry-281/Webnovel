@@ -111,14 +111,21 @@
 
                         <label>Cover image:</label>
 
-                        <div class="upload-box">
+                        <div id="uploadContainer" style="width: 100%;">
+                            <div class="upload-box">
 
-                            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
 
-                            <p>Upload cover image</p>
+                                <p>Upload cover image</p>
 
-                            <input type="file" name="images">
+                                <input type="file" name="images" id="imageInput" accept=".png, .jpg, .jpeg">
 
+                            </div>
+
+                            <div id="previewContainer" style="display:none;">
+                                <img id="imagePreview" src="" alt="Image Preview"
+                                    style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover;">
+                            </div>
                         </div>
 
                     </div>
@@ -139,6 +146,47 @@
     </div>
 
     <!-- <script src="/src/main/resources/static/admin/js/sidebar.js"></script> -->
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadContainer = document.getElementById('uploadContainer');
+        const uploadBox = document.querySelector('.upload-box');
+
+        imageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+
+                    // Change layout to flex when image is selected
+                    uploadContainer.style.display = 'flex';
+                    uploadContainer.style.gap = '20px';
+                    uploadContainer.style.alignItems = 'flex-start';
+                    uploadBox.style.flex = '1';
+                    uploadBox.style.margin = '0';
+                    previewContainer.style.flex = '0 0 auto';
+                    previewContainer.style.display = 'flex';
+                    previewContainer.style.alignItems = 'center';
+                    previewContainer.style.justifyContent = 'center';
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+                // Reset to full width when file is removed
+                uploadContainer.style.display = 'block';
+                uploadBox.style.flex = '';
+                uploadBox.style.margin = '';
+                previewContainer.style.flex = '';
+            }
+        });
+    </script>
 
 </body>
 

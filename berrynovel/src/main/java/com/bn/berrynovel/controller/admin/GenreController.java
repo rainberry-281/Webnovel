@@ -1,5 +1,7 @@
 package com.bn.berrynovel.controller.admin;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,7 +25,9 @@ public class GenreController {
 
     @GetMapping()
     public String getGenreList(Model model) {
-        model.addAttribute("genres", this.novelService.getAllGenres());
+        List<Genre> genres = this.novelService.getAllGenres();
+        System.out.println(">>>>>>> genre list: " + genres);
+        model.addAttribute("genres", genres);
         model.addAttribute("genre", new Genre());
         return "admin/genre/show";
     }

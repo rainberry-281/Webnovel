@@ -99,15 +99,21 @@
                     <!-- COVER IMAGE -->
                     <div class="form-group">
                         <label>Cover image:</label>
-                        <div class="upload-box">
-                            <img th:if="*{image}" th:src="@{/images/novel/{image}(image=*{image})}"
-                                style="width:120px;border-radius:8px;margin-bottom:10px" alt="Novel cover">
+                        <input type="hidden" id="currentImage" th:value="*{image}" th:if="*{image}"
+                            th:data-imagepath="@{/images/novel/}">
+                        <div id="uploadContainer" style="width: 100%;">
+                            <div class="upload-box">
+                                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
 
-                            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                <p>Upload cover image</p>
 
-                            <p>Upload cover image</p>
+                                <input type="file" name="images" id="imageInput" accept=".png, .jpg, .jpeg">
+                            </div>
 
-                            <input type="file" name="images">
+                            <div id="previewContainer" style="display:none;">
+                                <img id="imagePreview" src="" alt=""
+                                    style="max-width: 250px; max-height: 250px; border-radius: 8px; object-fit: cover;">
+                            </div>
                         </div>
                     </div>
 
@@ -123,6 +129,70 @@
     </div>
 
     <script src="/src/main/resources/static/admin/js/sidebar.js"></script>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadContainer = document.getElementById('uploadContainer');
+        const uploadBox = document.querySelector('.upload-box');
+        const currentImageElement = document.getElementById('currentImage');
+
+        // Check if there's a current image on page load
+        if (currentImageElement && currentImageElement.value) {
+            const currentImageName = currentImageElement.value;
+            const imagePath = currentImageElement.dataset.imagepath || '/images/novel/';
+            imagePreview.src = imagePath + currentImageName;
+            previewContainer.style.display = 'flex';
+
+            // Set up flex layout
+            uploadContainer.style.display = 'flex';
+            uploadContainer.style.gap = '20px';
+            uploadContainer.style.alignItems = 'flex-start';
+            uploadBox.style.flex = '1';
+            uploadBox.style.margin = '0';
+            uploadBox.style.minWidth = '0';
+            previewContainer.style.flex = '0 0 auto';
+            previewContainer.style.display = 'flex';
+            previewContainer.style.alignItems = 'center';
+            previewContainer.style.justifyContent = 'center';
+        }
+
+        imageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+
+                    // Change layout to flex when image is selected
+                    uploadContainer.style.display = 'flex';
+                    uploadContainer.style.gap = '20px';
+                    uploadContainer.style.alignItems = 'flex-start';
+                    uploadBox.style.flex = '1';
+                    uploadBox.style.margin = '0';
+                    uploadBox.style.minWidth = '0';
+                    previewContainer.style.flex = '0 0 auto';
+                    previewContainer.style.display = 'flex';
+                    previewContainer.style.alignItems = 'center';
+                    previewContainer.style.justifyContent = 'center';
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+                // Reset to full width when file is removed
+                uploadContainer.style.display = 'block';
+                uploadBox.style.flex = '';
+                uploadBox.style.margin = '';
+                uploadBox.style.minWidth = '';
+                previewContainer.style.flex = '';
+            }
+        });
+    </script>
 
 </body>
 

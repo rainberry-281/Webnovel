@@ -31,7 +31,7 @@ public class UserService {
         user.setRole(roleInDataBase);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        String imageName = "image.png";
+        String imageName = "defaultavatar.png";
         if (file != null && !file.isEmpty()) {
             // Nếu người dùng có upload ảnh
             imageName = this.imageService.handleImage(file, "avatar");
@@ -51,8 +51,12 @@ public class UserService {
         currentUser.setPhoneNumber(user.getPhoneNumber());
 
         if (file != null && !file.isEmpty()) {
-            String imageName = this.imageService.handleImage(file, "avatar");
-            currentUser.setImage(imageName);
+            if (currentUser.getImage() != null
+                    && !currentUser.getImage().isEmpty()
+                    && !currentUser.getImage().equals("defaultavatar.png")) {
+                String imageName = this.imageService.handleImage(file, "avatar");
+                currentUser.setImage(imageName);
+            }
         }
 
         return this.userRepository.save(currentUser);
@@ -70,7 +74,7 @@ public class UserService {
         return this.userRepository.findByUsername(username);
     }
 
-    public void toggleUserStatus(int id) {
+    public void softDeleteUser(int id) {
         User userInDataBase = this.userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userInDataBase.setStatus(!userInDataBase.getStatus());

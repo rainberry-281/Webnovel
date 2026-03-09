@@ -24,7 +24,7 @@ public class ImageService {
             return null;
         }
         String finalName = "";
-        String rootPath = this.servletContext.getRealPath("/resources/images");
+        String rootPath = System.getProperty("user.dir") + "/src/main/resources/static/images";
         byte[] bytes;
         try {
             bytes = file.getBytes();

@@ -55,6 +55,7 @@ public class UserController {
         if (userBindingResult.hasErrors()) {
             return "admin/user/create";
         }
+
         this.userService.adminCreateUser(user, file);
         return "redirect:/admin/user";
     }
@@ -68,14 +69,14 @@ public class UserController {
 
     @PostMapping("/update/{id}")
     public String updateUserPage(@PathVariable int id, @ModelAttribute("newUser") User user,
-            @RequestParam(value = "imageFile", required = false) MultipartFile file) {
+            @RequestParam(value = "images", required = false) MultipartFile file) {
         this.userService.updateUser(user, file);
         return "redirect:/admin/user";
     }
 
-    @PostMapping("/toggle-status/{id}")
-    public String toggleUserStatus(@PathVariable Integer id) {
-        this.userService.toggleUserStatus(id);
+    @PostMapping("/ban/{id}")
+    public String banUser(@PathVariable Integer id) {
+        this.userService.softDeleteUser(id);
         return "redirect:/admin/user";
     }
 
