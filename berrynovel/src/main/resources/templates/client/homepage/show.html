@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" th:href="@{/client/css/main.css}">
 
-    <link rel="stylesheet" th:href="@{/client/css/navigation.css}">
+    <link rel="stylesheet" th:href="@{/client/css/navitigation.css}">
 
     <link rel="stylesheet" th:href="@{/client/css/font.css}">
 
@@ -37,8 +37,8 @@
                 </div>
 
                 <div class="col-lg-7">
-                    <img th:src="@{/images/novel/z7584053799537_3767597718be6ab6cea484a896630b62.jpg}"
-                        class="img-fluid hero-img">
+                    <!-- <img th:src="@{/images/novel/z7584053799537_3767597718be6ab6cea484a896630b62.jpg}"
+                        class="img-fluid hero-img"> -->
                 </div>
             </div>
         </section>
@@ -46,94 +46,34 @@
         <section class="container my-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold section-title">SÁNG TÁC</h4>
-                <a th:href="@{/client/category}" class="text-muted">Xem thêm</a>
+                <!-- <a th:href="@{/client/category}" class="text-muted">Xem thêm</a> -->
             </div>
-
             <div class="row g-4">
-                <a class="novel col-4 col-md-3 col-xl-2" th:href="@{/client/novel}">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                        <img th:src="@{/images/novel/Screenshot 2026-02-10 202954.png}" class="card-img-top"
-                            alt="Tên truyện">
-                        <div class="overlay">
-                            <h6 class="mb-1 fw-bold text-white text-truncate">
-                                Yondome wa Iyana Shi Zokusei Majutsushi
-                            </h6>
-                            <small class="text-light">Tác giả: Densuke</small>
-                        </div>
-                    </div>
-                </a>
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2" th:each="novel : ${novels}">
+                    <a class="novel text-decoration-none" th:href="@{/novel/{id}(id=${novel.id})}">
+                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
 
-                <a class="novel col-4 col-md-3 col-xl-2" href="#">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                        <img th:src="@{/images/novel/Screenshot 2026-02-10 203345.png}" class="card-img-top"
-                            alt="Tên truyện">
-                        <div class="overlay">
-                            <h6 class="mb-1 fw-bold text-white text-truncate">
-                                Around 40 Kenja no Isekai Seikatsu Nikki
-                            </h6>
-                            <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
-                        </div>
-                    </div>
-                </a>
+                            <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
+                                alt="Tên truyện">
 
-                <a class="novel col-4 col-md-3 col-xl-2" href="#">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                        <img th:src="@{/images/novel/Screenshot 2026-02-10 203345.png}" class="card-img-top"
-                            alt="Tên truyện">
-                        <div class="overlay">
-                            <h6 class="mb-1 fw-bold text-white text-truncate">
-                                Around 40 Kenja no Isekai Seikatsu Nikki
-                            </h6>
-                            <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
-                        </div>
-                    </div>
-                </a>
+                            <div class="overlay">
+                                <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
 
-                <a class="novel col-4 col-md-3 col-xl-2" href="#">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                        <img th:src="@{/images/novel/Screenshot 2026-02-10 203345.png}" class="card-img-top"
-                            alt="Tên truyện">
-                        <div class="overlay">
-                            <h6 class="mb-1 fw-bold text-white text-truncate">
-                                Around 40 Kenja no Isekai Seikatsu Nikki
-                            </h6>
-                            <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
+                                <small class="text-light" th:text="'Tác giả: ' + ${novel.author}"></small>
+                            </div>
                         </div>
-                    </div>
-                </a>
-
-                <a class="novel col-4 col-md-3 col-xl-2" href="#">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                        <img th:src="@{/images/novel/Screenshot 2026-02-10 203345.png}" class="card-img-top"
-                            alt="Tên truyện">
-                        <div class="overlay">
-                            <h6 class="mb-1 fw-bold text-white text-truncate">
-                                Around 40 Kenja no Isekai Seikatsu Nikki
-                            </h6>
-                            <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
-                        </div>
-                    </div>
-                </a>
-
-                <a class="novel col-4 col-md-3 col-xl-2" href="#">
-                    <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
-                        <img th:src="@{/images/novel/Screenshot 2026-02-10 203345.png}" class="card-img-top"
-                            alt="Tên truyện">
-                        <div class="overlay">
-                            <h6 class="mb-1 fw-bold text-white text-truncate">
-                                Around 40 Kenja no Isekai Seikatsu Nikki
-                            </h6>
-                            <small class="text-light">Tác giả: Kotobuki Yasukiyo</small>
-                        </div>
-                    </div>
-                </a>
+                    </a>
+                </div>
             </div>
         </section>
 
-        <footer class="footer text-center py-4">
+        <!-- <footer class="footer text-center py-4">
             <h4>© 2026 berryNovel</h4>
-        </footer>
+        </footer> -->
     </div>
+    <footer class="footer text-center py-4">
+        <h4>© 2026 berryNovel</h4>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

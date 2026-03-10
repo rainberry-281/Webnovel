@@ -15,4 +15,5 @@ public class SecurityConfiguration {
         // Để mã hóa password cho người dùng
         return new BCryptPasswordEncoder();
     }
+
 }

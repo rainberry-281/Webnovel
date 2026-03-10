@@ -1,9 +1,10 @@
-<nav id="mainNavbar" class="navbar navbar-expand-lg navbar-light custom-navbar shadow-sm fixed-top headroom">
+<nav th:fragment="navbar" id="mainNavbar"
+    class="navbar navbar-expand-lg navbar-light custom-navbar shadow-sm fixed-top headroom">
     <div class="container align-items-center">
 
         <div class="d-flex align-items-center gap-3 flex-grow-1">
 
-            <div id="logo"></div>
+            <div th:replace="~{client/layout/logo :: logo}"></div>
             <!-- <a class="navbar-brand d-flex align-items-center gap-2 mb-0" href="../homepage/homepage.html">
                 <img src="https://www.svgrepo.com/show/404187/strawberry.svg" width="30">
                 <span class="fw-bold">berryNovel</span>
@@ -22,11 +23,11 @@
 
         <div class="collapse navbar-collapse " id="mainNav">
             <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
-                <li class="nav-item"><a class="nav-link active" href="../homepage/homepage.html">Home</a></li>
-                <li class="nav-item"><a class="nav-link active" href="../category/category.html">Genre</a></li>
-                <li class="nav-item"><a class="nav-link active" href="../library/bookshelf.html">Library</a></li>
-                <li class="nav-item fw-bold"><a href="../auth/login.html">Login</a>/<a
-                        href="../auth/register.html">Register</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/home}">Home</a></li>
+                <!-- <li class="nav-item"><a class="nav-link active" href="../category/category.html">Genre</a></li>
+                <li class="nav-item"><a class="nav-link active" href="../library/bookshelf.html">Library</a></li> -->
+                <li class="nav-item fw-bold"><a th:href="@{/login}">Login</a>/<a th:href="@{/register}">Register</a>
+                </li>
             </ul>
         </div>
 

@@ -22,6 +22,12 @@ public class HomepageController {
         this.novelService = novelService;
     }
 
+    @GetMapping("/home")
+    public String getHomePage(Model model) {
+        model.addAttribute("novels", this.novelService.getNovels());
+        return "client/homepage/show";
+    }
+
     @GetMapping("/")
     public String autoDirectHomePage() {
         return "redirect:/home";
@@ -45,4 +51,5 @@ public class HomepageController {
         model.addAttribute("loginUser", new User());
         return "client/auth/login";
     }
+
 }

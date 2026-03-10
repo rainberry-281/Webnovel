@@ -82,4 +82,8 @@ public class NovelService {
         novelInDataBase.setStatus(!novelInDataBase.getStatus());
         this.novelRepository.save(novelInDataBase);
     }
+
+    public List<Novel> getNovels() {
+        return this.novelRepository.findByStatus(true);
+    }
 }

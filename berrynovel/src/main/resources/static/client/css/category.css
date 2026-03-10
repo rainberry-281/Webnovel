@@ -3,6 +3,10 @@ body {
     background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
 }
 
+.page-wrapper {
+    min-height: 100vh;
+}
+
 /* .filter-box {
     position: sticky;
     top: 90px;

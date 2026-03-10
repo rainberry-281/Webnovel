@@ -66,7 +66,7 @@ public class NovelController {
     @GetMapping("/update/{id}")
     public String getNovelUpdatePage(@PathVariable("id") int id, Model model) {
         Novel novel = this.novelService.getNovelById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid novel id: " + id));
+                .orElseThrow(() -> new RuntimeException("Novel not found"));
         model.addAttribute("newNovel", novel);
         model.addAttribute("genres", this.novelService.getAllGenres());
         return "admin/novel/update";
