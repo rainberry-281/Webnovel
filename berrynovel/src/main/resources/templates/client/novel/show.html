@@ -43,157 +43,160 @@
                 </div>
 
                 <div class="col-lg-9">
-                    <div class="info-card p-4 h-100">
-                        <h2 class="fw-bold mb-3" th:text="${novel.title}"></h2>
+                    <div class="row mt-3">
+                        <div class="info-card p-4 h-100">
+                            <h2 class="fw-bold mb-3" th:text="${novel.title}"></h2>
 
-                        <div th:each="genre : ${novel.genres}" class="mb-3">
-                            <span class="badge bg-secondary me-1" th:text="${genre.name}"></span>
+                            <div class="mb-3">
+                                <span th:each="genre : ${novel.genres}" class="badge bg-secondary me-1"
+                                    th:text="${genre.name}">
+                                </span>
+                            </div>
+
+                            <div class="col-md-6"><strong>Tác giả:</strong> <span th:text="${novel.author}"></span>
+                            </div>
+                            <div class="col-md-6"><strong>Trạng thái:</strong>
+                                <span class="text-success" th:text="${novel.status ? 'COMPLETED' : 'ONGOING'}"></span>
+                            </div>
+                            <div class="col-md-6"><strong>Lần cuối:</strong> 17/02/2026</div>
+
+                            <i class="fa-regular fa-heart bookmark"></i>
+
+                            <div class="mt-4">
+                                <a href="" class="btn btn-outline-primary me-2">
+                                    <i class="fa-solid fa-book-open me-1"></i> Đọc từ đầu
+                                </a>
+
+                                <a href="#" class="btn btn-outline-secondary">
+                                    <i class="fa-solid fa-bolt me-1"></i> Chương mới nhất
+                                </a>
+                            </div>
                         </div>
-
-                        <span class="badge bg-secondary me-1">Magic</span>
-                    </div>
-
-                    <div class="col-md-6"><strong>Tác giả:</strong> <span th:text="${novel.author}"></span></div>
-                    <div class="col-md-6"><strong>Trạng thái:</strong>
-                        <span class="text-success" th:text="${novel.status ? 'COMPLETED' : 'ONGOING'}"></span>
-                    </div>
-                    <div class="col-md-6"><strong>Lần cuối:</strong> 17/02/2026</div>
-
-                    <i class="fa-regular fa-heart bookmark"></i>
-
-                    <div class="mt-4">
-                        <a href="" class="btn btn-outline-primary me-2">
-                            <i class="fa-solid fa-book-open me-1"></i> Đọc từ đầu
-                        </a>
-
-                        <a href="#" class="btn btn-outline-secondary">
-                            <i class="fa-solid fa-bolt me-1"></i> Chương mới nhất
-                        </a>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row mt-5">
-            <div class="col-12">
-                <div class="intro-card p-4 p-md-5">
-                    <h4 class="fw-bold mb-4">Giới thiệu</h4>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="intro-card p-4 p-md-5">
+                        <h4 class="fw-bold mb-4">Giới thiệu</h4>
 
-                    <p th:text="${novel.description}" class="intro-text" id="introText">
-                    </p>
+                        <p th:text="${novel.description}" class="intro-text" id="introText">
+                        </p>
 
-                    <button id="toggleBtn">Xem thêm</button>
+                        <button id="toggleBtn">Xem thêm</button>
+                    </div>
                 </div>
             </div>
+
+            <section class="volume-list mt-5 rounded-4">
+                <header class="sect-header">
+                    <span class="sect-title">
+                        Vol.1: Khiên quốc Mirg
+                    </span>
+                </header>
+
+                <main class="d-lg-block">
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="list-chapters">
+                                <li class="">
+                                    <div class="chapter-name">
+                                        <a href="" title="Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai">
+                                            Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai
+                                        </a>
+                                    </div>
+                                    <div class="chapter-time">29/06/2025</div>
+                                </li>
+
+                                <li class="">
+                                    <div class="chapter-name">
+                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
+                                            Chương 1: Sự khởi đầu của kiếp thứ ba
+                                        </a>
+                                    </div>
+                                    <div class="chapter-time">31/04/2025</div>
+                                </li>
+
+                                <li class="">
+                                    <div class="chapter-name">
+                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
+                                            Chương 2: Chế độ khó khăn và sự cuồng nộ
+                                        </a>
+                                    </div>
+                                    <div class="chapter-time">01/07/2025</div>
+                                </li>
+
+                                <li class="">
+                                    <div class="chapter-name">
+                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
+                                            Chương 3: Một hikimori 6 tháng tuổi
+                                        </a>
+                                    </div>
+                                    <div class="chapter-time">01/07/2025</div>
+                                </li>
+
+                                <li class="">
+                                    <div class="chapter-name">
+                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
+                                            Chương 4: Tình yêu dành cho mặt trời
+                                        </a>
+                                    </div>
+                                    <div class="chapter-time">02/07/2025</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </main>
+            </section>
+
+            <section class="comment-section mt-5 rounded-4">
+
+                <header class="sect-header">
+                    <span class="sect-title">
+                        Bình luận
+                    </span>
+                </header>
+
+                <main class="p-3">
+                    <!-- Form comment -->
+                    <div class="comment-form mb-4">
+                        <textarea class="form-control mb-2 rounded-2" rows="3"
+                            placeholder="Viết bình luận..."></textarea>
+                        <div class="text-end">
+                            <button class="btn btn-primary">
+                                Gửi bình luận
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- List comment -->
+                    <div class="comment-list">
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <span class="comment-name">User123</span>
+                                <span class="comment-time">2 phút trước</span>
+                            </div>
+
+                            <div class="comment-text">
+                                Truyện này hay thật, đọc cuốn quá!
+                            </div>
+                        </div>
+
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <span class="comment-name">ReaderVN</span>
+                                <span class="comment-time">10 phút trước</span>
+                            </div>
+
+                            <div class="comment-text">
+                                Đoạn này main bá quá :))
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </section>
         </div>
-
-        <section class="volume-list mt-5 rounded-4">
-            <header class="sect-header">
-                <span class="sect-title">
-                    Vol.1: Khiên quốc Mirg
-                </span>
-            </header>
-
-            <main class="d-lg-block">
-                <div class="row">
-                    <div class="col-12">
-                        <ul class="list-chapters">
-                            <li class="">
-                                <div class="chapter-name">
-                                    <a href="" title="Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai">
-                                        Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai
-                                    </a>
-                                </div>
-                                <div class="chapter-time">29/06/2025</div>
-                            </li>
-
-                            <li class="">
-                                <div class="chapter-name">
-                                    <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                        Chương 1: Sự khởi đầu của kiếp thứ ba
-                                    </a>
-                                </div>
-                                <div class="chapter-time">31/04/2025</div>
-                            </li>
-
-                            <li class="">
-                                <div class="chapter-name">
-                                    <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                        Chương 2: Chế độ khó khăn và sự cuồng nộ
-                                    </a>
-                                </div>
-                                <div class="chapter-time">01/07/2025</div>
-                            </li>
-
-                            <li class="">
-                                <div class="chapter-name">
-                                    <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                        Chương 3: Một hikimori 6 tháng tuổi
-                                    </a>
-                                </div>
-                                <div class="chapter-time">01/07/2025</div>
-                            </li>
-
-                            <li class="">
-                                <div class="chapter-name">
-                                    <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                        Chương 4: Tình yêu dành cho mặt trời
-                                    </a>
-                                </div>
-                                <div class="chapter-time">02/07/2025</div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </main>
-        </section>
-
-        <section class="comment-section mt-5 rounded-4">
-
-            <header class="sect-header">
-                <span class="sect-title">
-                    Bình luận
-                </span>
-            </header>
-
-            <main class="p-3">
-                <!-- Form comment -->
-                <div class="comment-form mb-4">
-                    <textarea class="form-control mb-2 rounded-2" rows="3" placeholder="Viết bình luận..."></textarea>
-                    <div class="text-end">
-                        <button class="btn btn-primary">
-                            Gửi bình luận
-                        </button>
-                    </div>
-                </div>
-
-                <!-- List comment -->
-                <div class="comment-list">
-                    <div class="comment-item">
-                        <div class="comment-header">
-                            <span class="comment-name">User123</span>
-                            <span class="comment-time">2 phút trước</span>
-                        </div>
-
-                        <div class="comment-text">
-                            Truyện này hay thật, đọc cuốn quá!
-                        </div>
-                    </div>
-
-                    <div class="comment-item">
-                        <div class="comment-header">
-                            <span class="comment-name">ReaderVN</span>
-                            <span class="comment-time">10 phút trước</span>
-                        </div>
-
-                        <div class="comment-text">
-                            Đoạn này main bá quá :))
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </section>
-    </div>
     </div>
 
     <footer class="footer text-center py-4">

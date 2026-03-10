@@ -9,6 +9,14 @@ body {
     padding: 30px;
 }
 
+h4 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.25rem !important;
+}
+
+
+
 /* LEFT PANEL */
 
 .chapter-sidebar {
@@ -117,6 +125,7 @@ body {
 .form-row input,
 .form-row select {
     flex: 1;
+    max-width: 85%;
     border: 2px solid #222;
     border-radius: 10px;
     padding: 8px 12px;

@@ -9,17 +9,22 @@ import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.repository.GenreRepository;
 import com.bn.berrynovel.repository.NovelRepository;
 import com.bn.berrynovel.domain.Genre;
+import com.bn.berrynovel.domain.Chapter;
+import com.bn.berrynovel.repository.ChapterRepository;
 
 @Service
 public class NovelService {
     private final NovelRepository novelRepository;
     private final GenreRepository genreRepository;
+    private final ChapterRepository chapterRepository;
     private final ImageService imageService;
 
-    public NovelService(NovelRepository novelRepository, GenreRepository genreRepository, ImageService imageService) {
+    public NovelService(NovelRepository novelRepository, GenreRepository genreRepository, ImageService imageService,
+            ChapterRepository chapterRepository) {
         this.novelRepository = novelRepository;
         this.genreRepository = genreRepository;
         this.imageService = imageService;
+        this.chapterRepository = chapterRepository;
     }
 
     public void updateNovel(Novel novel, MultipartFile file) {
@@ -29,12 +34,15 @@ public class NovelService {
         // }
         // novel.setGenres(novel.getGenres().stream().map(g ->
         // this.genreRepository.findByCode(g.getCode())).toList());
-        String imageName = "";
+        Novel currentNovel = this.novelRepository.findById(novel.getId())
+                .orElseThrow(() -> new RuntimeException("Novel not found"));
+
         if (file != null && !file.isEmpty()) {
-            imageName = this.imageService.handleImage(file, "novel");
+            String imageName = this.imageService.handleImage(file, "novel");
             novel.setImage(imageName);
+        } else {
+            novel.setImage(currentNovel.getImage());
         }
-        novel.setImage(imageName);
 
         Novel savedNovel = this.novelRepository.save(novel);
     }
@@ -85,5 +93,9 @@ public class NovelService {
 
     public List<Novel> getNovels() {
         return this.novelRepository.findByStatus(true);
+    }
+
+    public List<Chapter> getChaptersByNovelId(int novelId) {
+        return this.chapterRepository.findByNovelId(novelId);
     }
 }

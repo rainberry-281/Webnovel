@@ -11,6 +11,11 @@ body {
     margin: auto;
 }
 
+h2 {
+    font-size: 1.625rem !important;
+    line-height: 2.125rem !important;
+}
+
 .info-card {
     background: #ffffff;
     border-radius: 20px;

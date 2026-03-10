@@ -68,9 +68,10 @@
 
                                 <td class="action">
 
-                                    <button class="btn btn-view">
+                                    <a th:href="@{/admin/chapter/create/{novelId}(novelId=${novel.id})}"
+                                        class="btn btn-view" title="Create Chapter">
                                         <i class="fa-solid fa-eye"></i>
-                                    </button>
+                                    </a>
 
                                     <a th:href="@{/admin/novel/update/{id}(id=${novel.id})}" class="btn btn-edit">
                                         <i class="fa-solid fa-pen"></i>
