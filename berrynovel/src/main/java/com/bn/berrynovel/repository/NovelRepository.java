@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Repository
-public interface NovelRepository extends JpaRepository<Novel, Integer> {
+public interface NovelRepository extends JpaRepository<Novel, Long> {
 
     Page<Novel> findAll(Pageable pageable);
 

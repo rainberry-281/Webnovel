@@ -7,8 +7,8 @@ import com.bn.berrynovel.domain.Chapter;
 import java.util.List;
 
 @Repository
-public interface ChapterRepository extends JpaRepository<Chapter, Integer> {
+public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     Chapter findByTitle(String title);
 
-    List<Chapter> findByNovelId(int novelId);
+    List<Chapter> findByNovelId(Long novelId);
 }

@@ -64,7 +64,7 @@ public class NovelController {
     }
 
     @GetMapping("/update/{id}")
-    public String getNovelUpdatePage(@PathVariable("id") int id, Model model) {
+    public String getNovelUpdatePage(@PathVariable("id") Long id, Model model) {
         Novel novel = this.novelService.getNovelById(id)
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
         model.addAttribute("newNovel", novel);
@@ -88,7 +88,7 @@ public class NovelController {
     }
 
     @PostMapping("/toggle-status/{id}")
-    public String toggleNovelStatus(@PathVariable Integer id) {
+    public String toggleNovelStatus(@PathVariable Long id) {
         this.novelService.toggleNovelStatus(id);
         return "redirect:/admin/novel";
     }

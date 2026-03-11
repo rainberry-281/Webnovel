@@ -92,7 +92,7 @@
             <section class="volume-list mt-5 rounded-4">
                 <header class="sect-header">
                     <span class="sect-title">
-                        Vol.1: Khiên quốc Mirg
+                        Danh sách chương
                     </span>
                 </header>
 
@@ -100,49 +100,14 @@
                     <div class="row">
                         <div class="col-12">
                             <ul class="list-chapters">
-                                <li class="">
+                                <li th:each="chapter : ${chapters}">
                                     <div class="chapter-name">
-                                        <a href="" title="Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai">
-                                            Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai
+                                        <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id}, chapterId=${chapter.id})}"
+                                            title="Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai">
+                                            <span th:text="${chapter.title}"></span>
                                         </a>
                                     </div>
                                     <div class="chapter-time">29/06/2025</div>
-                                </li>
-
-                                <li class="">
-                                    <div class="chapter-name">
-                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                            Chương 1: Sự khởi đầu của kiếp thứ ba
-                                        </a>
-                                    </div>
-                                    <div class="chapter-time">31/04/2025</div>
-                                </li>
-
-                                <li class="">
-                                    <div class="chapter-name">
-                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                            Chương 2: Chế độ khó khăn và sự cuồng nộ
-                                        </a>
-                                    </div>
-                                    <div class="chapter-time">01/07/2025</div>
-                                </li>
-
-                                <li class="">
-                                    <div class="chapter-name">
-                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                            Chương 3: Một hikimori 6 tháng tuổi
-                                        </a>
-                                    </div>
-                                    <div class="chapter-time">01/07/2025</div>
-                                </li>
-
-                                <li class="">
-                                    <div class="chapter-name">
-                                        <a href="" title="Chương 1: Sự khởi đầu của kiếp thứ ba">
-                                            Chương 4: Tình yêu dành cho mặt trời
-                                        </a>
-                                    </div>
-                                    <div class="chapter-time">02/07/2025</div>
                                 </li>
                             </ul>
                         </div>

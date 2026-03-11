@@ -21,7 +21,7 @@ import jakarta.persistence.GenerationType;
 public class Novel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String title;
 
@@ -48,11 +48,11 @@ public class Novel {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

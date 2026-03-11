@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter</title>
+
+    <link rel="stylesheet" th:href="@{/client/css/main.css}">
+
+    <link rel="stylesheet" th:href="@{/client/css/chapter.css}">
+
+    <!-- <link rel="stylesheet" th:href="@{/client/css/font.css}"> -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- <div id="navbar"></div> -->
+
+    <div class="reading-page">
+        <section class="rd-side-icons">
+            <a class="rd_sd-button_item rd_top-left"
+                th:href="${prev != null} ? @{/reader/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${prev.id})} : '#'"
+                th:classappend="${prev == null} ? ' disabled'">
+                <i class="fas fa-backward"></i>
+            </a>
+
+            <a class="rd_sd-button_item" th:href="@{/novel/{id}(id=${novel.id})}"><i class="fas fa-home"></i></a>
+            <a id="rd-info-btn" class="rd_sd-button_item"><i class="fas fa-info"></i></a>
+            <a class="rd_sd-button_item"><i class="fas fa-bookmark"></i></a>
+
+
+            <a class="rd_sd-button_item rd_top-right"
+                th:href="${next != null} ? @{/reader/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${next.id})} : '#'"
+                th:classappend="${next == null} ? ' disabled'">
+                <i class="fas fa-forward"></i>
+            </a>
+        </section>
+
+        <section class="rd_sidebar rdtoggle" aria-hidden="true">
+            <main class="rdtoggle_body animation fade-in-left-big">
+                <header class="rd_sidebar-header">
+                    <a th:href="@{/novel/{id}(id=${novel.id})}" class="novel-image">
+                        <img th:src="@{/images/novel/{image}(image=${novel.image})}" alt="Ảnh bìa">
+                    </a>
+
+                    <div class="rd_sidebar-name">
+                        <h5>
+                            <a th:href="@{/novel/{id}(id=${novel.id})}" th:text="${novel.title}"></a>
+                        </h5>
+
+                        <small>
+                            <i class="fas fa-pen"></i>
+                            <span th:text="${novel.author}"></span>
+                        </small>
+                    </div>
+                </header>
+
+                <!-- <ul id="chap_list" class="unstyled"> -->
+                <ul class="sub-chap_list unstyled">
+                    <li th:each="chap : ${chapters}" th:classappend="${chap.id == chapter.id} ? ' current'">
+                        <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id}, chapterId=${chap.id})}"
+                            th:text="${chap.title}">
+                        </a>
+                    </li>
+                </ul>
+                <!-- </ul> -->
+            </main>
+        </section>
+
+        <div class="black-click"></div>
+
+        <div class="container">
+            <div class="row">
+                <div class="reading-content col-12 col-lg-10 offset-lg-1" style="word-wrap: break-word;">
+                    <div class="title-top" style="padding-top: 20px;">
+                        <h2 class="title-item text-xl font-bold text-center" th:text="${novel.title}"></h2>
+
+                        <h4 class="title-item text-base font-bold text-center" th:text="${chapter.title}"></h4>
+                    </div>
+
+                    <div style="text-align: center; margin: 20px auto -20px auto;"></div>
+
+                    <div id="chapter-content" class="long-text text-justify"
+                        style="padding-left: 0px; padding-right: 0px;" th:utext="${chapter.content}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const sidebar = document.querySelector(".rd_sidebar");
+            const toggleBtn = document.getElementById("rd-info-btn");
+            const overlay = document.querySelector(".black-click");
+
+            function openSidebar() {
+                sidebar.classList.add("on");
+                document.body.classList.add("sidebar-open");
+                sidebar.setAttribute("aria-hidden", "false");
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove("on");
+                document.body.classList.remove("sidebar-open");
+                sidebar.setAttribute("aria-hidden", "true");
+            }
+
+            function toggleSidebar() {
+                sidebar.classList.toggle("on");
+
+                const isOpen = sidebar.classList.contains("on");
+                document.body.classList.toggle("sidebar-open", isOpen);
+                sidebar.setAttribute("aria-hidden", !isOpen);
+            }
+
+            toggleBtn.addEventListener("click", toggleSidebar);
+
+            overlay.addEventListener("click", closeSidebar);
+
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") {
+                    closeSidebar();
+                }
+            });
+
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const current = document.querySelector(".rd_sidebar li.current");
+            if (current) {
+                current.scrollIntoView({ block: "center" });
+            }
+        });
+    </script>
+</body>
+
+</html>

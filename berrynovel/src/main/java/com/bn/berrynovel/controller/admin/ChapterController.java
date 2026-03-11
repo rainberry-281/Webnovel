@@ -54,7 +54,7 @@ public class ChapterController {
     // }
 
     @GetMapping("/create/{novelId}")
-    public String createPage(@PathVariable("novelId") int novelId, Model model) {
+    public String createPage(@PathVariable("novelId") Long novelId, Model model) {
         Novel novel = this.novelService.getNovelById(novelId)
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
@@ -67,7 +67,7 @@ public class ChapterController {
     }
 
     @PostMapping("/create/{novelId}")
-    public String create(@PathVariable("novelId") int novelId, Chapter chapter) {
+    public String create(@PathVariable("novelId") Long novelId, Chapter chapter) {
         Novel novel = this.novelService.getNovelById(novelId)
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
@@ -78,7 +78,7 @@ public class ChapterController {
     }
 
     @GetMapping("/update/{id}")
-    public String updatePage(@PathVariable int id, Model model) {
+    public String updatePage(@PathVariable Long id, Model model) {
 
         Chapter chapter = chapterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
@@ -95,7 +95,7 @@ public class ChapterController {
     }
 
     @PostMapping("/update/{id}")
-    public String update(@PathVariable int id, Chapter chapter) {
+    public String update(@PathVariable Long id, Chapter chapter) {
 
         Chapter oldChapter = chapterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
@@ -109,7 +109,7 @@ public class ChapterController {
     }
 
     // @PostMapping("/delete/{id}")
-    // public String delete(@PathVariable("id") int id) {
+    // public String delete(@PathVariable("id") Long id) {
     // Chapter chapter = this.chapterRepository.findById(id)
     // .orElseThrow(() -> new RuntimeException("Chapter not found"));
 

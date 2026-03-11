@@ -55,7 +55,7 @@ public class NovelService {
     // return this.novelRepository.findByStatus(true);
     // }
 
-    public Optional<Novel> getNovelById(int id) {
+    public Optional<Novel> getNovelById(long id) {
         return this.novelRepository.findById(id);
     }
 
@@ -84,7 +84,7 @@ public class NovelService {
         }
     }
 
-    public void toggleNovelStatus(int id) {
+    public void toggleNovelStatus(Long id) {
         Novel novelInDataBase = this.novelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
         novelInDataBase.setStatus(!novelInDataBase.getStatus());
@@ -95,7 +95,12 @@ public class NovelService {
         return this.novelRepository.findByStatus(true);
     }
 
-    public List<Chapter> getChaptersByNovelId(int novelId) {
+    public List<Chapter> getChaptersByNovelId(Long novelId) {
         return this.chapterRepository.findByNovelId(novelId);
+    }
+
+    public Chapter getChapterById(Long id) {
+        return this.chapterRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Chapter not found"));
     }
 }

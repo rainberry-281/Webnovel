@@ -9,6 +9,7 @@ import com.bn.berrynovel.service.NovelService;
 import org.springframework.ui.Model;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.domain.Genre;
+import com.bn.berrynovel.domain.Chapter;
 import java.util.List;
 
 @Controller
@@ -20,8 +21,12 @@ public class ClientNovelController {
     }
 
     @GetMapping("/novel/{id}")
-    public String getNovelDetailPage(@PathVariable("id") int id, Model model) {
+    public String getNovelDetailPage(@PathVariable("id") Long id, Model model) {
         Novel novel = this.novelService.getNovelById(id).orElseThrow(() -> new RuntimeException("Novel not found"));
+
+        List<Chapter> chapters = this.novelService.getChaptersByNovelId(id);
+
+        model.addAttribute("chapters", chapters);
         model.addAttribute("novel", novel);
         return "client/novel/show";
     }
