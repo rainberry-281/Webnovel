@@ -63,11 +63,15 @@
                             <i class="fa-regular fa-heart bookmark"></i>
 
                             <div class="mt-4">
-                                <a href="" class="btn btn-outline-primary me-2">
-                                    <i class="fa-solid fa-book-open me-1"></i> Đọc từ đầu
+                                <a th:if="${firstChapter != null}"
+                                    th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${firstChapter.id})}"
+                                    class="btn btn-outline-primary me-2">
+                                    Đọc từ đầu
                                 </a>
 
-                                <a href="#" class="btn btn-outline-secondary">
+                                <a th:if="${latestChapter != null}"
+                                    th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${latestChapter.id})}"
+                                    class="btn btn-outline-secondary">
                                     <i class="fa-solid fa-bolt me-1"></i> Chương mới nhất
                                 </a>
                             </div>
@@ -81,7 +85,7 @@
                     <div class="intro-card p-4 p-md-5">
                         <h4 class="fw-bold mb-4">Giới thiệu</h4>
 
-                        <p th:text="${novel.description}" class="intro-text" id="introText">
+                        <p th:utext="${novel.description}" class="intro-text" id="introText">
                         </p>
 
                         <button id="toggleBtn">Xem thêm</button>
@@ -101,13 +105,14 @@
                         <div class="col-12">
                             <ul class="list-chapters">
                                 <li th:each="chapter : ${chapters}">
-                                    <div class="chapter-name">
-                                        <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id}, chapterId=${chapter.id})}"
-                                            title="Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai">
+                                    <div class="chapter-name fw-semibold">
+                                        <a
+                                            th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id}, chapterId=${chapter.id})}">
                                             <span th:text="${chapter.title}"></span>
                                         </a>
                                     </div>
-                                    <div class="chapter-time">29/06/2025</div>
+                                    <div class="chapter-time"
+                                        th:text="${#temporals.format(chapter.createdAt, 'dd/MM/yyyy')}"></div>
                                 </li>
                             </ul>
                         </div>

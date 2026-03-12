@@ -125,6 +125,8 @@ textarea.form-control {
     padding: 12px;
     line-height: 1.6;
     font-size: 1.25rem;
+
+    border-radius: 8px;
 }
 
 

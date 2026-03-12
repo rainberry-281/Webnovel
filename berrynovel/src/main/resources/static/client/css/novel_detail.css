@@ -115,6 +115,10 @@ section.basic-section main {
     position: relative;
 }
 
+.list-chapters li:hover {
+    background-color: #f0f0f0;
+}
+
 .list-chapters li .chapter-name {
     padding-right: 86px;
     overflow: hidden;

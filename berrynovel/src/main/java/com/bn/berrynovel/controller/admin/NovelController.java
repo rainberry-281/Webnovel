@@ -1,6 +1,8 @@
 package com.bn.berrynovel.controller.admin;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Collections;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,7 +45,7 @@ public class NovelController {
 
     @GetMapping("/create")
     public String getNovelCreatePage(Model model) {
-        model.addAttribute("novel", new Novel());
+        model.addAttribute("newNovel", new Novel());
         model.addAttribute("genres", this.novelService.getAllGenres());
         return "admin/novel/create";
     }
@@ -54,12 +56,13 @@ public class NovelController {
             @RequestParam(value = "genreIds", required = false) List<Integer> genreIds) {
         if (genreIds != null && !genreIds.isEmpty()) {
             List<Genre> genres = genreIds.stream()
-                    .map(id -> this.genreRepository.findById(id).orElse(null))
+                    .map(genreId -> this.genreRepository.findById(genreId).orElse(null))
                     .filter(g -> g != null)
                     .toList();
             novel.setGenres(genres);
         }
-        this.novelService.updateNovel(novel, file);
+        novel.setCreatedAt(LocalDateTime.now());
+        this.novelService.createNovel(novel, file);
         return "redirect:/admin/novel";
     }
 
@@ -69,16 +72,19 @@ public class NovelController {
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
         model.addAttribute("newNovel", novel);
         model.addAttribute("genres", this.novelService.getAllGenres());
+        model.addAttribute("selectedGenreIds", novel.getGenres() == null ? Collections.emptyList()
+                : novel.getGenres().stream().map(Genre::getId).toList());
         return "admin/novel/update";
     }
 
-    @PostMapping("/update")
-    public String updateNovelPage(@ModelAttribute("newNovel") Novel novel,
+    @PostMapping("/update/{id}")
+    public String updateNovelPage(@PathVariable("id") Long id, @ModelAttribute("newNovel") Novel novel,
             @RequestParam(value = "images", required = false) MultipartFile file,
             @RequestParam(value = "genreIds", required = false) List<Integer> genreIds) {
+        novel.setId(id);
         if (genreIds != null && !genreIds.isEmpty()) {
             List<Genre> genres = genreIds.stream()
-                    .map(id -> this.genreRepository.findById(id).orElse(null))
+                    .map(genreId -> this.genreRepository.findById(genreId).orElse(null))
                     .filter(g -> g != null)
                     .toList();
             novel.setGenres(genres);

@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Novels")
@@ -43,6 +44,8 @@ public class Novel {
     private boolean status = true;
 
     String image;
+
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -126,5 +129,13 @@ public class Novel {
 
     public void setProgress(NovelProgress progress) {
         this.progress = progress;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

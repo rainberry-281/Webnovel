@@ -17,6 +17,35 @@
     <link rel="stylesheet" th:href="@{/admin/css/font.css}">
 
     <link rel="stylesheet" th:href="@{/admin/css/sidebar.css}">
+
+    <style>
+        .ck-editor {
+            border: 1px solid #ced4da !important;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .ck-toolbar {
+            border: none !important;
+            border-bottom: 1px solid #ced4da !important;
+        }
+
+        .ck-editor__top {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+
+        .ck-editor__editable {
+            border: none !important;
+            padding: 12px;
+            min-height: 200px;
+            width: 100%;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+    </style>
 </head>
 
 <body>
@@ -32,7 +61,7 @@
                 <div class="form-header">
                     Update Novel
                 </div>
-                <form th:action="@{/admin/novel/update}" th:object="${newNovel}" method="post"
+                <form th:action="@{/admin/novel/update/{id}(id=${newNovel.id})}" th:object="${newNovel}" method="post"
                     enctype="multipart/form-data">
                     <input type="hidden" th:field="*{id}">
                     <div class="row">
@@ -80,7 +109,7 @@
                             <div class="genre-box">
                                 <label class="genre-item" th:each="genre : ${genres}">
                                     <input type="checkbox" name="genreIds" th:value="${genre.id}"
-                                        th:checked="${#lists.contains(newNovel.genres, genre)}">
+                                        th:checked="${selectedGenreIds != null and #lists.contains(selectedGenreIds, genre.id)}">
                                     <span th:text="${genre.name}"></span>
                                 </label>
                             </div>
@@ -91,8 +120,7 @@
                     <div class="form-group">
 
                         <label>Description:</label>
-                        <textarea class="form-control" rows="5" th:field="*{description}"
-                            placeholder="Enter novel description..."></textarea>
+                        <textarea id="novelDescription" th:field="*{description}"></textarea>
 
                     </div>
 
@@ -128,7 +156,27 @@
         </div>
     </div>
 
-    <script src="/src/main/resources/static/admin/js/sidebar.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+    <script>
+        let editor;
+
+        ClassicEditor
+            .create(document.querySelector('#novelDescription'))
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        // sync dữ liệu trước khi submit
+        document.querySelector("form").addEventListener("submit", function () {
+            if (editor) {
+                document.querySelector("#novelDescription").value = editor.getData();
+            }
+        });
+    </script>
 
     <script>
         const imageInput = document.getElementById('imageInput');

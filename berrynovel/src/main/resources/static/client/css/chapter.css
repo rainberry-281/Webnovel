@@ -31,7 +31,7 @@ ul {
 }
 
 .rd-side-icons {
-    background: linear-gradient(135deg, #f6e1c3, #e9c9a8);
+    background: #f3dcc0;
     border: 1px solid #6f6d6d;
     display: flex;
     flex-direction: column;
@@ -51,6 +51,17 @@ ul {
     font-size: 20px;
     font-weight: 400;
     padding: 16px 20px;
+}
+
+.rd-side-icons {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.rd-side-icons.show {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .rd-side-icons a i {
@@ -216,8 +227,8 @@ ul {
 }
 
 #chapter-content {
-    /* font-family: 'Times New Roman', Georgia, serif; */
-    font-size: 18px;
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 20px;
     line-height: 28px;
     margin-top: 40px;
 }

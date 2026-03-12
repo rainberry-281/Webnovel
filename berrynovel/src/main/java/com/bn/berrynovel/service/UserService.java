@@ -68,6 +68,7 @@ public class UserService {
             if (currentUser.getImage() != null
                     && !currentUser.getImage().isEmpty()
                     && !currentUser.getImage().equals("defaultavatar.png")) {
+                this.imageService.deleteImage(currentUser.getImage(), "avatar");
                 String imageName = this.imageService.handleImage(file, "avatar");
                 currentUser.setImage(imageName);
             }
@@ -86,6 +87,10 @@ public class UserService {
 
     public User getUserByUsername(String username) {
         return this.userRepository.findByUsername(username);
+    }
+
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
     }
 
     public void softDeleteUser(int id) {

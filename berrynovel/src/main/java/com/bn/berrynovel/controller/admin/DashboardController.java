@@ -24,7 +24,7 @@ public class DashboardController {
         this.genreRepository = genreRepository;
     }
 
-    @GetMapping("/dashboard")
+    @GetMapping
     public String getDashboard(Model model) {
         model.addAttribute("userCount", this.userRepository.count());
         model.addAttribute("novelCount", this.novelRepository.count());

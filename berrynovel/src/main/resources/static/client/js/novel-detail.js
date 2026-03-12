@@ -1,15 +1,15 @@
 // Kết cấu của tóm tắt nội dung
-document.addEventListener("DOMContentLoaded", function() {
-    const intro = document.getElementById("introText");
-    let content = intro.innerText;
-    content = content.replace(/\. /g, ".<br>");
-    intro.innerHTML = content;
-});
+// document.addEventListener("DOMContentLoaded", function() {
+//     const intro = document.getElementById("introText");
+//     let content = intro.innerText;
+//     content = content.replace(/\. /g, ".<br>");
+//     intro.innerHTML = content;
+// });
 
 // Bookmark
 const icon = document.querySelector('.bookmark');
 
-icon.addEventListener('click', function() {
+icon.addEventListener('click', function () {
     this.classList.toggle('active');
 
     if (this.classList.contains('active')) {
@@ -27,7 +27,7 @@ icon.addEventListener('click', function() {
 const btn = document.getElementById("toggleBtn");
 const text = document.getElementById("introText");
 
-btn.addEventListener("click", function() {
+btn.addEventListener("click", function () {
     text.classList.toggle("expanded");
 
     if (text.classList.contains("expanded")) {
@@ -39,7 +39,7 @@ btn.addEventListener("click", function() {
 
 
 // Comment
-document.getElementById("submitComment").addEventListener("click", function() {
+document.getElementById("submitComment").addEventListener("click", function () {
 
     const name = document.getElementById("username").value.trim();
     const text = document.getElementById("commentInput").value.trim();

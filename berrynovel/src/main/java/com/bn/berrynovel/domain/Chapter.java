@@ -1,5 +1,7 @@
 package com.bn.berrynovel.domain;
 
+import org.springframework.cglib.core.Local;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,6 +11,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Chapters")
@@ -26,6 +29,8 @@ public class Chapter {
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String content;
+
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "novel_id")
@@ -69,6 +74,14 @@ public class Chapter {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
 }

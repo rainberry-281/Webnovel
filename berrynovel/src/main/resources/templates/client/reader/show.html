@@ -147,6 +147,22 @@
             }
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const icons = document.querySelector(".rd-side-icons");
+
+            document.addEventListener("click", function (e) {
+
+                // nếu click vào sidebar thì không toggle
+                if (e.target.closest(".rd_sidebar")) return;
+
+                icons.classList.toggle("show");
+            });
+
+        });
+    </script>
 </body>
 
 </html>

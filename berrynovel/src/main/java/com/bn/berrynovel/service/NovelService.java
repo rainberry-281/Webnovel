@@ -2,8 +2,11 @@ package com.bn.berrynovel.service;
 
 import java.util.Optional;
 import java.util.List;
+import java.util.Locale.Category;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.repository.GenreRepository;
@@ -27,24 +30,51 @@ public class NovelService {
         this.chapterRepository = chapterRepository;
     }
 
-    public void updateNovel(Novel novel, MultipartFile file) {
+    public void createNovel(Novel novel, MultipartFile file) {
         // if (novel.getGenres() != null && !novel.getGenres().isEmpty()) {
         // Genre genreInDataBase =
         // this.genreRepository.findByCode(novel.getGenres().get(0).getCode());
         // }
         // novel.setGenres(novel.getGenres().stream().map(g ->
         // this.genreRepository.findByCode(g.getCode())).toList());
-        Novel currentNovel = this.novelRepository.findById(novel.getId())
-                .orElseThrow(() -> new RuntimeException("Novel not found"));
 
+        Genre genreInDatabase = this.genreRepository.findByCode(novel.getGenres().get(0).getCode());
+        novel.setGenres(List.of(genreInDatabase));
+        String imageName = "";
         if (file != null && !file.isEmpty()) {
-            String imageName = this.imageService.handleImage(file, "novel");
+            imageName = this.imageService.handleImage(file, "novel");
             novel.setImage(imageName);
-        } else {
-            novel.setImage(currentNovel.getImage());
         }
 
         Novel savedNovel = this.novelRepository.save(novel);
+    }
+
+    @Transactional
+    public void updateNovel(Novel novel, MultipartFile file) {
+        Novel novelInDataBase = this.novelRepository.findById(novel.getId())
+                .orElseThrow(() -> new RuntimeException("Novel not found"));
+
+        if (file != null && !file.isEmpty()) {
+            this.imageService.deleteImage(novelInDataBase.getImage(), "novel");
+            String imageName = this.imageService.handleImage(file, "novel");
+            novelInDataBase.setImage(imageName);
+        }
+        novelInDataBase.setTitle(novel.getTitle());
+        novelInDataBase.setAuthor(novel.getAuthor());
+        novelInDataBase.setDescription(novel.getDescription());
+        if (novel.getGenres() != null) {
+            List<Integer> genreIds = novel.getGenres().stream()
+                    .map(Genre::getId)
+                    .filter(Objects::nonNull)
+                    .toList();
+            List<Genre> managedGenres = genreIds.isEmpty()
+                    ? List.of()
+                    : this.genreRepository.findAllById(genreIds);
+            novelInDataBase.setGenres(managedGenres);
+        }
+        novelInDataBase.setType(novel.getType());
+        novelInDataBase.setProgress(novel.getProgress());
+        this.novelRepository.save(novelInDataBase);
     }
 
     public List<Novel> getAllNovels() {
@@ -102,5 +132,13 @@ public class NovelService {
     public Chapter getChapterById(Long id) {
         return this.chapterRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
+    }
+
+    public Optional<Chapter> getFirstChapter(Long novelId) {
+        return Optional.ofNullable(this.chapterRepository.findFirstChapter(novelId));
+    }
+
+    public Optional<Chapter> getLatestChapter(Long novelId) {
+        return Optional.ofNullable(this.chapterRepository.findLastChapter(novelId));
     }
 }

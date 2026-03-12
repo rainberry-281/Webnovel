@@ -72,6 +72,7 @@ public class ChapterController {
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
         chapter.setNovel(novel);
+        chapter.setCreatedAt(java.time.LocalDateTime.now());
         this.chapterRepository.save(chapter);
 
         return "redirect:/admin/chapter/create/" + novelId;

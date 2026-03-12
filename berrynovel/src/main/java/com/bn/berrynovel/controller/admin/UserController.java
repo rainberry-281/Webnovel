@@ -1,5 +1,6 @@
 package com.bn.berrynovel.controller.admin;
 
+import com.bn.berrynovel.service.ImageService;
 import java.util.List;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
@@ -23,10 +24,12 @@ import com.bn.berrynovel.domain.User;
 @RequestMapping("/admin/user")
 public class UserController {
 
+    private final ImageService imageService;
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ImageService imageService) {
         this.userService = userService;
+        this.imageService = imageService;
     }
 
     @GetMapping
