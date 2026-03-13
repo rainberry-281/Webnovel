@@ -30,15 +30,19 @@ public class NovelService {
     }
 
     public void createNovel(Novel novel, MultipartFile file) {
-        // if (novel.getGenres() != null && !novel.getGenres().isEmpty()) {
-        // Genre genreInDataBase =
-        // this.genreRepository.findByCode(novel.getGenres().get(0).getCode());
-        // }
-        // novel.setGenres(novel.getGenres().stream().map(g ->
-        // this.genreRepository.findByCode(g.getCode())).toList());
+        if (novel.getGenres() != null) {
+            List<Integer> genreIds = novel.getGenres().stream()
+                    .map(Genre::getId)
+                    .filter(Objects::nonNull)
+                    .toList();
+            List<Genre> managedGenres = genreIds.isEmpty()
+                    ? List.of()
+                    : this.genreRepository.findAllById(genreIds);
+            novel.setGenres(managedGenres);
+        } else {
+            novel.setGenres(List.of());
+        }
 
-        Genre genreInDatabase = this.genreRepository.findByCode(novel.getGenres().get(0).getCode());
-        novel.setGenres(List.of(genreInDatabase));
         String imageName = "";
         if (file != null && !file.isEmpty()) {
             imageName = this.imageService.handleImage(file, "novel");

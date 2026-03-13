@@ -21,7 +21,7 @@
         <h2>Login</h2>
         <form th:action="@{/login}" th:object="${loginUser}" method="post">
             <div class="my-2" style="color: red;" th:if="${param.error != null}">
-                Invalid email or password.
+                Invalid username or password.
             </div>
             <div class="form-group">
                 <input th:field="*{username}" type="text" id="username" name="username">
