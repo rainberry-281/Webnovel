@@ -1,7 +1,5 @@
 package com.bn.berrynovel.domain;
 
-import org.springframework.cglib.core.Local;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
