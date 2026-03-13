@@ -3,6 +3,9 @@ package com.bn.berrynovel.controller.client;
 import org.springframework.stereotype.Controller;
 import com.bn.berrynovel.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,7 +26,7 @@ public class HomepageController {
     }
 
     @GetMapping("/home")
-    public String getHomePage(Model model) {
+    public String getHomePage(Model model, HttpServletRequest request) {
         model.addAttribute("novels", this.novelService.getNovels());
         return "client/homepage/show";
     }

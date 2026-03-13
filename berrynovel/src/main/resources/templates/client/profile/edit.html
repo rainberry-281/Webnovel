@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- <link rel="stylesheet" href="/src/main/webapp/resources/client/css/navitigation.css"> -->
+
+    <link rel="stylesheet" th:href="@{/client/css/profile/profile.css}">
+
+    <link rel="stylesheet" th:href="@{/client/css/profile/update.css}">
+
+    <link rel="stylesheet" th:href="@{/client/css/navitigation.css}">
+</head>
+
+<body>
+    <div th:replace="~{client/layout/navigation :: navbar}"></div>
+
+    <div class="page-wrapper">
+        <div class="container profile-card">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <div class="card shadow-lg border-0 rounded-3">
+
+                        <div class="card-header theme-gradient-bg text-white p-4 rounded-top-3">
+                            <h4 class="mb-0">
+                                <i class="bi bi-person-badge-fill me-2"></i> Hồ sơ cá nhân
+                            </h4>
+                        </div>
+
+                        <div class="card-body p-4 p-md-5">
+
+                            <form id="newUser" th:action="@{/profile/edit}" th:object="${user}" method="post"
+                                enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}">
+                                <input type="hidden" th:field="*{role.name}">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+
+                                        <label class="form-label fw-bold">Email:</label>
+                                        <input th:field="*{email}" style="padding-left: 20px;" type="email"
+                                            class="form-control border bg-light " readonly="readonly"
+                                            value="nguyennhatanh533@gmail.com">
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label class="form-label fw-bold">User name:</label>
+                                        <input th:field="*{username}" style="padding-left: 20px;" type="text"
+                                            class="form-control border bg-light " readonly="readonly"
+                                            value="B23DCCN035">
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Full name:</label>
+                                        <input th:field="*{fullName}" style="padding-left: 20px;" type="text"
+                                            class="form-control border" value="Nguyen Nhat Anh">
+                                    </div>
+
+                                    <div class="col-md-12 mb-3">
+
+                                        <label class="form-label fw-bold">Phone number:</label>
+                                        <input th:field="*{phoneNumber}" style="padding-left: 20px;" type="number"
+                                            class="form-control border " value="">
+
+                                    </div>
+
+                                    <div class="col-md-12 mb-3">
+                                        <label class="form-label fw-bold">Avatar:</label>
+
+                                        <!-- lưu ảnh cũ -->
+                                        <input type="hidden" id="currentImage" th:value="*{image}" th:if="*{image}"
+                                            th:data-imagepath="@{/images/avatar/}">
+
+                                        <div id="uploadContainer" class="d-flex gap-3 align-items-start">
+
+                                            <!-- upload box -->
+                                            <div class="upload-box">
+                                                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                                <p>Upload image</p>
+
+                                                <input type="file" id="imageInput" name="images"
+                                                    accept=".png,.jpg,.jpeg">
+                                            </div>
+
+                                            <!-- preview -->
+                                            <div id="previewContainer" style="display:none;">
+                                                <img id="imagePreview" style="max-width:250px;
+                                                    max-height:250px;
+                                                    border-radius:8px;
+                                                    object-fit:cover;">
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn px-4 py-2 fw-bold">
+                                        Update
+                                    </button>
+                                </div>
+
+                                <!-- <div>
+                                    <input type="hidden" name="_csrf"
+                                        value="d9e6l5wUzlpzIj6mNcqAIW6DXv6OPkn8XEph3AwBH7vEgH0LFLOM9fkk9zxeQQjEBOe0EFixc5zvX3vRay5R5T9nJ4L35E89">
+                                </div> -->
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer text-center py-4">
+        <h4>© 2026 berryNovel</h4>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadContainer = document.getElementById('uploadContainer');
+        const uploadBox = document.querySelector('.upload-box');
+        const currentImageElement = document.getElementById('currentImage');
+
+        // Show existing avatar on page load
+        if (currentImageElement && currentImageElement.value) {
+            const currentImageName = currentImageElement.value;
+            const imagePath = currentImageElement.dataset.imagepath || '/images/avatar/';
+            imagePreview.src = imagePath + currentImageName;
+
+            uploadContainer.style.display = 'flex';
+            uploadContainer.style.gap = '20px';
+            uploadContainer.style.alignItems = 'flex-start';
+            uploadBox.style.flex = '1';
+            uploadBox.style.margin = '0';
+            uploadBox.style.minWidth = '0';
+            previewContainer.style.flex = '0 0 auto';
+            previewContainer.style.display = 'flex';
+            previewContainer.style.alignItems = 'center';
+            previewContainer.style.justifyContent = 'center';
+        }
+
+        imageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+
+                    uploadContainer.style.display = 'flex';
+                    uploadContainer.style.gap = '20px';
+                    uploadContainer.style.alignItems = 'flex-start';
+                    uploadBox.style.flex = '1';
+                    uploadBox.style.margin = '0';
+                    uploadBox.style.minWidth = '0';
+                    previewContainer.style.flex = '0 0 auto';
+                    previewContainer.style.display = 'flex';
+                    previewContainer.style.alignItems = 'center';
+                    previewContainer.style.justifyContent = 'center';
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

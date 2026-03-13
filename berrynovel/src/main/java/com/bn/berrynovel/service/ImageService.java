@@ -13,14 +13,12 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 import com.bn.berrynovel.domain.Novel;
 
-import jakarta.servlet.ServletContext;
-
 @Service
 public class ImageService {
-    private final ServletContext servletContext;
+    private static final String UPLOAD_ROOT = "uploads/images";
 
-    public ImageService(ServletContext servletContext) {
-        this.servletContext = servletContext;
+    private String getRootPath() {
+        return Paths.get(System.getProperty("user.dir"), UPLOAD_ROOT).toString();
     }
 
     public String handleImage(MultipartFile file, String target) {
@@ -28,7 +26,7 @@ public class ImageService {
             return null;
         }
         String finalName = "";
-        String rootPath = System.getProperty("user.dir") + "/src/main/resources/static/images";
+        String rootPath = getRootPath();
         byte[] bytes;
         try {
             bytes = file.getBytes();
@@ -58,7 +56,7 @@ public class ImageService {
     // Phục vụ cho việc xóa người dùng hoặc cập nhật ảnh thì xóa luôn file ảnh trên
     // ổ cứng
     public void deleteImage(String fileName, String target) {
-        String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/images/" + target + "/";
+        String uploadDir = getRootPath() + File.separator + target + File.separator;
         Path path = Paths.get(uploadDir + fileName);
         try {
             Files.deleteIfExists(path);
@@ -73,7 +71,7 @@ public class ImageService {
             return null;
         }
         String finalName = "";
-        String rootPath = System.getProperty("user.dir") + "/src/main/resources/static/images";
+        String rootPath = getRootPath();
         byte[] bytes;
         try {
             bytes = file.getBytes();

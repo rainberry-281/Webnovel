@@ -69,9 +69,9 @@ public class UserService {
                     && !currentUser.getImage().isEmpty()
                     && !currentUser.getImage().equals("defaultavatar.png")) {
                 this.imageService.deleteImage(currentUser.getImage(), "avatar");
-                String imageName = this.imageService.handleImage(file, "avatar");
-                currentUser.setImage(imageName);
             }
+            String imageName = this.imageService.handleImage(file, "avatar");
+            currentUser.setImage(imageName);
         }
 
         return this.userRepository.save(currentUser);

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.bn.berrynovel.service.NovelService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.ui.Model;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.domain.Chapter;
@@ -21,7 +23,7 @@ public class ClientNovelController {
     }
 
     @GetMapping("/novel/{id}")
-    public String getNovelDetailPage(@PathVariable("id") Long id, Model model) {
+    public String getNovelDetailPage(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         Novel novel = this.novelService.getNovelById(id).orElseThrow(() -> new RuntimeException("Novel not found"));
 
         List<Chapter> chapters = this.novelService.getChaptersByNovelId(id);

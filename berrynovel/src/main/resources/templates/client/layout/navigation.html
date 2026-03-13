@@ -35,14 +35,13 @@
                         <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#"
                             data-bs-toggle="dropdown">
 
-                            <img src="" class="rounded-circle" width="32" height="32">
-
+                            <img th:src="@{/images/avatar/{image}(image=${(session.avatar != null and !#strings.isEmpty(session.avatar)) ? session.avatar : 'defaultavatar.png'},v=${#dates.createNow().time})}"
+                                class="rounded-circle user-avatar">
                             <!-- <span sec:authentication="name"></span> -->
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item">Profile</a></li>
-                            <!-- <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li> -->
+                            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
 
                             <li>
                                 <form th:action="@{/logout}" method="post">
