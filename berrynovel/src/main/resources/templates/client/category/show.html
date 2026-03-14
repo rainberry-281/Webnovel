@@ -82,15 +82,24 @@
                         <hr>
 
                         <h6>Thể loại</h6>
-                        <div th:each="genre : ${genres}">
-                            <label>
-                                <input type="checkbox" name="genres" th:value="${genre.code}"
-                                    th:checked="${selectedGenres != null and #lists.contains(selectedGenres, genre.code)}">
-                                <span th:text="${genre.name}"></span>
-                            </label>
+                        <div th:classappend="${#lists.size(genres) > 10} ? 'genre-scroll'"
+                            th:style="${#lists.size(genres) > 10} ? 'max-height:280px; overflow-y:auto; padding-right:6px;' : ''">
+                            <div th:each="genre : ${genres}">
+                                <label>
+                                    <input type="checkbox" name="genres" th:value="${genre.code}"
+                                        th:checked="${selectedGenres != null and #lists.contains(selectedGenres, genre.code)}">
+                                    <span th:text="${genre.name}"></span>
+                                </label>
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-dark btn-sm mt-3">Lọc</button>
+                        <div class="d-flex gap-2 mt-3">
+                            <button type="submit" class="btn btn-dark btn-sm">Lọc</button>
+                            <a class="btn btn-outline-secondary btn-sm"
+                                th:href="${#strings.isEmpty(keyword)} ? @{/category} : @{/search(keyword=${keyword})}">
+                                Clear
+                            </a>
+                        </div>
                     </form>
                 </div>
 

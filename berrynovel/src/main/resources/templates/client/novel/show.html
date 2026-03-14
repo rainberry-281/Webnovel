@@ -64,7 +64,12 @@
                                 <span class="text-success"
                                     th:text="${novel.progress != null ? novel.progress.displayName : 'Unknown'}"></span>
                             </div>
-                            <div class="col-md-6"><strong>Lần cuối:</strong> 17/02/2026</div>
+                            <div class="col-md-6"><strong>Lần cuối:</strong>
+                                <span
+                                    th:text="${latestChapter != null ? #temporals.format(latestChapter.createdAt, 'dd/MM/yyyy') : (novel.createdAt != null ? #temporals.format(novel.createdAt, 'dd/MM/yyyy') : '-')}">
+                                    -
+                                </span>
+                            </div>
 
                             <i class="fa-regular fa-heart bookmark"></i>
 
