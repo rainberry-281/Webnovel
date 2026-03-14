@@ -27,7 +27,9 @@ public class HomepageController {
 
     @GetMapping("/home")
     public String getHomePage(Model model, HttpServletRequest request) {
-        model.addAttribute("novels", this.novelService.getNovels());
+        model.addAttribute("completedNovels", this.novelService.getHomepageCompletedNovels());
+        model.addAttribute("novels", this.novelService.getHomepageOriginalNovels());
+        model.addAttribute("translatedNovels", this.novelService.getHomepageTranslatedNovels());
         return "client/homepage/show";
     }
 

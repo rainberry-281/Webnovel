@@ -21,7 +21,7 @@
     <!-- navbar -->
     <div th:replace="~{client/layout/navigation :: navbar}"></div>
 
-    <div class="page-wrapper" style="padding-top: 40px;">
+    <div class="page-wrapper" style="padding-top: 50px;">
         <section class="hero container my-5">
             <div class="row align-items-center">
                 <div class="col-lg-5">
@@ -50,7 +50,7 @@
             </div>
             <div class="row g-4">
                 <div class="col-6 col-md-4 col-lg-3 col-xl-2" th:each="novel : ${novels}">
-                    <a class="novel text-decoration-none" th:href="@{/novel/{id}(id=${novel.id})}">
+                    <a class="novel text-decoration-none" th:href="@{/novel/{id}(id=${novel.id},from='home')}">
                         <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
 
                             <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
@@ -59,6 +59,48 @@
                             <div class="overlay">
                                 <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
 
+                                <small class="text-light" th:text="'Tác giả: ' + ${novel.author}"></small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Translated Novel section -->
+        <section class="container my-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold section-title">TRUYỆN DỊCH</h4>
+            </div>
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2" th:each="novel : ${translatedNovels}">
+                    <a class="novel text-decoration-none" th:href="@{/novel/{id}(id=${novel.id},from='home')}">
+                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                            <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
+                                alt="Tên truyện">
+                            <div class="overlay">
+                                <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
+                                <small class="text-light" th:text="'Tác giả: ' + ${novel.author}"></small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Completed Novel section -->
+        <section class="container my-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold section-title">HOÀN THÀNH</h4>
+            </div>
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2" th:each="novel : ${completedNovels}">
+                    <a class="novel text-decoration-none" th:href="@{/novel/{id}(id=${novel.id},from='home')}">
+                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                            <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
+                                alt="Tên truyện">
+                            <div class="overlay">
+                                <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
                                 <small class="text-light" th:text="'Tác giả: ' + ${novel.author}"></small>
                             </div>
                         </div>

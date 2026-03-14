@@ -1,6 +1,8 @@
 package com.bn.berrynovel.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -79,6 +81,10 @@ public class UserService {
 
     public List<User> getUserList() {
         return this.userRepository.findAll();
+    }
+
+    public Page<User> findAll(Pageable pageable) {
+        return this.userRepository.findAll(pageable);
     }
 
     public User getUserByID(int id) {

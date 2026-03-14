@@ -24,8 +24,8 @@
             <div class="collapse navbar-collapse " id="mainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
                     <li class="nav-item"><a class="nav-link active" th:href="@{/}">Home</a></li>
-                    <!-- <li class="nav-item"><a class="nav-link active" href="../category/category.html">Genre</a></li>
-                <li class="nav-item"><a class="nav-link active" href="../library/bookshelf.html">Library</a></li> -->
+                    <li class="nav-item"><a class="nav-link active" th:href="@{/category}">Category</a></li>
+                    <!-- <li class="nav-item"><a class="nav-link active" th:href="@{/library}">Library</a></li> -->
                     <li class="nav-item fw-bold" sec:authorize="!isAuthenticated()">
                         <a th:href="@{/login}">Login</a> /
                         <a th:href="@{/register}">Register</a>

@@ -90,6 +90,12 @@
 			<optional>true</optional>
 		</dependency>
 
+		<dependency>
+			<groupId>com.turkraft.springfilter</groupId>
+			<artifactId>jpa</artifactId>
+			<version>3.2.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

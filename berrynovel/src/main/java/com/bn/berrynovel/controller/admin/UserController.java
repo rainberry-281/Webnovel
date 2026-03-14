@@ -2,6 +2,7 @@ package com.bn.berrynovel.controller.admin;
 
 import com.bn.berrynovel.service.ImageService;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,8 @@ import org.springframework.validation.FieldError;
 
 import com.bn.berrynovel.domain.Role;
 import com.bn.berrynovel.domain.User;
+import com.bn.berrynovel.domain.PaginationQuery;
+import com.bn.berrynovel.service.PaginationService;
 
 @Controller
 @RequestMapping("/admin/user")
@@ -26,17 +29,20 @@ public class UserController {
 
     private final ImageService imageService;
     private final UserService userService;
+    private final PaginationService paginationService;
 
-    public UserController(UserService userService, ImageService imageService) {
+    public UserController(UserService userService, ImageService imageService, PaginationService paginationService) {
         this.userService = userService;
         this.imageService = imageService;
+        this.paginationService = paginationService;
     }
 
     @GetMapping
-    public String getUserListPage(Model model) {
-        List<User> users = this.userService.getUserList();
-        System.out.println(">>>>>>> user list: " + users);
-        model.addAttribute("users", users);
+    public String getUserListPage(Model model, @RequestParam(value = "page") Optional<String> pageOptional) {
+        PaginationQuery paginationQuery = this.paginationService.AdminUserPagination(pageOptional, 8);
+        model.addAttribute("users", paginationQuery.getNvs().getContent());
+        model.addAttribute("currentPage", paginationQuery.getPage());
+        model.addAttribute("totalPage", paginationQuery.getNvs().getTotalPages());
         return "admin/user/show";
     }
 

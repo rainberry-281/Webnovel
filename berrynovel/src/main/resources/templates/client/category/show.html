@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>berryNovel - Thế giới truyện chữ</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/client/css/category.css}">
+
+    <link rel="stylesheet" th:href="@{/client/css/navitigation.css}">
+
+    <link rel="stylesheet" th:href="@{/client/css/font.css}">
+</head>
+
+<body>
+    <!-- navbar -->
+    <div th:replace="~{client/layout/navigation :: navbar}"></div>
+
+    <div class="page-wrapper" style="padding-top: 78px;">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/}" class="text-decoration-none text-dark">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Category</li>
+                </ol>
+            </nav>
+
+            <div class="row d-block clearfix">
+                <!-- Filter sidebar -->
+                <div class="col-12 col-lg-2 d-block filter-box float-start">
+                    <h6>Nguồn truyện</h6>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="type" value="sang-tac">
+                            Truyện sáng tác
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="type" value="dich">
+                            Truyện dịch
+                        </label>
+                    </div>
+                    <hr>
+                    <h6>Thể loại</h6>
+                    <div th:each="genre : ${genres}">
+                        <label>
+                            <input type="checkbox" name="genre" th:value="${genre.code}">
+                            <span th:text="${genre.name}"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Novel list -->
+                <div class="col-12 col-lg-9 float-end">
+                    <h2 class="fw-bold mb-4">Tất cả truyện</h2>
+
+                    <div class="novel-list row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
+                        <a th:each="novel : ${novels}" th:href="@{/novel/{id}(id=${novel.id},from='category')}"
+                            class="">
+                            <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                                <img th:src="@{'/images/novel/' + ${novel.image}}" class="card-img-top"
+                                    th:alt="${novel.title}">
+                                <div class="overlay">
+                                    <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
+                                    <small class="text-light" th:text="'Tác giả: ' + ${novel.author}"></small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer text-center py-4">
+        <h4>© 2026 berryNovel</h4>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script th:src="@{/client/js/navitigation.js}"></script>
+</body>
+
+</html>

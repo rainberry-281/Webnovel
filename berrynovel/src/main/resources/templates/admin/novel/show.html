@@ -102,15 +102,18 @@
                 <div class="pagination-box">
                     <ul class="pagination">
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
+                            <a th:class="${currentPage == 1} ? 'page-link disabled' : 'page-link'"
+                                th:href="@{/admin/novel(page=${currentPage - 1})}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item">
+                            <a th:href="@{/admin/novel(page=${i})}" th:classappend="${i == currentPage} ? 'active'"
+                                class="page-link" th:text="${i}"></a>
+                        </li>
                         <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
+                            <a th:class="${currentPage == totalPage} ? 'page-link disabled' : 'page-link'"
+                                th:href="@{/admin/novel(page=${currentPage + 1})}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

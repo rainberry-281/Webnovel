@@ -22,12 +22,17 @@
 <body>
     <div th:replace="~{client/layout/navigation :: navbar}"></div>
 
-    <div class="page-wrapper" style="padding-top: 40px;">
+    <div class="page-wrapper" style="padding-top: 55px;">
         <nav aria-label="breadcrumb" class="pt-4">
             <ol class="breadcrumb ms-3">
                 <li class="breadcrumb-item"><a th:href="@{/home}" class="text-decoration-none text-dark">Homepage</a>
                 </li>
-                <!-- <li class="breadcrumb-item"><a th:href="@{/category}" class="text-decoration-none text-dark">Category</a></li> -->
+                <li class="breadcrumb-item" th:if="${breadcrumbFrom == 'category'}">
+                    <a th:href="@{/category}" class="text-decoration-none text-dark">Category</a>
+                </li>
+                <li class="breadcrumb-item" th:if="${breadcrumbFrom == 'library'}">
+                    <a th:href="@{/profile}" class="text-decoration-none text-dark">Library</a>
+                </li>
                 <li th:text="${novel.title}" class="breadcrumb-item active" aria-current="page"></li>
             </ol>
         </nav>

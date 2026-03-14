@@ -77,11 +77,24 @@
 
                 <!-- Pagination -->
                 <div class="pagination-box">
-                    <a class="page-btn disabled">«</a>
-
-                    <a class="page-btn active">1</a>
-
-                    <a class="page-btn disabled">»</a>
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a th:class="${currentPage == 1} ? 'page-link disabled' : 'page-link'"
+                                th:href="@{/admin/genres(page=${currentPage - 1})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item">
+                            <a th:href="@{/admin/genres(page=${i})}" th:classappend="${i == currentPage} ? 'active'"
+                                class="page-link" th:text="${i}"></a>
+                        </li>
+                        <li class="page-item">
+                            <a th:class="${currentPage == totalPage} ? 'page-link disabled' : 'page-link'"
+                                th:href="@{/admin/genres(page=${currentPage + 1})}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
