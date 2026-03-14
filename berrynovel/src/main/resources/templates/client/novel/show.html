@@ -61,7 +61,8 @@
                             <div class="col-md-6"><strong>Tác giả:</strong> <span th:text="${novel.author}"></span>
                             </div>
                             <div class="col-md-6"><strong>Trạng thái:</strong>
-                                <span class="text-success" th:text="${novel.status ? 'COMPLETED' : 'ONGOING'}"></span>
+                                <span class="text-success"
+                                    th:text="${novel.progress != null ? novel.progress.displayName : 'Unknown'}"></span>
                             </div>
                             <div class="col-md-6"><strong>Lần cuối:</strong> 17/02/2026</div>
 

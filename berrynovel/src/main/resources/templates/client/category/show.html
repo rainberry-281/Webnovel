@@ -56,19 +56,26 @@
 
                         <hr>
 
-                        <h6>Tiến độ</h6>
+                        <h6>Tiến trình</h6>
                         <div>
                             <label>
                                 <input type="checkbox" name="progresses" value="ONGOING"
                                     th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'ONGOING')}">
-                                Đang ra
+                                ongoing
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" name="progresses" value="PAUSED"
+                                    th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'PAUSED')}">
+                                paused
                             </label>
                         </div>
                         <div>
                             <label>
                                 <input type="checkbox" name="progresses" value="COMPLETED"
                                     th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'COMPLETED')}">
-                                Hoàn thành
+                                completed
                             </label>
                         </div>
 
