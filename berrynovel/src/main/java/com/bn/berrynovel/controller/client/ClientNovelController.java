@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.service.PaginationService;
+import com.bn.berrynovel.domain.PaginationQuery;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -29,10 +30,79 @@ public class ClientNovelController {
     }
 
     @GetMapping("/category")
-    public String getCategoryPage(Model model) {
-        List<Novel> novels = this.novelService.getNovels();
-        model.addAttribute("novels", novels);
+    public String getCategoryPage(Model model,
+            @RequestParam("page") Optional<String> pageOptional,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "genres", required = false) List<String> genres,
+            @RequestParam(value = "types", required = false) List<String> types,
+            @RequestParam(value = "progresses", required = false) List<String> progresses) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        List<String> selectedGenres = genres == null
+                ? List.of()
+                : genres.stream().filter(g -> g != null && !g.trim().isEmpty()).map(String::trim).distinct().toList();
+        List<String> selectedTypes = types == null
+                ? List.of()
+                : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim).distinct().toList();
+        List<String> selectedProgresses = progresses == null
+                ? List.of()
+                : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim).distinct()
+                        .toList();
+
+        PaginationQuery<Novel> nvs;
+        if (normalizedKeyword.isEmpty() && selectedGenres.isEmpty() && selectedTypes.isEmpty()
+                && selectedProgresses.isEmpty()) {
+            nvs = this.paginationService.ClientNovelPagination(pageOptional, 20);
+        } else {
+            nvs = this.paginationService.ClientFilterNovelPagination(pageOptional, 20, normalizedKeyword,
+                    selectedGenres, selectedTypes, selectedProgresses);
+        }
+
+        model.addAttribute("novels", nvs.getNvs().getContent());
+        model.addAttribute("currentPage", nvs.getPage());
+        model.addAttribute("totalPage", nvs.getNvs().getTotalPages());
         model.addAttribute("genres", this.novelService.getAllGenres());
+        model.addAttribute("selectedGenres", selectedGenres);
+        model.addAttribute("selectedTypes", selectedTypes);
+        model.addAttribute("selectedProgresses", selectedProgresses);
+        model.addAttribute("keyword", normalizedKeyword);
+        return "client/category/show";
+    }
+
+    @GetMapping("/search")
+    public String searchNovels(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam("page") Optional<String> pageOptional,
+            @RequestParam(value = "genres", required = false) List<String> genres,
+            @RequestParam(value = "types", required = false) List<String> types,
+            @RequestParam(value = "progresses", required = false) List<String> progresses,
+            Model model) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        List<String> selectedGenres = genres == null
+                ? List.of()
+                : genres.stream().filter(g -> g != null && !g.trim().isEmpty()).map(String::trim).distinct().toList();
+        List<String> selectedTypes = types == null
+                ? List.of()
+                : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim).distinct().toList();
+        List<String> selectedProgresses = progresses == null
+                ? List.of()
+                : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim).distinct()
+                        .toList();
+        if (normalizedKeyword.isEmpty() && selectedGenres.isEmpty() && selectedTypes.isEmpty()
+                && selectedProgresses.isEmpty()) {
+            return "redirect:/category";
+        }
+
+        PaginationQuery<Novel> nvs = this.paginationService.ClientFilterNovelPagination(pageOptional, 20,
+                normalizedKeyword, selectedGenres, selectedTypes, selectedProgresses);
+
+        model.addAttribute("novels", nvs.getNvs().getContent());
+        model.addAttribute("currentPage", nvs.getPage());
+        model.addAttribute("totalPage", nvs.getNvs().getTotalPages());
+        model.addAttribute("genres", this.novelService.getAllGenres());
+        model.addAttribute("selectedGenres", selectedGenres);
+        model.addAttribute("selectedTypes", selectedTypes);
+        model.addAttribute("selectedProgresses", selectedProgresses);
+        model.addAttribute("keyword", normalizedKeyword);
         return "client/category/show";
     }
 

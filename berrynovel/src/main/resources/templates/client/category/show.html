@@ -27,39 +27,76 @@
                     <li class="breadcrumb-item">
                         <a th:href="@{/}" class="text-decoration-none text-dark">Home</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Category</li>
+                    <li class="breadcrumb-item active" aria-current="page"
+                        th:text="${#strings.isEmpty(keyword)} ? 'Category' : 'Search'">Category</li>
                 </ol>
             </nav>
 
             <div class="row d-block clearfix">
                 <!-- Filter sidebar -->
                 <div class="col-12 col-lg-2 d-block filter-box float-start">
-                    <h6>Nguồn truyện</h6>
-                    <div>
-                        <label>
-                            <input type="checkbox" name="type" value="sang-tac">
-                            Truyện sáng tác
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="checkbox" name="type" value="dich">
-                            Truyện dịch
-                        </label>
-                    </div>
-                    <hr>
-                    <h6>Thể loại</h6>
-                    <div th:each="genre : ${genres}">
-                        <label>
-                            <input type="checkbox" name="genre" th:value="${genre.code}">
-                            <span th:text="${genre.name}"></span>
-                        </label>
-                    </div>
+                    <form th:action="${#strings.isEmpty(keyword)} ? @{/category} : @{/search}" method="get">
+                        <input type="hidden" name="keyword" th:if="${!#strings.isEmpty(keyword)}" th:value="${keyword}">
+
+                        <h6>Nguồn truyện</h6>
+                        <div>
+                            <label>
+                                <input type="checkbox" name="types" value="ORIGINAL"
+                                    th:checked="${selectedTypes != null and #lists.contains(selectedTypes, 'ORIGINAL')}">
+                                Truyện sáng tác
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" name="types" value="TRANSLATION"
+                                    th:checked="${selectedTypes != null and #lists.contains(selectedTypes, 'TRANSLATION')}">
+                                Truyện dịch
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <h6>Tiến độ</h6>
+                        <div>
+                            <label>
+                                <input type="checkbox" name="progresses" value="ONGOING"
+                                    th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'ONGOING')}">
+                                Đang ra
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input type="checkbox" name="progresses" value="COMPLETED"
+                                    th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'COMPLETED')}">
+                                Hoàn thành
+                            </label>
+                        </div>
+
+                        <hr>
+
+                        <h6>Thể loại</h6>
+                        <div th:each="genre : ${genres}">
+                            <label>
+                                <input type="checkbox" name="genres" th:value="${genre.code}"
+                                    th:checked="${selectedGenres != null and #lists.contains(selectedGenres, genre.code)}">
+                                <span th:text="${genre.name}"></span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark btn-sm mt-3">Lọc</button>
+                    </form>
                 </div>
 
                 <!-- Novel list -->
                 <div class="col-12 col-lg-9 float-end">
-                    <h2 class="fw-bold mb-4">Tất cả truyện</h2>
+                    <h2 class="fw-bold mb-4"
+                        th:text="${#strings.isEmpty(keyword)} ? 'Tất cả truyện' : 'Kết quả tìm kiếm cho: ' + keyword">
+                        Tất cả truyện
+                    </h2>
+
+                    <p class="text-muted mb-4" th:if="${#lists.isEmpty(novels)}">
+                        Không tìm thấy truyện phù hợp.
+                    </p>
 
                     <div class="novel-list row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
                         <a th:each="novel : ${novels}" th:href="@{/novel/{id}(id=${novel.id},from='category')}"
@@ -74,6 +111,60 @@
                             </div>
                         </a>
                     </div>
+
+                    <div class="d-flex justify-content-center mt-4"
+                        th:if="${#strings.isEmpty(keyword) and totalPage > 1}">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a th:class="${currentPage == 1} ? 'page-link disabled' : 'page-link'"
+                                    th:href="@{/category(page=${currentPage - 1},genres=${selectedGenres},types=${selectedTypes},progresses=${selectedProgresses})}"
+                                    aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item">
+                                <a th:href="@{/category(page=${i},genres=${selectedGenres},types=${selectedTypes},progresses=${selectedProgresses})}"
+                                    th:classappend="${i == currentPage} ? 'active'" class="page-link"
+                                    th:text="${i}"></a>
+                            </li>
+
+                            <li class="page-item">
+                                <a th:class="${currentPage == totalPage} ? 'page-link disabled' : 'page-link'"
+                                    th:href="@{/category(page=${currentPage + 1},genres=${selectedGenres},types=${selectedTypes},progresses=${selectedProgresses})}"
+                                    aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="d-flex justify-content-center mt-4"
+                        th:if="${!#strings.isEmpty(keyword) and totalPage > 1}">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a th:class="${currentPage == 1} ? 'page-link disabled' : 'page-link'"
+                                    th:href="@{/search(keyword=${keyword},genres=${selectedGenres},types=${selectedTypes},progresses=${selectedProgresses},page=${currentPage - 1})}"
+                                    aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+
+                            <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item">
+                                <a th:href="@{/search(keyword=${keyword},genres=${selectedGenres},types=${selectedTypes},progresses=${selectedProgresses},page=${i})}"
+                                    th:classappend="${i == currentPage} ? 'active'" class="page-link"
+                                    th:text="${i}"></a>
+                            </li>
+
+                            <li class="page-item">
+                                <a th:class="${currentPage == totalPage} ? 'page-link disabled' : 'page-link'"
+                                    th:href="@{/search(keyword=${keyword},genres=${selectedGenres},types=${selectedTypes},progresses=${selectedProgresses},page=${currentPage + 1})}"
+                                    aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -86,6 +177,37 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script th:src="@{/client/js/navitigation.js}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const typeInputs = document.querySelectorAll('input[name="types"]');
+            const progressInputs = document.querySelectorAll('input[name="progresses"]');
+            typeInputs.forEach(function (input) {
+                input.addEventListener('change', function () {
+                    if (!this.checked) {
+                        return;
+                    }
+                    typeInputs.forEach(function (other) {
+                        if (other !== input) {
+                            other.checked = false;
+                        }
+                    });
+                });
+            });
+
+            progressInputs.forEach(function (input) {
+                input.addEventListener('change', function () {
+                    if (!this.checked) {
+                        return;
+                    }
+                    progressInputs.forEach(function (other) {
+                        if (other !== input) {
+                            other.checked = false;
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

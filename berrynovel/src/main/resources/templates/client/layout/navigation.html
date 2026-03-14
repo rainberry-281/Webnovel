@@ -10,12 +10,13 @@
             <div class="d-flex align-items-center gap-3 flex-grow-1">
 
                 <div th:replace="~{client/layout/logo :: logo}"></div>
-                <form class="search-form d-none d-md-flex">
+                <form class="search-form d-none d-md-flex" th:action="@{/search}" method="get">
                     <div class="input-group">
                         <span class="input-group-text bg-transparent border-end-0">
                             <i class="fa-solid fa-magnifying-glass"></i>
                         </span>
-                        <input type="text" class="form-control border-start-0" placeholder="Tìm truyện">
+                        <input type="text" class="form-control border-start-0" name="keyword" th:value="${keyword}"
+                            placeholder="Tìm truyện">
                     </div>
                 </form>
 

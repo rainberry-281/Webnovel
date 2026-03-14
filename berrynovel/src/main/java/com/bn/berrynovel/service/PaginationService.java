@@ -40,6 +40,57 @@ public class PaginationService {
         return new PaginationQuery<>(page, nvs);
     }
 
+    public PaginationQuery<Novel> ClientNovelPagination(Optional<String> pageOptinal, int size) {
+        int page = 1;
+        try {
+            if (pageOptinal.isPresent()) {
+                page = Integer.parseInt(pageOptinal.get());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<Novel> nvs = this.novelService.findActiveNovels(pageable);
+
+        return new PaginationQuery<>(page, nvs);
+    }
+
+    public PaginationQuery<Novel> ClientSearchNovelPagination(Optional<String> pageOptinal, int size, String keyword) {
+        int page = 1;
+        try {
+            if (pageOptinal.isPresent()) {
+                page = Integer.parseInt(pageOptinal.get());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<Novel> nvs = this.novelService.searchVisibleNovelsByTitle(keyword, pageable);
+
+        return new PaginationQuery<>(page, nvs);
+    }
+
+    public PaginationQuery<Novel> ClientFilterNovelPagination(Optional<String> pageOptinal, int size, String keyword,
+            java.util.List<String> genreCodes, java.util.List<String> typeValues,
+            java.util.List<String> progressValues) {
+        int page = 1;
+        try {
+            if (pageOptinal.isPresent()) {
+                page = Integer.parseInt(pageOptinal.get());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<Novel> nvs = this.novelService.searchVisibleNovels(keyword, genreCodes, typeValues, progressValues,
+                pageable);
+
+        return new PaginationQuery<>(page, nvs);
+    }
+
     public PaginationQuery<User> AdminUserPagination(Optional<String> pageOptinal, int size) {
         int page = 1;
         try {

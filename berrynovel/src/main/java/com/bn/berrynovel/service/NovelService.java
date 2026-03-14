@@ -1,12 +1,14 @@
 package com.bn.berrynovel.service;
 
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.List;
 import java.util.Objects;
 import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -143,6 +145,128 @@ public class NovelService {
 
     public List<Novel> getNovels() {
         return this.novelRepository.findByStatus(true);
+    }
+
+    public Page<Novel> findActiveNovels(Pageable pageable) {
+        return this.novelRepository.findByStatus(true, pageable);
+    }
+
+    public List<Novel> searchVisibleNovels(String keyword, List<String> genreCodes, List<String> typeValues,
+            List<String> progressValues) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        List<String> normalizedGenreCodes = genreCodes == null
+                ? List.of()
+                : genreCodes.stream()
+                        .filter(Objects::nonNull)
+                        .map(String::trim)
+                        .map(String::toLowerCase)
+                        .filter(code -> !code.isEmpty())
+                        .distinct()
+                        .toList();
+        List<String> normalizedTypeValues = typeValues == null
+                ? List.of()
+                : typeValues.stream()
+                        .filter(Objects::nonNull)
+                        .map(String::trim)
+                        .filter(value -> !value.isEmpty())
+                        .distinct()
+                        .toList();
+        List<String> normalizedProgressValues = progressValues == null
+                ? List.of()
+                : progressValues.stream()
+                        .filter(Objects::nonNull)
+                        .map(String::trim)
+                        .filter(value -> !value.isEmpty())
+                        .distinct()
+                        .toList();
+
+        if (normalizedKeyword.isEmpty() && normalizedGenreCodes.isEmpty() && normalizedTypeValues.isEmpty()
+                && normalizedProgressValues.isEmpty()) {
+            return List.of();
+        }
+
+        StringBuilder filter = new StringBuilder("status : true and genres.status : true");
+        if (!normalizedKeyword.isEmpty()) {
+            String escapedKeyword = normalizedKeyword
+                    .replace("\\", "\\\\")
+                    .replace("'", "\\'");
+            filter.append(" and title ~~ '%").append(escapedKeyword).append("%'");
+        }
+
+        if (!normalizedGenreCodes.isEmpty()) {
+            String genreInClause = normalizedGenreCodes.stream()
+                    .map(code -> code.replace("\\", "\\\\").replace("'", "\\'"))
+                    .map(code -> "'" + code + "'")
+                    .collect(java.util.stream.Collectors.joining(", "));
+            filter.append(" and genres.code in [").append(genreInClause).append("]");
+        }
+
+        if (!normalizedTypeValues.isEmpty()) {
+            String typeInClause = normalizedTypeValues.stream()
+                    .map(value -> value.replace("\\", "\\\\").replace("'", "\\'"))
+                    .map(value -> "'" + value + "'")
+                    .collect(java.util.stream.Collectors.joining(", "));
+            filter.append(" and type in [").append(typeInClause).append("]");
+        }
+
+        if (!normalizedProgressValues.isEmpty()) {
+            String progressInClause = normalizedProgressValues.stream()
+                    .map(value -> value.replace("\\", "\\\\").replace("'", "\\'"))
+                    .map(value -> "'" + value + "'")
+                    .collect(java.util.stream.Collectors.joining(", "));
+            filter.append(" and progress in [").append(progressInClause).append("]");
+        }
+
+        Specification<Novel> specification = this.filterSpecificationConverter.convert(filter.toString());
+        Pageable pageable = PageRequest.of(0, 500);
+
+        return this.novelRepository.findAll(specification, pageable).getContent().stream()
+                .filter(novel -> novel.getGenres() != null && !novel.getGenres().isEmpty())
+                .filter(novel -> novel.getGenres().stream().allMatch(Genre::getStatus))
+                .filter(novel -> {
+                    if (normalizedGenreCodes.isEmpty()) {
+                        return true;
+                    }
+                    java.util.Set<String> novelGenreCodes = novel.getGenres().stream()
+                            .map(Genre::getCode)
+                            .filter(Objects::nonNull)
+                            .map(String::trim)
+                            .map(String::toLowerCase)
+                            .collect(java.util.stream.Collectors.toSet());
+                    return novelGenreCodes.containsAll(normalizedGenreCodes);
+                })
+                .collect(java.util.stream.Collectors.toMap(
+                        Novel::getId,
+                        novel -> novel,
+                        (left, right) -> left,
+                        LinkedHashMap::new))
+                .values().stream()
+                .sorted(Comparator.comparing(novel -> {
+                    Chapter latest = this.chapterRepository.findLastChapter(novel.getId());
+                    return latest != null ? latest.getCreatedAt() : LocalDateTime.MIN;
+                }, Comparator.reverseOrder()))
+                .toList();
+    }
+
+    public Page<Novel> searchVisibleNovels(String keyword, List<String> genreCodes, List<String> typeValues,
+            List<String> progressValues, Pageable pageable) {
+        List<Novel> searchedNovels = this.searchVisibleNovels(keyword, genreCodes, typeValues, progressValues);
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), searchedNovels.size());
+        List<Novel> content = start >= searchedNovels.size()
+                ? List.of()
+                : searchedNovels.subList(start, end);
+
+        return new PageImpl<>(content, pageable, searchedNovels.size());
+    }
+
+    public List<Novel> searchVisibleNovelsByTitle(String keyword) {
+        return this.searchVisibleNovels(keyword, List.of(), List.of(), List.of());
+    }
+
+    public Page<Novel> searchVisibleNovelsByTitle(String keyword, Pageable pageable) {
+        return this.searchVisibleNovels(keyword, List.of(), List.of(), List.of(), pageable);
     }
 
     public List<Novel> getHomepageCompletedNovels() {
