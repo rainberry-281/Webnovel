@@ -14,6 +14,8 @@ public interface NovelRepository extends JpaRepository<Novel, Long>, JpaSpecific
 
     Page<Novel> findAll(Pageable pageable);
 
+    Page<Novel> findByTitleContainingIgnoreCase(String keyword, Pageable pageable);
+
     Page<Novel> findByStatus(boolean status, Pageable pageable);
 
     boolean existsByTitle(String title);

@@ -99,6 +99,14 @@ public class NovelService {
         return this.novelRepository.findAll(pageable);
     }
 
+    public Page<Novel> findByTitleContaining(String keyword, Pageable pageable) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        if (normalizedKeyword.isEmpty()) {
+            return this.novelRepository.findAll(pageable);
+        }
+        return this.novelRepository.findByTitleContainingIgnoreCase(normalizedKeyword, pageable);
+    }
+
     // public List<Novel> getActiveNovels() {
     // return this.novelRepository.findByStatus(true);
     // }

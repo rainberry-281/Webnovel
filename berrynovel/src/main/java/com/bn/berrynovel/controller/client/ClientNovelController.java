@@ -47,9 +47,6 @@ public class ClientNovelController {
                 ? List.of()
                 : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim).distinct()
                         .toList();
-        if (selectedProgresses.size() > 1) {
-            selectedProgresses = List.of(selectedProgresses.get(selectedProgresses.size() - 1));
-        }
 
         PaginationQuery<Novel> nvs;
         if (normalizedKeyword.isEmpty() && selectedGenres.isEmpty() && selectedTypes.isEmpty()
@@ -90,9 +87,6 @@ public class ClientNovelController {
                 ? List.of()
                 : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim).distinct()
                         .toList();
-        if (selectedProgresses.size() > 1) {
-            selectedProgresses = List.of(selectedProgresses.get(selectedProgresses.size() - 1));
-        }
         if (normalizedKeyword.isEmpty() && selectedGenres.isEmpty() && selectedTypes.isEmpty()
                 && selectedProgresses.isEmpty()) {
             return "redirect:/category";

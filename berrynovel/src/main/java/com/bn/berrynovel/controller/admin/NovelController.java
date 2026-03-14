@@ -42,15 +42,19 @@ public class NovelController {
     }
 
     @GetMapping
-    public String getNovelListPage(Model model, @RequestParam(value = "page") Optional<String> pageOptional) {
-        PaginationQuery paginationQuery = this.paginationService.AdminNovelPagination(pageOptional, 8);
-        List<Novel> novels = this.novelService.getAllNovels();
-        System.out.println(">>>>>>> novel list: " + novels);
+    public String getNovelListPage(Model model,
+            @RequestParam(value = "page") Optional<String> pageOptional,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        PaginationQuery paginationQuery = this.paginationService.AdminNovelPagination(pageOptional, 8,
+                normalizedKeyword);
         model.addAttribute("novels", paginationQuery.getNvs().getContent());
 
         model.addAttribute("currentPage", paginationQuery.getPage());
 
         model.addAttribute("totalPage", paginationQuery.getNvs().getTotalPages());
+
+        model.addAttribute("keyword", normalizedKeyword);
 
         return "admin/novel/show";
     }

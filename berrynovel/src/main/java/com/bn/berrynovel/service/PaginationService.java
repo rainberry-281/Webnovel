@@ -40,6 +40,22 @@ public class PaginationService {
         return new PaginationQuery<>(page, nvs);
     }
 
+    public PaginationQuery<Novel> AdminNovelPagination(Optional<String> pageOptinal, int size, String keyword) {
+        int page = 1;
+        try {
+            if (pageOptinal.isPresent()) {
+                page = Integer.parseInt(pageOptinal.get());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<Novel> nvs = this.novelService.findByTitleContaining(keyword, pageable);
+
+        return new PaginationQuery<>(page, nvs);
+    }
+
     public PaginationQuery<Novel> ClientNovelPagination(Optional<String> pageOptinal, int size) {
         int page = 1;
         try {
