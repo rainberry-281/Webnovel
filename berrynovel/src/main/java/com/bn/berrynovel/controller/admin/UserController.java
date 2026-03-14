@@ -101,6 +101,7 @@ public class UserController {
                 userBindingResult.rejectValue("phoneNumber", "error.user", "Phone number must be exactly 10 digits");
             }
         }
+
         if (userBindingResult.hasErrors()) {
             return "admin/user/update";
         }

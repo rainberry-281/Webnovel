@@ -4,9 +4,10 @@ import org.springframework.stereotype.Controller;
 import com.bn.berrynovel.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +46,19 @@ public class HomepageController {
     }
 
     @PostMapping("/register")
-    public String handelRegister(@ModelAttribute("newUser") RegisterDTO registerDTO) {
+    public String handelRegister(@ModelAttribute("newUser") @Valid RegisterDTO registerDTO,
+            BindingResult bindingResult, Model model) {
+
+        String phone = registerDTO.getPhoneNumber();
+        if (phone != null && !phone.isEmpty()) {
+            if (!phone.matches("^[0-9]{10}$")) {
+                bindingResult.rejectValue("phoneNumber", "error.user", "Phone number must be exactly 10 digits");
+            }
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "client/auth/register";
+        }
 
         this.userService.createUserByClient(registerDTO);
         return "redirect:/login";

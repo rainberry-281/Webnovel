@@ -33,13 +33,13 @@ public class ClientNovelController {
     public String getCategoryPage(Model model,
             @RequestParam("page") Optional<String> pageOptional,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "genres", required = false) List<String> genres,
+            @RequestParam(value = "genres", required = false) List<Integer> genres,
             @RequestParam(value = "types", required = false) List<String> types,
             @RequestParam(value = "progresses", required = false) List<String> progresses) {
         String normalizedKeyword = keyword == null ? "" : keyword.trim();
-        List<String> selectedGenres = genres == null
+        List<Integer> selectedGenres = genres == null
                 ? List.of()
-                : genres.stream().filter(g -> g != null && !g.trim().isEmpty()).map(String::trim).distinct().toList();
+                : genres.stream().filter(g -> g != null && g > 0).distinct().toList();
         List<String> selectedTypes = types == null
                 ? List.of()
                 : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim).distinct().toList();
@@ -72,14 +72,14 @@ public class ClientNovelController {
     public String searchNovels(
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam("page") Optional<String> pageOptional,
-            @RequestParam(value = "genres", required = false) List<String> genres,
+            @RequestParam(value = "genres", required = false) List<Integer> genres,
             @RequestParam(value = "types", required = false) List<String> types,
             @RequestParam(value = "progresses", required = false) List<String> progresses,
             Model model) {
         String normalizedKeyword = keyword == null ? "" : keyword.trim();
-        List<String> selectedGenres = genres == null
+        List<Integer> selectedGenres = genres == null
                 ? List.of()
-                : genres.stream().filter(g -> g != null && !g.trim().isEmpty()).map(String::trim).distinct().toList();
+                : genres.stream().filter(g -> g != null && g > 0).distinct().toList();
         List<String> selectedTypes = types == null
                 ? List.of()
                 : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim).distinct().toList();

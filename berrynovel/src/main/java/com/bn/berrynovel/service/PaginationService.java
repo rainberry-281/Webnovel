@@ -89,7 +89,7 @@ public class PaginationService {
     }
 
     public PaginationQuery<Novel> ClientFilterNovelPagination(Optional<String> pageOptinal, int size, String keyword,
-            java.util.List<String> genreCodes, java.util.List<String> typeValues,
+            java.util.List<Integer> genreIds, java.util.List<String> typeValues,
             java.util.List<String> progressValues) {
         int page = 1;
         try {
@@ -101,7 +101,7 @@ public class PaginationService {
         }
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<Novel> nvs = this.novelService.searchVisibleNovels(keyword, genreCodes, typeValues, progressValues,
+        Page<Novel> nvs = this.novelService.searchVisibleNovels(keyword, genreIds, typeValues, progressValues,
                 pageable);
 
         return new PaginationQuery<>(page, nvs);

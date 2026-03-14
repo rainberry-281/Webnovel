@@ -139,7 +139,6 @@ public class NovelService {
                 .orElseThrow(() -> new RuntimeException("Genre not found"));
         if (genreInDataBase != null) {
             genreInDataBase.setName(genre.getName());
-            genreInDataBase.setCode(genre.getCode());
             this.genreRepository.save(genreInDataBase);
         }
     }
@@ -159,16 +158,14 @@ public class NovelService {
         return this.novelRepository.findByStatus(true, pageable);
     }
 
-    public List<Novel> searchVisibleNovels(String keyword, List<String> genreCodes, List<String> typeValues,
+    public List<Novel> searchVisibleNovels(String keyword, List<Integer> genreIds, List<String> typeValues,
             List<String> progressValues) {
         String normalizedKeyword = keyword == null ? "" : keyword.trim();
-        List<String> normalizedGenreCodes = genreCodes == null
+        List<Integer> normalizedGenreIds = genreIds == null
                 ? List.of()
-                : genreCodes.stream()
+                : genreIds.stream()
                         .filter(Objects::nonNull)
-                        .map(String::trim)
-                        .map(String::toLowerCase)
-                        .filter(code -> !code.isEmpty())
+                        .filter(id -> id > 0)
                         .distinct()
                         .toList();
         List<String> normalizedTypeValues = typeValues == null
@@ -188,7 +185,7 @@ public class NovelService {
                         .distinct()
                         .toList();
 
-        if (normalizedKeyword.isEmpty() && normalizedGenreCodes.isEmpty() && normalizedTypeValues.isEmpty()
+        if (normalizedKeyword.isEmpty() && normalizedGenreIds.isEmpty() && normalizedTypeValues.isEmpty()
                 && normalizedProgressValues.isEmpty()) {
             return List.of();
         }
@@ -201,12 +198,11 @@ public class NovelService {
             filter.append(" and title ~~ '%").append(escapedKeyword).append("%'");
         }
 
-        if (!normalizedGenreCodes.isEmpty()) {
-            String genreInClause = normalizedGenreCodes.stream()
-                    .map(code -> code.replace("\\", "\\\\").replace("'", "\\'"))
-                    .map(code -> "'" + code + "'")
+        if (!normalizedGenreIds.isEmpty()) {
+            String genreInClause = normalizedGenreIds.stream()
+                    .map(String::valueOf)
                     .collect(java.util.stream.Collectors.joining(", "));
-            filter.append(" and genres.code in [").append(genreInClause).append("]");
+            filter.append(" and genres.id in [").append(genreInClause).append("]");
         }
 
         if (!normalizedTypeValues.isEmpty()) {
@@ -232,16 +228,14 @@ public class NovelService {
                 .filter(novel -> novel.getGenres() != null && !novel.getGenres().isEmpty())
                 .filter(novel -> novel.getGenres().stream().allMatch(Genre::getStatus))
                 .filter(novel -> {
-                    if (normalizedGenreCodes.isEmpty()) {
+                    if (normalizedGenreIds.isEmpty()) {
                         return true;
                     }
-                    java.util.Set<String> novelGenreCodes = novel.getGenres().stream()
-                            .map(Genre::getCode)
+                    java.util.Set<Integer> novelGenreIds = novel.getGenres().stream()
+                            .map(Genre::getId)
                             .filter(Objects::nonNull)
-                            .map(String::trim)
-                            .map(String::toLowerCase)
                             .collect(java.util.stream.Collectors.toSet());
-                    return novelGenreCodes.containsAll(normalizedGenreCodes);
+                    return novelGenreIds.containsAll(normalizedGenreIds);
                 })
                 .collect(java.util.stream.Collectors.toMap(
                         Novel::getId,
@@ -256,9 +250,9 @@ public class NovelService {
                 .toList();
     }
 
-    public Page<Novel> searchVisibleNovels(String keyword, List<String> genreCodes, List<String> typeValues,
+    public Page<Novel> searchVisibleNovels(String keyword, List<Integer> genreIds, List<String> typeValues,
             List<String> progressValues, Pageable pageable) {
-        List<Novel> searchedNovels = this.searchVisibleNovels(keyword, genreCodes, typeValues, progressValues);
+        List<Novel> searchedNovels = this.searchVisibleNovels(keyword, genreIds, typeValues, progressValues);
 
         int start = (int) pageable.getOffset();
         int end = Math.min(start + pageable.getPageSize(), searchedNovels.size());
@@ -341,5 +335,9 @@ public class NovelService {
 
     public boolean checkTitleExists(String title) {
         return this.novelRepository.existsByTitle(title);
+    }
+
+    public boolean checkGenreNameExists(String name) {
+        return this.genreRepository.existsByName(name);
     }
 }

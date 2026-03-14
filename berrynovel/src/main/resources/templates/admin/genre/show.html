@@ -38,7 +38,6 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Code</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -48,7 +47,6 @@
                             <tr th:each="genre : ${genres}">
                                 <td th:text="${genre.id}">1</td>
                                 <td th:text="${genre.name}">Action</td>
-                                <td th:text="${genre.code}">ACT</td>
 
                                 <td th:classappend="${genre.status} ? 'status-published' : 'status-hidden'"
                                     class="status">
@@ -117,10 +115,7 @@
 
                     <label for="genreName">Genre Name</label>
                     <input type="text" th:field="*{name}" id="genreName" placeholder="Enter genre name" required>
-
-                    <label for="genreCode">Code</label>
-                    <input type="text" th:field="*{code}" id="genreCode" placeholder="Enter code" required>
-
+                    <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     <input type="hidden" name="status" value="true">
 
                     <div class="popup-action">
@@ -132,6 +127,10 @@
             </form>
         </div>
     </div>
+
+    <input type="hidden" id="openGenrePopupFlag" th:value="${openGenrePopup}">
+    <input type="hidden" id="popupModeValue" th:value="${popupMode}">
+    <input type="hidden" id="popupGenreIdValue" th:value="${genre != null ? genre.id : 0}">
 
 
 
@@ -173,7 +172,6 @@
             document.getElementById("genreForm").action = "/admin/genres/genre/create";
             document.getElementById("genreId").value = "";
             document.getElementById("genreName").value = "";
-            document.getElementById("genreCode").value = "";
             document.getElementById("saveGenreBtn").innerText = "CREATE";
             document.getElementById("genrePopup").style.display = "flex";
         }
@@ -185,14 +183,12 @@
                 const row = this.closest("tr");
                 const id = row.children[0].innerText;
                 const name = row.children[1].innerText;
-                const code = row.children[2].innerText;
                 const status = row.querySelector(".status").textContent.trim() === "Active";
 
                 document.getElementById("popupTitle").innerText = "Edit Genre";
                 document.getElementById("genreForm").action = "/admin/genres/genre/update/" + id;
                 document.getElementById("genreId").value = id;
                 document.getElementById("genreName").value = name;
-                document.getElementById("genreCode").value = code;
                 document.getElementById("saveGenreBtn").innerText = "UPDATE";
                 document.getElementById("genrePopup").style.display = "flex";
             });
@@ -203,6 +199,30 @@
         function closePopup() {
             document.getElementById("genrePopup").style.display = "none";
         }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const openGenrePopup = document.getElementById("openGenrePopupFlag")?.value === "true";
+            if (!openGenrePopup) {
+                return;
+            }
+
+            const popupMode = document.getElementById("popupModeValue")?.value || "";
+            const genreId = Number(document.getElementById("popupGenreIdValue")?.value || 0);
+
+            if (popupMode === "update" && genreId > 0) {
+                document.getElementById("popupTitle").innerText = "Edit Genre";
+                document.getElementById("genreForm").action = "/admin/genres/genre/update/" + genreId;
+                document.getElementById("saveGenreBtn").innerText = "UPDATE";
+            } else {
+                document.getElementById("popupTitle").innerText = "Add New Genre";
+                document.getElementById("genreForm").action = "/admin/genres/genre/create";
+                document.getElementById("saveGenreBtn").innerText = "CREATE";
+            }
+
+            document.getElementById("genrePopup").style.display = "flex";
+        });
     </script>
 
     <script src="/src/main/resources/static/admin/js/sidebar.js"></script>

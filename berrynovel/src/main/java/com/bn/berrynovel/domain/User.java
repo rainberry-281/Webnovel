@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import jakarta.persistence.Id;
+
+import com.bn.berrynovel.service.Validator.StrongPassword;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +33,7 @@ public class User {
     private String username;
 
     @NotNull
-    @Size(min = 6, message = "Mật khẩu không hợp lệ")
+    @StrongPassword
     private String password;
 
     private String fullName;

@@ -70,47 +70,49 @@
                                         <label class="form-label fw-bold">Phone number:</label>
                                         <input th:field="*{phoneNumber}" style="padding-left: 20px;" type="number"
                                             class="form-control border " value="">
+                                        <div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger">
+                                            <p th:errors="*{phoneNumber}"></p>
 
-                                    </div>
+                                        </div>
 
-                                    <div class="col-md-12 mb-3">
-                                        <label class="form-label fw-bold">Avatar:</label>
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label fw-bold">Avatar:</label>
 
-                                        <!-- lưu ảnh cũ -->
-                                        <input type="hidden" id="currentImage" th:value="*{image}" th:if="*{image}"
-                                            th:data-imagepath="@{/images/avatar/}">
+                                            <!-- lưu ảnh cũ -->
+                                            <input type="hidden" id="currentImage" th:value="*{image}" th:if="*{image}"
+                                                th:data-imagepath="@{/images/avatar/}">
 
-                                        <div id="uploadContainer" class="d-flex gap-3 align-items-start">
+                                            <div id="uploadContainer" class="d-flex gap-3 align-items-start">
 
-                                            <!-- upload box -->
-                                            <div class="upload-box">
-                                                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
-                                                <p>Upload image</p>
+                                                <!-- upload box -->
+                                                <div class="upload-box">
+                                                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                                    <p>Upload image</p>
 
-                                                <input type="file" id="imageInput" name="images"
-                                                    accept=".png,.jpg,.jpeg">
-                                            </div>
+                                                    <input type="file" id="imageInput" name="images"
+                                                        accept=".png,.jpg,.jpeg">
+                                                </div>
 
-                                            <!-- preview -->
-                                            <div id="previewContainer" style="display:none;">
-                                                <img id="imagePreview" style="max-width:250px;
+                                                <!-- preview -->
+                                                <div id="previewContainer" style="display:none;">
+                                                    <img id="imagePreview" style="max-width:250px;
                                                     max-height:250px;
                                                     border-radius:8px;
                                                     object-fit:cover;">
-                                            </div>
+                                                </div>
 
+                                            </div>
                                         </div>
+
                                     </div>
 
-                                </div>
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn px-4 py-2 fw-bold">
+                                            Update
+                                        </button>
+                                    </div>
 
-                                <div class="text-center mt-4">
-                                    <button type="submit" class="btn px-4 py-2 fw-bold">
-                                        Update
-                                    </button>
-                                </div>
-
-                                <!-- <div>
+                                    <!-- <div>
                                     <input type="hidden" name="_csrf"
                                         value="d9e6l5wUzlpzIj6mNcqAIW6DXv6OPkn8XEph3AwBH7vEgH0LFLOM9fkk9zxeQQjEBOe0EFixc5zvX3vRay5R5T9nJ4L35E89">
                                 </div> -->

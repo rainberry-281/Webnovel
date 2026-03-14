@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.bn.berrynovel.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -16,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import com.bn.berrynovel.domain.User;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 @Controller
 public class ClientAccountController {
@@ -43,10 +43,26 @@ public class ClientAccountController {
 
     @PostMapping("/profile/edit")
     public String postEditProfile(Model model, @ModelAttribute("user") User user, Authentication authentication,
-            @RequestParam(value = "images") MultipartFile file, HttpSession session,
+            BindingResult bindingResult, @RequestParam(value = "images") MultipartFile file, HttpSession session,
             RedirectAttributes redirectAttributes) {
 
         String username = authentication.getName();
+        User currentUser = this.userService.getUserByUsername(username);
+
+        String phone = user.getPhoneNumber();
+
+        if (phone != null && !phone.isEmpty()) {
+            if (!phone.matches("^[0-9]{10}$")) {
+                bindingResult.rejectValue("phoneNumber", "error.user", "Phone number must be exactly 10 digits");
+            }
+        }
+
+        if (bindingResult.hasErrors()) {
+            user.setImage(currentUser.getImage());
+            model.addAttribute("user", user);
+            return "client/profile/edit";
+        }
+
         User updateUser = this.userService.updateUser(user, file);
 
         session.setAttribute("phoneNumber", updateUser.getPhoneNumber());

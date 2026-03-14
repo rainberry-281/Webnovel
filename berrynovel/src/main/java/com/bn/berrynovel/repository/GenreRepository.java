@@ -11,7 +11,7 @@ import com.bn.berrynovel.domain.Genre;
 public interface GenreRepository extends JpaRepository<Genre, Integer> {
     Genre findByName(String name);
 
-    Genre findByCode(String code);
+    boolean existsByName(String name);
 
     List<Genre> findByStatus(boolean status);
 

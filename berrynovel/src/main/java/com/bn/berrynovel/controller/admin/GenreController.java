@@ -8,9 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.service.PaginationService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,24 +33,54 @@ public class GenreController {
         this.paginationService = paginationService;
     }
 
-    @GetMapping()
-    public String getGenreList(Model model, @RequestParam(value = "page") Optional<String> pageOptional) {
+    private void loadGenreListPageData(Model model, Optional<String> pageOptional, Genre genreForm) {
         PaginationQuery paginationQuery = this.paginationService.AdminGenrePagination(pageOptional, 8);
         model.addAttribute("genres", paginationQuery.getNvs().getContent());
         model.addAttribute("currentPage", paginationQuery.getPage());
         model.addAttribute("totalPage", paginationQuery.getNvs().getTotalPages());
-        model.addAttribute("genre", new Genre());
+        model.addAttribute("genre", genreForm);
+    }
+
+    @GetMapping()
+    public String getGenreList(Model model, @RequestParam(value = "page") Optional<String> pageOptional) {
+        loadGenreListPageData(model, pageOptional, new Genre());
         return "admin/genre/show";
     }
 
     @PostMapping("/genre/create")
-    public String createGenre(@ModelAttribute("genre") Genre genre) {
+    public String createGenre(@ModelAttribute("genre") @Valid Genre genre, BindingResult bindingResult,
+            Model model) {
+
+        if (this.novelService.checkGenreNameExists(genre.getName())) {
+            bindingResult.rejectValue("name", "error.genre", "Genre name already exists");
+        }
+
+        if (bindingResult.hasErrors()) {
+            loadGenreListPageData(model, Optional.of("1"), genre);
+            model.addAttribute("openGenrePopup", true);
+            model.addAttribute("popupMode", "create");
+            return "admin/genre/show";
+        }
         this.novelService.saveGenre(genre);
         return "redirect:/admin/genres";
     }
 
     @PostMapping("/genre/update/{id}")
-    public String updateGenre(@PathVariable Integer id, @ModelAttribute("genre") Genre genre) {
+    public String updateGenre(@PathVariable Integer id, @ModelAttribute("genre") @Valid Genre genre,
+            BindingResult bindingResult, Model model) {
+        genre.setId(id);
+
+        if (this.novelService.checkGenreNameExists(genre.getName())) {
+            bindingResult.rejectValue("name", "error.genre", "Genre name already exists");
+        }
+
+        if (bindingResult.hasErrors()) {
+            loadGenreListPageData(model, Optional.of("1"), genre);
+            model.addAttribute("openGenrePopup", true);
+            model.addAttribute("popupMode", "update");
+            return "admin/genre/show";
+        }
+
         this.novelService.updateGenre(genre);
         return "redirect:/admin/genres";
     }

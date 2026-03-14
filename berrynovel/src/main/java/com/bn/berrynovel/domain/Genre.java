@@ -22,8 +22,6 @@ public class Genre {
 
     private String name;
 
-    private String code;
-
     @ManyToMany(mappedBy = "genres", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Novel> novels;
@@ -45,14 +43,6 @@ public class Genre {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public boolean isStatus() {

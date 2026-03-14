@@ -1,11 +1,27 @@
 package com.bn.berrynovel.domain.dto;
 
+import com.bn.berrynovel.service.Validator.RegisterChecked;
+import com.bn.berrynovel.service.Validator.StrongPassword;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+@RegisterChecked
 public class RegisterDTO {
     public String fullName;
+
+    @NotBlank(message = "Tên đăng nhập không được để trống")
     public String username;
+
+    @Email(message = "Email không hợp lệ")
+    @NotBlank(message = "Email không được để trống")
     public String email;
+
     public String phoneNumber;
+
+    @StrongPassword
     public String password;
+
     public String confirmPassword;
 
     public RegisterDTO() {
