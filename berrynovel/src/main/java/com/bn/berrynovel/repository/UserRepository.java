@@ -18,6 +18,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findFirstById(int id);
 
+    boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
+
     Page<User> findAll(Pageable pageable);
 
     List<User> findByStatus(boolean status);

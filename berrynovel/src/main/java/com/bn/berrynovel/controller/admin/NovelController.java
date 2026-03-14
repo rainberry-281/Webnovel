@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 
+import javax.naming.Binding;
+
 import com.bn.berrynovel.repository.GenreRepository;
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.domain.Novel;
@@ -20,9 +22,12 @@ import com.bn.berrynovel.domain.PaginationQuery;
 import com.bn.berrynovel.domain.Genre;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.stereotype.Controller;
 import com.bn.berrynovel.service.ImageService;
 import com.bn.berrynovel.service.PaginationService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin/novel")
@@ -67,7 +72,8 @@ public class NovelController {
     }
 
     @PostMapping("/create")
-    public String postCreateNovel(@ModelAttribute("newNovel") Novel novel,
+    public String postCreateNovel(@ModelAttribute("newNovel") @Valid Novel novel,
+            BindingResult novelBindingResult,
             @RequestParam(value = "images", required = false) MultipartFile file,
             @RequestParam(value = "genreIds", required = false) List<Integer> genreIds) {
         if (genreIds != null && !genreIds.isEmpty()) {
@@ -77,6 +83,15 @@ public class NovelController {
                     .toList();
             novel.setGenres(genres);
         }
+
+        if (this.novelService.checkTitleExists(novel.getTitle())) {
+            novelBindingResult.rejectValue("title", "error.novel", "Title already exists");
+        }
+
+        if (novelBindingResult.hasErrors()) {
+            return "admin/novel/create";
+        }
+
         novel.setCreatedAt(LocalDateTime.now());
         this.novelService.createNovel(novel, file);
         return "redirect:/admin/novel";
@@ -94,7 +109,8 @@ public class NovelController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateNovelPage(@PathVariable("id") Long id, @ModelAttribute("newNovel") Novel novel,
+    public String updateNovelPage(@PathVariable("id") Long id, @ModelAttribute("newNovel") @Valid Novel novel,
+            BindingResult novelBindingResult,
             @RequestParam(value = "images", required = false) MultipartFile file,
             @RequestParam(value = "genreIds", required = false) List<Integer> genreIds) {
         novel.setId(id);
@@ -104,6 +120,14 @@ public class NovelController {
                     .filter(g -> g != null)
                     .toList();
             novel.setGenres(genres);
+        }
+
+        if (this.novelService.checkTitleExists(novel.getTitle())) {
+            novelBindingResult.rejectValue("title", "error.novel", "Title already exists");
+        }
+
+        if (novelBindingResult.hasErrors()) {
+            return "admin/novel/update";
         }
         this.novelService.updateNovel(novel, file);
         return "redirect:/admin/novel";

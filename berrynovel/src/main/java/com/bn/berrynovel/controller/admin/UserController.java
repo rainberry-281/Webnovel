@@ -61,6 +61,21 @@ public class UserController {
             System.out.println(">>>>" + error.getObjectName() + " - " + error.getDefaultMessage());
         }
 
+        if (userService.checkUsernameExists(user.getUsername())) {
+            userBindingResult.rejectValue("username", "error.user", "Username already exists");
+        }
+
+        if (userService.checkEmailExists(user.getEmail())) {
+            userBindingResult.rejectValue("email", "error.user", "Email already exists");
+        }
+
+        String phone = user.getPhoneNumber();
+        if (phone != null && !phone.isEmpty()) {
+            if (!phone.matches("^[0-9]{10}$")) {
+                userBindingResult.rejectValue("phoneNumber", "error.user", "Phone number must be exactly 10 digits");
+            }
+        }
+
         if (userBindingResult.hasErrors()) {
             return "admin/user/create";
         }
@@ -77,8 +92,19 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateUserPage(@PathVariable int id, @ModelAttribute("newUser") User user,
-            @RequestParam(value = "images", required = false) MultipartFile file) {
+    public String updateUserPage(@PathVariable int id, @ModelAttribute("newUser") @Valid User user,
+            BindingResult userBindingResult, @RequestParam(value = "images", required = false) MultipartFile file) {
+
+        String phone = user.getPhoneNumber();
+        if (phone != null && !phone.isEmpty()) {
+            if (!phone.matches("^[0-9]{10}$")) {
+                userBindingResult.rejectValue("phoneNumber", "error.user", "Phone number must be exactly 10 digits");
+            }
+        }
+        if (userBindingResult.hasErrors()) {
+            return "admin/user/update";
+        }
+
         this.userService.updateUser(user, file);
         return "redirect:/admin/user";
     }

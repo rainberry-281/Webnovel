@@ -39,6 +39,8 @@
                         <div class="col-md-12 form-group">
                             <label>Email:</label>
                             <input th:type="email" class="form-control border bg-light" th:field="*{email}" readonly>
+                            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                            </div>
                         </div>
 
                         <!-- USERNAME -->
@@ -46,6 +48,8 @@
                             <label>User name:</label>
                             <input th:type="text" class="form-control border bg-light" th:field="*{username}"
                                 readonly="true">
+                            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                            </div>
                         </div>
 
                         <!-- FULLNAME -->
@@ -58,6 +62,9 @@
                         <div class="col-md-6 form-group">
                             <label>Phone number:</label>
                             <input th:type="text" class="form-control" th:field="*{phoneNumber}">
+                            <div class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}"
+                                th:errors="*{phoneNumber}">
+                            </div>
                         </div>
 
                         <!-- ROLE -->

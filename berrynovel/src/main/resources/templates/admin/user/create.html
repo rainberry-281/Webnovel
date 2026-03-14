@@ -76,6 +76,9 @@
                             <label>Phone number:</label>
                             <input type="text" class="form-control" th:field="*{phoneNumber}"
                                 placeholder="Enter phone number">
+                            <div class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}"
+                                th:errors="*{phoneNumber}">
+                            </div>
                         </div>
 
                         <!-- ROLE -->
@@ -84,9 +87,8 @@
 
                             <div class="select-wrapper">
                                 <select class="form-control" th:field="*{role.name}">
-                                    <option value="">Select role</option>
-                                    <option value="ADMIN">ADMIN</option>
                                     <option value="USER">USER</option>
+                                    <option value="ADMIN">ADMIN</option>
                                 </select>
                                 <div class="text-danger" th:if="${#fields.hasErrors('role.name')}"
                                     th:errors="*{role.name}">

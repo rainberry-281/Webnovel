@@ -26,7 +26,7 @@ public class User {
     private Role role;
 
     @NotNull
-    @Size(min = 2, message = "Tên đăng nhập không hợp lệ")
+    @Size(min = 6, message = "Tên đăng nhập không hợp lệ")
     private String username;
 
     @NotNull

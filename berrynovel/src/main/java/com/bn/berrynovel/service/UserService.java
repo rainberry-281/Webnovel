@@ -105,4 +105,12 @@ public class UserService {
         userInDataBase.setStatus(!userInDataBase.getStatus());
         this.userRepository.save(userInDataBase);
     }
+
+    public boolean checkUsernameExists(String username) {
+        return this.userRepository.existsByUsername(username);
+    }
+
+    public boolean checkEmailExists(String email) {
+        return this.userRepository.existsByEmail(email);
+    }
 }

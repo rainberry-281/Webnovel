@@ -69,6 +69,7 @@
                         <div class="col-md-6 form-group">
                             <label>Novel name:</label>
                             <input type="text" th:field="*{title}" class="form-control">
+                            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="text-danger"></div>
                         </div>
 
                         <!-- AUTHOR -->

@@ -338,4 +338,8 @@ public class NovelService {
     public Optional<Chapter> getLatestChapter(Long novelId) {
         return Optional.ofNullable(this.chapterRepository.findLastChapter(novelId));
     }
+
+    public boolean checkTitleExists(String title) {
+        return this.novelRepository.existsByTitle(title);
+    }
 }
