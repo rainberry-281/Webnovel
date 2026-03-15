@@ -91,6 +91,7 @@ public class LibraryService {
         }
 
         return this.bookshelfRepository.findByUser_IdOrderByNovel_TitleAsc(user.getId()).stream()
+                .filter(bookshelf -> this.isNovelVisible(bookshelf.getNovel()))
                 .map(bookshelf -> {
                     Chapter newestChapter = this.chapterRepository.findLastChapter(bookshelf.getNovel().getId());
                     LocalDateTime latestChapterTime = newestChapter != null && newestChapter.getCreatedAt() != null
@@ -182,6 +183,9 @@ public class LibraryService {
 
         this.bookmarkRepository.findByUser_IdOrderByCreatedAtDesc(user.getId())
                 .forEach(bookmark -> {
+                    if (!this.isNovelVisible(bookmark.getNovel())) {
+                        return;
+                    }
                     Long id = bookmark.getNovel().getId();
                     novelsById.putIfAbsent(id, bookmark.getNovel());
                     groupedChapters.computeIfAbsent(id, key -> new java.util.ArrayList<>())
@@ -192,5 +196,13 @@ public class LibraryService {
                 .map(entry -> new BookmarkNovelDTO(entry.getValue(),
                         groupedChapters.getOrDefault(entry.getKey(), List.of())))
                 .toList();
+    }
+
+    private boolean isNovelVisible(Novel novel) {
+        return novel != null
+                && novel.getStatus()
+                && novel.getGenres() != null
+                && !novel.getGenres().isEmpty()
+                && novel.getGenres().stream().allMatch(genre -> genre != null && genre.getStatus());
     }
 }
