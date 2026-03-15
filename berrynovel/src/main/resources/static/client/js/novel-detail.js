@@ -6,53 +6,49 @@
 //     intro.innerHTML = content;
 // });
 
-// Bookmark
-const icon = document.querySelector('.bookmark');
-
-icon.addEventListener('click', function () {
-    this.classList.toggle('active');
-
-    if (this.classList.contains('active')) {
-        this.classList.remove('fa-regular');
-        this.classList.add('fa-solid');
-    } else {
-        this.classList.remove('fa-solid');
-        this.classList.add('fa-regular');
-        this.style.color = "";
-    }
-});
-
-
 // Nút xem thêm
 const btn = document.getElementById("toggleBtn");
 const text = document.getElementById("introText");
 
-btn.addEventListener("click", function () {
-    text.classList.toggle("expanded");
+if (btn && text) {
+    btn.addEventListener("click", function () {
+        text.classList.toggle("expanded");
 
-    if (text.classList.contains("expanded")) {
-        btn.innerText = "Thu gọn";
-    } else {
-        btn.innerText = "Xem thêm";
-    }
-});
+        if (text.classList.contains("expanded")) {
+            btn.innerText = "Thu gọn";
+        } else {
+            btn.innerText = "Xem thêm";
+        }
+    });
+}
 
 
 // Comment
-document.getElementById("submitComment").addEventListener("click", function () {
+const submitCommentButton = document.getElementById("submitComment");
 
-    const name = document.getElementById("username").value.trim();
-    const text = document.getElementById("commentInput").value.trim();
+if (submitCommentButton) {
+    submitCommentButton.addEventListener("click", function () {
 
-    if (name === "" || text === "") {
-        alert("Vui lòng nhập đầy đủ thông tin!");
-        return;
-    }
+        const usernameInput = document.getElementById("username");
+        const commentInput = document.getElementById("commentInput");
+        const commentList = document.getElementById("commentList");
 
-    const now = new Date();
-    const timeString = now.toLocaleString("vi-VN");
+        if (!usernameInput || !commentInput || !commentList) {
+            return;
+        }
 
-    const commentHTML = `
+        const name = usernameInput.value.trim();
+        const text = commentInput.value.trim();
+
+        if (name === "" || text === "") {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        const now = new Date();
+        const timeString = now.toLocaleString("vi-VN");
+
+        const commentHTML = `
         <div class="comment-item">
             <div class="d-flex justify-content-between">
                 <div class="comment-name">${name}</div>
@@ -62,8 +58,9 @@ document.getElementById("submitComment").addEventListener("click", function () {
         </div>
     `;
 
-    document.getElementById("commentList").insertAdjacentHTML("afterbegin", commentHTML);
+        commentList.insertAdjacentHTML("afterbegin", commentHTML);
 
-    document.getElementById("username").value = "";
-    document.getElementById("commentInput").value = "";
-});
+        usernameInput.value = "";
+        commentInput.value = "";
+    });
+}

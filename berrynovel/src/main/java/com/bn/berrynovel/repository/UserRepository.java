@@ -9,14 +9,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    void deleteById(int id);
+public interface UserRepository extends JpaRepository<User, Long> {
+    void deleteById(Long id);
 
     User findByUsername(String username);
 
     User findByEmail(String email);
 
-    User findFirstById(int id);
+    User findFirstById(Long id);
 
     boolean existsByUsername(String username);
 

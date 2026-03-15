@@ -85,14 +85,14 @@ public class UserController {
     }
 
     @GetMapping("/update/{id}")
-    public String getUpdatePage(Model model, @PathVariable int id) {
+    public String getUpdatePage(Model model, @PathVariable Long id) {
         User user = this.userService.getUserByID(id);
         model.addAttribute("newUser", user);
         return "admin/user/update";
     }
 
     @PostMapping("/update/{id}")
-    public String updateUserPage(@PathVariable int id, @ModelAttribute("newUser") @Valid User user,
+    public String updateUserPage(@PathVariable Long id, @ModelAttribute("newUser") @Valid User user,
             BindingResult userBindingResult, @RequestParam(value = "images", required = false) MultipartFile file) {
 
         String phone = user.getPhoneNumber();
@@ -111,7 +111,7 @@ public class UserController {
     }
 
     @PostMapping("/ban/{id}")
-    public String banUser(@PathVariable Integer id) {
+    public String banUser(@PathVariable Long id) {
         this.userService.softDeleteUser(id);
         return "redirect:/admin/user";
     }

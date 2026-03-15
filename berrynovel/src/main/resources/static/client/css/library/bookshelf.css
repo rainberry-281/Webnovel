@@ -127,6 +127,9 @@ table.listext-table.has-covers tr td .novel-cover {
     background-position: 50%;
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 table.listext-table tr td small.type-translation {

@@ -1,11 +1,13 @@
 package com.bn.berrynovel.controller.client;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.service.PaginationService;
 import com.bn.berrynovel.domain.PaginationQuery;
@@ -23,10 +25,13 @@ import java.util.Optional;
 public class ClientNovelController {
     private final NovelService novelService;
     private final PaginationService paginationService;
+    private final LibraryService libraryService;
 
-    public ClientNovelController(NovelService novelService, PaginationService paginationService) {
+    public ClientNovelController(NovelService novelService, PaginationService paginationService,
+            LibraryService libraryService) {
         this.novelService = novelService;
         this.paginationService = paginationService;
+        this.libraryService = libraryService;
     }
 
     @GetMapping("/category")
@@ -109,7 +114,7 @@ public class ClientNovelController {
     @GetMapping("/novel/{id}")
     public String getNovelDetailPage(@PathVariable("id") Long id,
             @RequestParam(value = "from", required = false) Optional<String> from,
-            Model model, HttpServletRequest request) {
+            Model model, HttpServletRequest request, Authentication authentication) {
         Novel novel = this.novelService.getNovelById(id).orElseThrow(() -> new RuntimeException("Novel not found"));
 
         List<Chapter> chapters = this.novelService.getChaptersByNovelId(id);
@@ -144,6 +149,11 @@ public class ClientNovelController {
         model.addAttribute("firstChapter", first);
         model.addAttribute("latestChapter", latest);
         model.addAttribute("breadcrumbFrom", breadcrumbFrom);
+        boolean inLibrary = authentication != null
+                && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getName())
+                && this.libraryService.isNovelInLibrary(authentication.getName(), id);
+        model.addAttribute("inLibrary", inLibrary);
 
         return "client/novel/show";
     }

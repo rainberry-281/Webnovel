@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -31,7 +31,7 @@
                     <a th:href="@{/category}" class="text-decoration-none text-dark">Category</a>
                 </li>
                 <li class="breadcrumb-item" th:if="${breadcrumbFrom == 'library'}">
-                    <a th:href="@{/profile}" class="text-decoration-none text-dark">Library</a>
+                    <a th:href="@{/library/bookshelf}" class="text-decoration-none text-dark">Library</a>
                 </li>
                 <li th:text="${novel.title}" class="breadcrumb-item active" aria-current="page"></li>
             </ol>
@@ -71,7 +71,21 @@
                                 </span>
                             </div>
 
-                            <i class="fa-regular fa-heart bookmark"></i>
+                            <form sec:authorize="isAuthenticated()"
+                                th:action="@{/library/toggle/{novelId}(novelId=${novel.id})}" method="post"
+                                class="mt-3">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                <button type="submit" class="bookmark-btn"
+                                    th:title="${inLibrary} ? 'Bỏ khỏi thư viện' : 'Thêm vào thư viện'">
+                                    <i
+                                        th:class="${inLibrary} ? 'fa-solid fa-heart bookmark active' : 'fa-regular fa-heart bookmark'"></i>
+                                </button>
+                            </form>
+
+                            <a sec:authorize="!isAuthenticated()" th:href="@{/login}"
+                                class="bookmark-login-link mt-3 d-inline-block" title="Đăng nhập để thêm vào thư viện">
+                                <i class="fa-regular fa-heart bookmark"></i>
+                            </a>
 
                             <div class="mt-4">
                                 <a th:if="${firstChapter != null}"

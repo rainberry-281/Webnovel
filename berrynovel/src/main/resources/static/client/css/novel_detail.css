@@ -48,6 +48,22 @@ h2 {
     transition: 0.3s;
 }
 
+.bookmark-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    line-height: 1;
+}
+
+.bookmark-btn .fa-heart.active,
+.bookmark-login-link .fa-heart.active {
+    color: #ff6b81;
+}
+
+.bookmark-login-link {
+    text-decoration: none;
+}
+
 .fa-heart:hover {
     font-size: 25px;
     color: #FFB6C1;

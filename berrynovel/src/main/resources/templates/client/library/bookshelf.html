@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -10,28 +10,28 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/library/bookshelf.css">
+    <link rel="stylesheet" th:href="@{/client/css/library/bookshelf.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/navitigation.css">
+    <link rel="stylesheet" th:href="@{/client/css/navitigation.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/font.css">
+    <link rel="stylesheet" th:href="@{/client/css/font.css}">
 </head>
 
 <body>
-    <div id="navbar"></div>
+    <div th:replace="~{client/layout/navigation :: navbar}"></div>
 
-    <main class="library-page" style="min-height: 622px; padding-top: 70px;">
+    <main class="library-page" style="min-height: 100vh; padding-top: 85px;">
         <div class="container">
             <div class="row d-block clearfix">
                 <div class="col-12 col-lg-3 float-end">
                     <section class="private-tabs">
                         <header>
                             <h4 class="section-name">Tài khoản</h4>
-                            <span class="user-name">rainberry</span>
+                            <span class="user-name" sec:authentication="name"></span>
                         </header>
                         <ul class="user-private-tabs">
                             <li class="current">
-                                <a href="bookshelf.html">
+                                <a th:href="@{/library/bookshelf}">
                                     <span class="d-none d-lg-inline">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
@@ -43,7 +43,7 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="bookmark.html">
+                                <a th:href="@{/library/bookshelf}">
                                     <span class="d-none d-lg-inline">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
@@ -59,85 +59,59 @@
                 </div>
 
                 <div class="col-12 col-lg-9 float-start">
-                    <div class="pad-bottom-20" style="padding-bottom: 20px;">
-                        <div class="delete-button-container d-flex justify-content-start" style>
-                            <button class="btn btn-danger rounded-pill fw-bold px-3">Xóa đã chọn</button>
+                    <form th:action="@{/library/bookshelf/delete}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        <div class="pad-bottom-20" style="padding-bottom: 20px;">
+                            <div class="delete-button-container d-flex justify-content-start" style>
+                                <button class="btn btn-danger rounded-pill fw-bold px-3" type="submit">Xóa đã
+                                    chọn</button>
+                            </div>
                         </div>
-                    </div>
 
-                    <table class="table table-borderless listext-table has-covers" style="table-layout: fixed;">
-                        <tbody>
-                            <tr>
-                                <th style="width: 2rem;"></th>
-                                <th class="col-10 col-md-8">Tên truyện</th>
-                                <th class="none table-cell-m col-md-4">Mới nhất</th>
-                            </tr>
+                        <table class="table table-borderless listext-table has-covers" style="table-layout: fixed;">
+                            <tbody>
+                                <tr>
+                                    <th style="width: 2rem;"></th>
+                                    <th class="col-10 col-md-8">Tên truyện</th>
+                                    <th class="none table-cell-m col-md-4">Mới nhất</th>
+                                </tr>
 
-                            <tr>
-                                <td class="text-clip">
-                                    <input type="checkbox" class="select-item">
-                                </td>
+                                <tr th:if="${#lists.isEmpty(libraryItems)}">
+                                    <td colspan="3" class="text-center py-4">Chưa có truyện trong thư viện.</td>
+                                </tr>
 
-                                <td>
-                                    <div class="a6-ratio novel-cover">
-                                        <div class="content img-in-ratio"
-                                            style="background-image: url('/src/main/resources/static/client/image/novel/Screenshot 2026-02-10 202954.png');">
+                                <tr th:each="item : ${libraryItems}">
+                                    <td class="text-clip align-middle">
+                                        <input type="checkbox" class="select-item" name="novelIds"
+                                            th:value="${item.novel.id}">
+                                    </td>
+
+                                    <td>
+                                        <div class="a6-ratio novel-cover">
+                                            <img class="content img-in-ratio"
+                                                th:src="@{/images/novel/{image}(image=${item.novel.image})}"
+                                                th:alt="${item.novel.title}">
                                         </div>
-                                    </div>
 
-                                    <div class="novel-name" style="padding-left: 50px;">
-                                        <a href="../novel/novel.html" class="overlay">
-                                            Yondomewa Iyana Shi Zokusei Majutsushi
-                                        </a>
-
-                                        <small class="type-translation">Truyện dịch</small>
-                                    </div>
-
-                                    <div class=""></div>
-                                </td>
-
-                                <td class="none table-cell-m">
-                                    <a href="../novel/chapter.html" class="overlay">
-                                        Chương 4: Tình yêu dành cho mặt trời
-                                    </a>
-                                    <small class="volume-name">Khiên quốc Mirg</small>
-                                </td>
-
-                            </tr>
-
-                            <tr>
-                                <td class="text-clip">
-                                    <input type="checkbox" class="select-item">
-                                </td>
-
-                                <td>
-                                    <div class="a6-ratio novel-cover">
-                                        <div class="content img-in-ratio"
-                                            style="background-image: url('/src/main/resources/static/client/image/novel/Screenshot 2026-02-10 202954.png');">
+                                        <div class="novel-name" style="padding-left: 50px;">
+                                            <a th:href="@{/novel/{id}(id=${item.novel.id},from='library')}"
+                                                class="overlay" th:text="${item.novel.title}"></a>
                                         </div>
-                                    </div>
+                                    </td>
 
-                                    <div class="novel-name" style="padding-left: 50px;">
-                                        <a href="../novel/novel.html" class="overlay">
-                                            Yondomewa Iyana Shi Zokusei Majutsushi
-                                        </a>
-
-                                        <small class="type-translation">Truyện dịch</small>
-                                    </div>
-
-                                    <div class=""></div>
-                                </td>
-
-                                <td class="none table-cell-m">
-                                    <a href="../novel/chapter.html" class="overlay">
-                                        Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai
-                                    </a>
-                                    <small class="volume-name">Khiên quốc Mirg</small>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
+                                    <td class="none table-cell-m">
+                                        <a class="overlay" th:if="${item.newestChapter != null}"
+                                            th:href="@{/reader/{novelId}/{chapterId}(novelId=${item.novel.id},chapterId=${item.newestChapter.id})}"
+                                            th:text="${item.newestChapter.title}"></a>
+                                        <small class="volume-name" th:if="${item.newestChapter != null}"
+                                            th:text="${#temporals.format(item.newestChapter.createdAt, 'dd/MM/yyyy')}"></small>
+                                        <span th:if="${item.newestChapter == null}">Chưa có chương</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
 
                 <div style="text-align: center; margin: 0 auto 10px auto;"></div>
@@ -150,11 +124,10 @@
         <h4>© 2026 berryNovel</h4>
     </footer>
 
-    <script src="/src/main/resources/static/client/js/include.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="/src/main/resources/static/client/js/logo.js"></script>
 
-    <script src="/src/main/resources/static/client/js/navitigation.js"></script>
+    <script th:src="@{/client/js/navitigation.js}"></script>
 </body>
 
 </html>

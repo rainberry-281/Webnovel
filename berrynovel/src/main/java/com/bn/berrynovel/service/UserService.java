@@ -87,7 +87,7 @@ public class UserService {
         return this.userRepository.findAll(pageable);
     }
 
-    public User getUserByID(int id) {
+    public User getUserByID(Long id) {
         return this.userRepository.findFirstById(id);
     }
 
@@ -99,7 +99,7 @@ public class UserService {
         return this.userRepository.findByEmail(email);
     }
 
-    public void softDeleteUser(int id) {
+    public void softDeleteUser(Long id) {
         User userInDataBase = this.userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userInDataBase.setStatus(!userInDataBase.getStatus());

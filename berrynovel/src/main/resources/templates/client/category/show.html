@@ -14,6 +14,13 @@
     <link rel="stylesheet" th:href="@{/client/css/navitigation.css}">
 
     <link rel="stylesheet" th:href="@{/client/css/font.css}">
+
+    <style>
+        .card-img-top {
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+        }
+    </style>
 </head>
 
 <body>
@@ -38,50 +45,50 @@
                     <form th:action="${#strings.isEmpty(keyword)} ? @{/category} : @{/search}" method="get">
                         <input type="hidden" name="keyword" th:if="${!#strings.isEmpty(keyword)}" th:value="${keyword}">
 
-                        <h6>Nguồn truyện</h6>
+                        <h6>Source</h6>
                         <div>
                             <label>
                                 <input type="checkbox" name="types" value="ORIGINAL"
                                     th:checked="${selectedTypes != null and #lists.contains(selectedTypes, 'ORIGINAL')}">
-                                Truyện sáng tác
+                                Original
                             </label>
                         </div>
                         <div>
                             <label>
                                 <input type="checkbox" name="types" value="TRANSLATION"
                                     th:checked="${selectedTypes != null and #lists.contains(selectedTypes, 'TRANSLATION')}">
-                                Truyện dịch
+                                Translation
                             </label>
                         </div>
 
                         <hr>
 
-                        <h6>Tiến trình</h6>
+                        <h6>Progress</h6>
                         <div>
                             <label>
                                 <input type="checkbox" name="progresses" value="ONGOING"
                                     th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'ONGOING')}">
-                                ongoing
+                                Ongoing
                             </label>
                         </div>
                         <div>
                             <label>
                                 <input type="checkbox" name="progresses" value="PAUSED"
                                     th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'PAUSED')}">
-                                paused
+                                Paused
                             </label>
                         </div>
                         <div>
                             <label>
                                 <input type="checkbox" name="progresses" value="COMPLETED"
                                     th:checked="${selectedProgresses != null and #lists.contains(selectedProgresses, 'COMPLETED')}">
-                                completed
+                                Completed
                             </label>
                         </div>
 
                         <hr>
 
-                        <h6>Thể loại</h6>
+                        <h6>Genres</h6>
                         <div th:classappend="${#lists.size(genres) > 10} ? 'genre-scroll'"
                             th:style="${#lists.size(genres) > 10} ? 'max-height:280px; overflow-y:auto; padding-right:6px;' : ''">
                             <div th:each="genre : ${genres}">
@@ -106,12 +113,11 @@
                 <!-- Novel list -->
                 <div class="col-12 col-lg-9 float-end">
                     <h2 class="fw-bold mb-4"
-                        th:text="${#strings.isEmpty(keyword)} ? 'Tất cả truyện' : 'Kết quả tìm kiếm cho: ' + keyword">
-                        Tất cả truyện
+                        th:text="${#strings.isEmpty(keyword)} ? 'All novels' : 'Search result for: ' + ${keyword}">
                     </h2>
 
-                    <p class="text-muted mb-4" th:if="${#lists.isEmpty(novels)}">
-                        Không tìm thấy truyện phù hợp.
+                    <p class="text-muted mb-4 fs-4" th:if="${#lists.isEmpty(novels)}">
+                        No novels found matching your search.
                     </p>
 
                     <div class="novel-list row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
