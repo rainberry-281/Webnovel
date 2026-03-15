@@ -35,7 +35,7 @@
                         <a th:href="@{/}" class="text-decoration-none text-dark">Home</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page"
-                        th:text="${#strings.isEmpty(keyword)} ? 'Category' : 'Search'">Category</li>
+                        th:text="${hasFilters} ? 'Filter result' : 'Category'">Category</li>
                 </ol>
             </nav>
 
@@ -101,7 +101,7 @@
                         </div>
 
                         <div class="d-flex gap-2 mt-3">
-                            <button type="submit" class="btn btn-dark btn-sm">Lọc</button>
+                            <button type="submit" class="btn btn-dark btn-sm">Filter</button>
                             <a class="btn btn-outline-secondary btn-sm"
                                 th:href="${#strings.isEmpty(keyword)} ? @{/category} : @{/search(keyword=${keyword})}">
                                 Clear
@@ -112,8 +112,7 @@
 
                 <!-- Novel list -->
                 <div class="col-12 col-lg-9 float-end">
-                    <h2 class="fw-bold mb-4"
-                        th:text="${#strings.isEmpty(keyword)} ? 'All novels' : 'Search result for: ' + ${keyword}">
+                    <h2 class="fw-bold mb-4" th:text="${hasFilters} ? 'Filter result' : 'All novels'">
                     </h2>
 
                     <p class="text-muted mb-4 fs-4" th:if="${#lists.isEmpty(novels)}">

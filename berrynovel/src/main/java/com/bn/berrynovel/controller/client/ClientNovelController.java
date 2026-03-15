@@ -70,6 +70,11 @@ public class ClientNovelController {
         model.addAttribute("selectedTypes", selectedTypes);
         model.addAttribute("selectedProgresses", selectedProgresses);
         model.addAttribute("keyword", normalizedKeyword);
+        boolean hasFilters = !normalizedKeyword.isEmpty()
+                || !selectedGenres.isEmpty()
+                || !selectedTypes.isEmpty()
+                || !selectedProgresses.isEmpty();
+        model.addAttribute("hasFilters", hasFilters);
         return "client/category/show";
     }
 
@@ -108,6 +113,11 @@ public class ClientNovelController {
         model.addAttribute("selectedTypes", selectedTypes);
         model.addAttribute("selectedProgresses", selectedProgresses);
         model.addAttribute("keyword", normalizedKeyword);
+        boolean hasFilters = !normalizedKeyword.isEmpty()
+                || !selectedGenres.isEmpty()
+                || !selectedTypes.isEmpty()
+                || !selectedProgresses.isEmpty();
+        model.addAttribute("hasFilters", hasFilters);
         return "client/category/show";
     }
 
