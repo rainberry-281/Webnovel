@@ -67,7 +67,7 @@ public class PaginationService {
         }
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        Page<Novel> nvs = this.novelService.findActiveNovels(pageable);
+        Page<Novel> nvs = this.novelService.findActiveNovelsWithActiveGenres(pageable);
 
         return new PaginationQuery<>(page, nvs);
     }

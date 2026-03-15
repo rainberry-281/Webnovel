@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -37,7 +37,19 @@
 
             <a class="rd_sd-button_item" th:href="@{/novel/{id}(id=${novel.id})}"><i class="fas fa-home"></i></a>
             <a id="rd-info-btn" class="rd_sd-button_item"><i class="fas fa-info"></i></a>
-            <a class="rd_sd-button_item"><i class="fas fa-bookmark"></i></a>
+            <form sec:authorize="isAuthenticated()"
+                th:action="@{/library/bookmark/toggle/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${chapter.id})}"
+                method="post" class="bookmark-toggle-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit" class="rd_sd-button_item"
+                    th:title="${isBookmarked} ? 'Bỏ bookmark chapter' : 'Bookmark chapter'">
+                    <i th:class="${isBookmarked} ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
+                </button>
+            </form>
+
+            <a sec:authorize="!isAuthenticated()" class="rd_sd-button_item" th:href="@{/login}">
+                <i class="far fa-bookmark"></i>
+            </a>
 
 
             <a class="rd_sd-button_item rd_top-right"
@@ -91,8 +103,8 @@
 
                     <div style="text-align: center; margin: 20px auto -20px auto;"></div>
 
-                    <div id="chapter-content" class="long-text text-justify"
-                        style="padding-left: 0px; padding-right: 0px;" th:utext="${chapter.content}">
+                    <div id="chapter-content" class="long-text text-justify" style="padding: 30px 0"
+                        th:utext="${chapter.content}">
                     </div>
                 </div>
             </div>

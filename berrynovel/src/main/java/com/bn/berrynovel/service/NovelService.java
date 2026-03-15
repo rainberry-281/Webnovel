@@ -40,7 +40,7 @@ public class NovelService {
         this.filterSpecificationConverter = filterSpecificationConverter;
     }
 
-    public void createNovel(Novel novel, MultipartFile file) {
+    public Novel createNovel(Novel novel, MultipartFile file) {
         if (novel.getGenres() != null) {
             List<Integer> genreIds = novel.getGenres().stream()
                     .map(Genre::getId)
@@ -60,11 +60,11 @@ public class NovelService {
             novel.setImage(imageName);
         }
 
-        Novel savedNovel = this.novelRepository.save(novel);
+        return this.novelRepository.save(novel);
     }
 
     @Transactional
-    public void updateNovel(Novel novel, MultipartFile file) {
+    public Novel updateNovel(Novel novel, MultipartFile file) {
         Novel novelInDataBase = this.novelRepository.findById(novel.getId())
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
@@ -88,7 +88,7 @@ public class NovelService {
         }
         novelInDataBase.setType(novel.getType());
         novelInDataBase.setProgress(novel.getProgress());
-        this.novelRepository.save(novelInDataBase);
+        return this.novelRepository.save(novelInDataBase);
     }
 
     public List<Novel> getAllNovels() {
@@ -119,6 +119,10 @@ public class NovelService {
         return this.genreRepository.findAllOrderByNameAsc();
     }
 
+    public List<Genre> getActiveGenres() {
+        return this.genreRepository.findActiveOrderByNameAsc();
+    }
+
     public Page<Genre> findAllGenres(Pageable pageable) {
         return this.genreRepository.findAll(pageable);
     }
@@ -134,13 +138,14 @@ public class NovelService {
         this.genreRepository.save(genreInDataBase);
     }
 
-    public void updateGenre(Genre genre) {
+    public Genre updateGenre(Genre genre) {
         Genre genreInDataBase = this.genreRepository.findById(genre.getId())
                 .orElseThrow(() -> new RuntimeException("Genre not found"));
         if (genreInDataBase != null) {
             genreInDataBase.setName(genre.getName());
-            this.genreRepository.save(genreInDataBase);
+            return this.genreRepository.save(genreInDataBase);
         }
+        return genreInDataBase;
     }
 
     public void toggleNovelStatus(Long id) {
@@ -269,6 +274,23 @@ public class NovelService {
 
     public Page<Novel> searchVisibleNovelsByTitle(String keyword, Pageable pageable) {
         return this.searchVisibleNovels(keyword, List.of(), List.of(), List.of(), pageable);
+    }
+
+    public Page<Novel> findActiveNovelsWithActiveGenres(Pageable pageable) {
+        String filter = "status : true and genres.status : true";
+        Specification<Novel> specification = this.filterSpecificationConverter.convert(filter);
+        Pageable largePageable = PageRequest.of(0, 2000);
+
+        List<Novel> allFiltered = this.novelRepository.findAll(specification, largePageable).getContent().stream()
+                .filter(novel -> novel.getGenres() != null && !novel.getGenres().isEmpty())
+                .filter(novel -> novel.getGenres().stream().allMatch(Genre::getStatus))
+                .collect(java.util.stream.Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), allFiltered.size());
+        List<Novel> content = start >= allFiltered.size() ? List.of() : allFiltered.subList(start, end);
+
+        return new PageImpl<>(content, pageable, allFiltered.size());
     }
 
     public List<Novel> getHomepageCompletedNovels() {

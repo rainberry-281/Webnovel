@@ -11,7 +11,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Library")
+@Table(name = "Bookshelf")
 public class Bookshelf {
 
     @EmbeddedId

@@ -29,7 +29,7 @@ public class UserService {
         this.imageService = imageService;
     }
 
-    public void createUserByClient(RegisterDTO registerDTO) {
+    public User createUserByClient(RegisterDTO registerDTO) {
         User user = new User();
         user.setUsername(registerDTO.getUsername());
         user.setFullName(registerDTO.getFullName());
@@ -39,10 +39,10 @@ public class UserService {
         user.setRole(this.roleRepository.findByName("USER"));
         String imageName = "defaultavatar.png";
         user.setImage(imageName);
-        User savedUser = this.userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
-    public void adminCreateUser(User user, MultipartFile file) {
+    public User adminCreateUser(User user, MultipartFile file) {
         Role roleInDataBase = this.roleRepository.findByName(user.getRole().getName());
         user.setRole(roleInDataBase);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -54,7 +54,7 @@ public class UserService {
         }
         user.setImage(imageName);
 
-        User savedUser = this.userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     public User updateUser(User user, MultipartFile file) {
@@ -99,11 +99,11 @@ public class UserService {
         return this.userRepository.findByEmail(email);
     }
 
-    public void softDeleteUser(Long id) {
+    public User softDeleteUser(Long id) {
         User userInDataBase = this.userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         userInDataBase.setStatus(!userInDataBase.getStatus());
-        this.userRepository.save(userInDataBase);
+        return this.userRepository.save(userInDataBase);
     }
 
     public boolean checkUsernameExists(String username) {

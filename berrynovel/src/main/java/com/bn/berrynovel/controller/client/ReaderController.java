@@ -1,6 +1,7 @@
 package com.bn.berrynovel.controller.client;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,19 +10,23 @@ import java.util.List;
 
 import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
+import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
 
 @Controller
 @RequestMapping("/reader")
 public class ReaderController {
     private final NovelService novelService;
+    private final LibraryService libraryService;
 
-    public ReaderController(NovelService novelService) {
+    public ReaderController(NovelService novelService, LibraryService libraryService) {
         this.novelService = novelService;
+        this.libraryService = libraryService;
     }
 
     @GetMapping("/{novelID}/{chapterID}")
-    public String getReaderPage(@PathVariable Long novelID, @PathVariable Long chapterID, Model model) {
+    public String getReaderPage(@PathVariable Long novelID, @PathVariable Long chapterID, Model model,
+            Authentication authentication) {
         Chapter chapter = this.novelService.getChapterById(chapterID);
 
         Novel novel = this.novelService.getNovelById(novelID)
@@ -52,6 +57,11 @@ public class ReaderController {
         model.addAttribute("chapters", chapters);
         model.addAttribute("prev", prev);
         model.addAttribute("next", next);
+        boolean isBookmarked = authentication != null
+                && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getName())
+                && this.libraryService.isChapterBookmarked(authentication.getName(), chapterID);
+        model.addAttribute("isBookmarked", isBookmarked);
         return "/client/reader/show";
     }
 

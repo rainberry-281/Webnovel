@@ -9,28 +9,34 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bn.berrynovel.domain.Bookshelf;
 import com.bn.berrynovel.domain.BookshelfId;
+import com.bn.berrynovel.domain.Bookmark;
 import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.domain.User;
+import com.bn.berrynovel.domain.dto.BookmarkNovelDTO;
 import com.bn.berrynovel.domain.dto.BookshelfItemDTO;
+import com.bn.berrynovel.repository.BookmarkRepository;
+import com.bn.berrynovel.repository.BookshelfRepository;
 import com.bn.berrynovel.repository.ChapterRepository;
-import com.bn.berrynovel.repository.LibraryRepository;
 import com.bn.berrynovel.repository.NovelRepository;
 import com.bn.berrynovel.repository.UserRepository;
 
 @Service
 public class LibraryService {
-    private final LibraryRepository libraryRepository;
+    private final BookshelfRepository bookshelfRepository;
     private final UserRepository userRepository;
     private final NovelRepository novelRepository;
     private final ChapterRepository chapterRepository;
+    private final BookmarkRepository bookmarkRepository;
 
-    public LibraryService(LibraryRepository libraryRepository, UserRepository userRepository,
-            NovelRepository novelRepository, ChapterRepository chapterRepository) {
-        this.libraryRepository = libraryRepository;
+    public LibraryService(BookshelfRepository bookshelfRepository, UserRepository userRepository,
+            NovelRepository novelRepository, ChapterRepository chapterRepository,
+            BookmarkRepository bookmarkRepository) {
+        this.bookshelfRepository = bookshelfRepository;
         this.userRepository = userRepository;
         this.novelRepository = novelRepository;
         this.chapterRepository = chapterRepository;
+        this.bookmarkRepository = bookmarkRepository;
     }
 
     public void addNovelToLibrary(String username, Long novelId) {
@@ -39,7 +45,7 @@ public class LibraryService {
             throw new RuntimeException("User not found");
         }
 
-        if (this.libraryRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId)) {
+        if (this.bookshelfRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId)) {
             return;
         }
 
@@ -51,7 +57,7 @@ public class LibraryService {
         bookshelf.setUser(user);
         bookshelf.setNovel(novel);
 
-        this.libraryRepository.save(bookshelf);
+        this.bookshelfRepository.save(bookshelf);
     }
 
     @Transactional
@@ -61,9 +67,9 @@ public class LibraryService {
             throw new RuntimeException("User not found");
         }
 
-        boolean inLibrary = this.libraryRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId);
+        boolean inLibrary = this.bookshelfRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId);
         if (inLibrary) {
-            this.libraryRepository.deleteByUser_IdAndNovel_Id(user.getId(), novelId);
+            this.bookshelfRepository.deleteByUser_IdAndNovel_Id(user.getId(), novelId);
             return;
         }
 
@@ -75,7 +81,7 @@ public class LibraryService {
         if (user == null) {
             return false;
         }
-        return this.libraryRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId);
+        return this.bookshelfRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId);
     }
 
     public List<BookshelfItemDTO> getBookshelfItems(String username) {
@@ -84,7 +90,7 @@ public class LibraryService {
             return List.of();
         }
 
-        return this.libraryRepository.findByUser_IdOrderByNovel_TitleAsc(user.getId()).stream()
+        return this.bookshelfRepository.findByUser_IdOrderByNovel_TitleAsc(user.getId()).stream()
                 .map(bookshelf -> {
                     Chapter newestChapter = this.chapterRepository.findLastChapter(bookshelf.getNovel().getId());
                     LocalDateTime latestChapterTime = newestChapter != null && newestChapter.getCreatedAt() != null
@@ -108,16 +114,83 @@ public class LibraryService {
     }
 
     @Transactional
-    public void deleteNovelsFromLibrary(String username, List<Long> novelIds) {
+    public int deleteNovelsFromLibrary(String username, List<Long> novelIds) {
         if (novelIds == null || novelIds.isEmpty()) {
-            return;
+            return 0;
         }
 
         User user = this.userRepository.findByUsername(username);
         if (user == null) {
+            return 0;
+        }
+
+        List<Bookshelf> matchedItems = this.bookshelfRepository.findByUser_IdOrderByNovel_TitleAsc(user.getId())
+                .stream()
+                .filter(item -> item.getNovel() != null && item.getNovel().getId() != null
+                        && novelIds.contains(item.getNovel().getId()))
+                .toList();
+
+        this.bookshelfRepository.deleteByUser_IdAndNovel_IdIn(user.getId(), novelIds);
+        return matchedItems.size();
+    }
+
+    @Transactional
+    public void toggleChapterBookmark(String username, Long novelId, Long chapterId) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        Chapter chapter = this.chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+
+        if (chapter.getNovel() == null || chapter.getNovel().getId() == null
+                || !chapter.getNovel().getId().equals(novelId)) {
+            throw new RuntimeException("Chapter does not belong to novel");
+        }
+
+        boolean exists = this.bookmarkRepository.existsByUser_IdAndChapter_Id(user.getId(), chapterId);
+        if (exists) {
+            this.bookmarkRepository.deleteByUser_IdAndChapter_Id(user.getId(), chapterId);
             return;
         }
 
-        this.libraryRepository.deleteByUser_IdAndNovel_IdIn(user.getId(), novelIds);
+        Bookmark bookmark = new Bookmark();
+        bookmark.setUser(user);
+        bookmark.setNovel(chapter.getNovel());
+        bookmark.setChapter(chapter);
+        this.bookmarkRepository.save(bookmark);
+    }
+
+    public boolean isChapterBookmarked(String username, Long chapterId) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            return false;
+        }
+
+        return this.bookmarkRepository.existsByUser_IdAndChapter_Id(user.getId(), chapterId);
+    }
+
+    public List<BookmarkNovelDTO> getBookmarkItems(String username) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            return List.of();
+        }
+
+        java.util.LinkedHashMap<Long, java.util.List<Chapter>> groupedChapters = new java.util.LinkedHashMap<>();
+        java.util.LinkedHashMap<Long, Novel> novelsById = new java.util.LinkedHashMap<>();
+
+        this.bookmarkRepository.findByUser_IdOrderByCreatedAtDesc(user.getId())
+                .forEach(bookmark -> {
+                    Long id = bookmark.getNovel().getId();
+                    novelsById.putIfAbsent(id, bookmark.getNovel());
+                    groupedChapters.computeIfAbsent(id, key -> new java.util.ArrayList<>())
+                            .add(bookmark.getChapter());
+                });
+
+        return novelsById.entrySet().stream()
+                .map(entry -> new BookmarkNovelDTO(entry.getValue(),
+                        groupedChapters.getOrDefault(entry.getKey(), List.of())))
+                .toList();
     }
 }

@@ -9,7 +9,7 @@ import com.bn.berrynovel.domain.Bookshelf;
 import com.bn.berrynovel.domain.BookshelfId;
 
 @Repository
-public interface LibraryRepository extends JpaRepository<Bookshelf, BookshelfId> {
+public interface BookshelfRepository extends JpaRepository<Bookshelf, BookshelfId> {
     boolean existsByUser_IdAndNovel_Id(Long userId, Long novelId);
 
     void deleteByUser_IdAndNovel_Id(Long userId, Long novelId);

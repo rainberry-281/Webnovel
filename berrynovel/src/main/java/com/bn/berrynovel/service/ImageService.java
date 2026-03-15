@@ -55,14 +55,16 @@ public class ImageService {
 
     // Phục vụ cho việc xóa người dùng hoặc cập nhật ảnh thì xóa luôn file ảnh trên
     // ổ cứng
-    public void deleteImage(String fileName, String target) {
+    public boolean deleteImage(String fileName, String target) {
         String uploadDir = getRootPath() + File.separator + target + File.separator;
         Path path = Paths.get(uploadDir + fileName);
         try {
-            Files.deleteIfExists(path);
+            boolean deleted = Files.deleteIfExists(path);
             System.out.println("Deleted: " + path.toAbsolutePath());
+            return deleted;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 

@@ -92,7 +92,7 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    public String updateUserPage(@PathVariable Long id, @ModelAttribute("newUser") @Valid User user,
+    public String updateUserPage(@PathVariable Long id, @ModelAttribute("newUser") User user,
             BindingResult userBindingResult, @RequestParam(value = "images", required = false) MultipartFile file) {
 
         String phone = user.getPhoneNumber();

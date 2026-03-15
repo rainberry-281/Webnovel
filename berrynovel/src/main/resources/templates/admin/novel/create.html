@@ -65,6 +65,8 @@
                 <form th:action="@{/admin/novel/create}" th:object="${newNovel}" method="post"
                     enctype="multipart/form-data">
 
+                    <input type="hidden" name="uploaderID" th:value="${session.id}">
+
                     <div class="row">
 
                         <!-- NOVEL NAME -->

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
+import org.springframework.security.core.Authentication;
 
 import javax.naming.Binding;
 
@@ -20,12 +21,14 @@ import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.domain.PaginationQuery;
 import com.bn.berrynovel.domain.Genre;
+import com.bn.berrynovel.domain.User;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.stereotype.Controller;
 import com.bn.berrynovel.service.ImageService;
 import com.bn.berrynovel.service.PaginationService;
+import com.bn.berrynovel.service.UserService;
 
 import jakarta.validation.Valid;
 
@@ -37,13 +40,15 @@ public class NovelController {
     private final GenreRepository genreRepository;
     private final ImageService imageService;
     private final PaginationService paginationService;
+    private final UserService userService;
 
     public NovelController(NovelService novelService, GenreRepository genreRepository, ImageService imageService,
-            PaginationService paginationService) {
+            PaginationService paginationService, UserService userService) {
         this.novelService = novelService;
         this.genreRepository = genreRepository;
         this.imageService = imageService;
         this.paginationService = paginationService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -75,7 +80,9 @@ public class NovelController {
     public String postCreateNovel(@ModelAttribute("newNovel") @Valid Novel novel,
             BindingResult novelBindingResult,
             @RequestParam(value = "images", required = false) MultipartFile file,
-            @RequestParam(value = "genreIds", required = false) List<Integer> genreIds) {
+            @RequestParam(value = "genreIds", required = false) List<Integer> genreIds,
+            @RequestParam(value = "uploaderID", required = false) Long uploaderID,
+            Authentication authentication) {
         if (genreIds != null && !genreIds.isEmpty()) {
             List<Genre> genres = genreIds.stream()
                     .map(genreId -> this.genreRepository.findById(genreId).orElse(null))
@@ -90,6 +97,17 @@ public class NovelController {
 
         if (novelBindingResult.hasErrors()) {
             return "admin/novel/create";
+        }
+
+        User uploader = null;
+        if (uploaderID != null) {
+            uploader = this.userService.getUserByID(uploaderID);
+        }
+        if (uploader == null && authentication != null) {
+            uploader = this.userService.getUserByUsername(authentication.getName());
+        }
+        if (uploader != null) {
+            novel.setUser(uploader);
         }
 
         novel.setCreatedAt(LocalDateTime.now());

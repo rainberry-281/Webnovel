@@ -45,12 +45,24 @@ ul {
     z-index: 1050;
 }
 
-.rd-side-icons a {
+.rd-side-icons .rd_sd-button_item {
     border-bottom: 1px solid #6f6d6d;
     display: block;
     font-size: 20px;
     font-weight: 400;
     padding: 16px 20px;
+    text-decoration: none;
+    color: inherit;
+    background: transparent;
+    width: 100%;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    text-align: center;
+}
+
+.rd-side-icons .bookmark-toggle-form {
+    display: block;
 }
 
 .rd-side-icons {
@@ -64,16 +76,16 @@ ul {
     pointer-events: auto;
 }
 
-.rd-side-icons a i {
+.rd-side-icons .rd_sd-button_item i {
     text-align: center;
     width: 20px;
 }
 
-.rd-side-icons a:last-child {
+.rd-side-icons>.rd_sd-button_item:last-child {
     border-bottom: none;
 }
 
-.rd-side-icons a:hover {
+.rd-side-icons .rd_sd-button_item:hover {
     color: #1ABC9C;
 }
 
@@ -197,6 +209,14 @@ ul {
     position: relative;
     text-decoration: inherit;
     color: inherit;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.rd_sidebar li a:hover {
+    background-color: #ddd;
+    border-radius: 4px;
 }
 
 .sub-chap_list {

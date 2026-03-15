@@ -4,9 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.bn.berrynovel.service.CommentService;
 import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.service.PaginationService;
@@ -26,12 +28,14 @@ public class ClientNovelController {
     private final NovelService novelService;
     private final PaginationService paginationService;
     private final LibraryService libraryService;
+    private final CommentService commentService;
 
     public ClientNovelController(NovelService novelService, PaginationService paginationService,
-            LibraryService libraryService) {
+            LibraryService libraryService, CommentService commentService) {
         this.novelService = novelService;
         this.paginationService = paginationService;
         this.libraryService = libraryService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/category")
@@ -65,7 +69,7 @@ public class ClientNovelController {
         model.addAttribute("novels", nvs.getNvs().getContent());
         model.addAttribute("currentPage", nvs.getPage());
         model.addAttribute("totalPage", nvs.getNvs().getTotalPages());
-        model.addAttribute("genres", this.novelService.getAllGenres());
+        model.addAttribute("genres", this.novelService.getActiveGenres());
         model.addAttribute("selectedGenres", selectedGenres);
         model.addAttribute("selectedTypes", selectedTypes);
         model.addAttribute("selectedProgresses", selectedProgresses);
@@ -108,7 +112,7 @@ public class ClientNovelController {
         model.addAttribute("novels", nvs.getNvs().getContent());
         model.addAttribute("currentPage", nvs.getPage());
         model.addAttribute("totalPage", nvs.getNvs().getTotalPages());
-        model.addAttribute("genres", this.novelService.getAllGenres());
+        model.addAttribute("genres", this.novelService.getActiveGenres());
         model.addAttribute("selectedGenres", selectedGenres);
         model.addAttribute("selectedTypes", selectedTypes);
         model.addAttribute("selectedProgresses", selectedProgresses);
@@ -159,6 +163,7 @@ public class ClientNovelController {
         model.addAttribute("firstChapter", first);
         model.addAttribute("latestChapter", latest);
         model.addAttribute("breadcrumbFrom", breadcrumbFrom);
+        model.addAttribute("comments", this.commentService.getCommentsByNovelId(id));
         boolean inLibrary = authentication != null
                 && authentication.isAuthenticated()
                 && !"anonymousUser".equals(authentication.getName())
@@ -166,5 +171,18 @@ public class ClientNovelController {
         model.addAttribute("inLibrary", inLibrary);
 
         return "client/novel/show";
+    }
+
+    @PostMapping("/novel/{id}/comment")
+    public String createComment(@PathVariable("id") Long novelId,
+            @RequestParam("content") String content,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getName())) {
+            return "redirect:/login";
+        }
+
+        this.commentService.createComment(novelId, authentication.getName(), content);
+        return "redirect:/novel/" + novelId + "#comments";
     }
 }

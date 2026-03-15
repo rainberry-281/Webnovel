@@ -17,4 +17,7 @@ public interface GenreRepository extends JpaRepository<Genre, Integer> {
 
     @Query("SELECT g FROM Genre g ORDER BY g.name ASC")
     List<Genre> findAllOrderByNameAsc();
+
+    @Query("SELECT g FROM Genre g WHERE g.status = true ORDER BY g.name ASC")
+    List<Genre> findActiveOrderByNameAsc();
 }

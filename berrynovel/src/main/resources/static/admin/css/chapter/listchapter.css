@@ -1,0 +1,38 @@
+.chapter-tree {
+    overflow-x: hidden;
+}
+
+.chapter-tree ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.chapter-tree li {
+    list-style: none;
+    margin: 6px 0;
+}
+
+.chapter-tree-link {
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    padding: 6px 10px;
+    position: relative;
+    text-decoration: inherit;
+    color: inherit;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.chapter-tree-link:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+    color: inherit;
+}
+
+.chapter-tree li.active-chapter .chapter-tree-link {
+    background-color: #ddd;
+    border-radius: 4px;
+    font-weight: 700;
+}

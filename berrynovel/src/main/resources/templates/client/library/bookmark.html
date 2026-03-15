@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -10,30 +10,30 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/library/bookshelf.css">
+    <link rel="stylesheet" th:href="@{/client/css/library/bookshelf.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/library/bookmark.css">
+    <link rel="stylesheet" th:href="@{/client/css/library/bookmark.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/navitigation.css">
+    <link rel="stylesheet" th:href="@{/client/css/navitigation.css}">
 
-    <link rel="stylesheet" href="/src/main/resources/static/client/css/font.css">
+    <link rel="stylesheet" th:href="@{/client/css/font.css}">
 </head>
 
 <body>
-    <div id="navbar"></div>
+    <div th:replace="~{client/layout/navigation :: navbar}"></div>
 
-    <main class="library-page" style="min-height: 622px; padding-top: 70px;">
+    <main class="library-page" style="min-height: 100vh; padding-top: 95px;">
         <div class="container">
             <div class="row d-block clearfix">
                 <div class="col-12 col-lg-3 float-end">
                     <section class="private-tabs">
                         <header>
                             <h4 class="section-name">Tài khoản</h4>
-                            <span class="user-name">rainberry</span>
+                            <span class="user-name" sec:authentication="name"></span>
                         </header>
                         <ul class="user-private-tabs">
                             <li class="">
-                                <a href="bookshelf.html">
+                                <a th:href="@{/library/bookshelf}">
                                     <span class="d-none d-lg-inline">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
@@ -45,7 +45,7 @@
                                 </a>
                             </li>
                             <li class="current">
-                                <a href="bookmark.html">
+                                <a th:href="@{/library/bookmark}">
                                     <span class="d-none d-lg-inline">
                                         <i class="fas fa-chevron-left"></i>
                                     </span>
@@ -67,19 +67,21 @@
                         </header>
 
                         <main class="sect-body" style="padding: 10px; display: block;">
-                            <article class="bookmark-item clear">
+                            <p class="text-muted" th:if="${#lists.isEmpty(bookmarkItems)}">Chưa có chapter nào được
+                                bookmark.</p>
+
+                            <article class="bookmark-item clear" th:each="item : ${bookmarkItems}">
                                 <div class="series-cover">
                                     <div class="a6-ratio" style="position: relative;">
-                                        <div class="content img-in-ratio"
-                                            style="background-image: url('/src/main/resources/static/client/image/novel/Screenshot 2026-02-10 202954.png');">
-                                        </div>
+                                        <img class="content img-in-ratio"
+                                            th:src="@{/images/novel/{image}(image=${item.novel.image})}"
+                                            th:alt="${item.novel.title}">
                                     </div>
                                 </div>
 
                                 <div class="series-title">
-                                    <a href="#" class="">
-                                        Yondomewa Iyana Shi Zokusei Majutsushi
-                                    </a>
+                                    <a th:href="@{/novel/{id}(id=${item.novel.id},from='library')}" class=""
+                                        th:text="${item.novel.title}"></a>
                                     <span class="bm-toggle_symbol" style="cursor: pointer">
                                         <i class="fas fa-chevron-down"></i>
                                     </span>
@@ -87,39 +89,10 @@
 
                                 <div class="none bm-toggle clear" style="display: none;">
                                     <ul class="bookmarks-list clear">
-                                        <li>
+                                        <li th:each="chapter : ${item.chapters}">
                                             <div class="chapter-title">
-                                                <a href="../novel/chapter1.html">
-                                                    Chương 1: Sự khởi đầu của kiếp thứ ba
-                                                </a>
-                                            </div>
-
-                                            <div class="volume-title">
-                                                <small>Khiên quốc Mirg</small>
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                            <div class="chapter-title">
-                                                <a href="../novel/chapter.html">
-                                                    Mở đầu: Hồi kết của kiếp đầu tiên và kiếp thứ hai
-                                                </a>
-                                            </div>
-
-                                            <div class="volume-title">
-                                                <small>Khiên quốc Mirg</small>
-                                            </div>
-                                        </li>
-
-                                        <li>
-                                            <div class="chapter-title">
-                                                <a href="../novel/chapter1.html">
-                                                    Chương 4: Tình yêu dành cho mặt trời
-                                                </a>
-                                            </div>
-
-                                            <div class="volume-title">
-                                                <small>Khiên quốc Mirg</small>
+                                                <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${item.novel.id},chapterId=${chapter.id})}"
+                                                    th:text="${chapter.title}"></a>
                                             </div>
                                         </li>
                                     </ul>
@@ -142,11 +115,7 @@
         <h4>© 2026 berryNovel</h4>
     </footer>
 
-    <script src="/src/main/resources/static/client/js/include.js"></script>
-
-    <script src="/src/main/resources/static/client/js/logo.js"></script>
-
-    <script src="/src/main/resources/static/client/js/navitigation.js"></script>
+    <script th:src="@{/client/js/navitigation.js}"></script>
 
     <script>
         document.querySelectorAll(".bm-toggle_symbol").forEach(btn => {
