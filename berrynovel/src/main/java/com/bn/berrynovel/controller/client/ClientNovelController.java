@@ -185,4 +185,21 @@ public class ClientNovelController {
         this.commentService.createComment(novelId, authentication.getName(), content);
         return "redirect:/novel/" + novelId + "#comments";
     }
+
+    @PostMapping("/novel/{novelId}/comment/{commentId}/delete")
+    public String deleteComment(@PathVariable("novelId") Long novelId,
+            @PathVariable("commentId") Integer commentId,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getName())) {
+            return "redirect:/login";
+        }
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .anyMatch(role -> "ROLE_ADMIN".equalsIgnoreCase(role) || "ROLE_AMIN".equalsIgnoreCase(role));
+
+        this.commentService.deleteComment(novelId, commentId, authentication.getName(), isAdmin);
+        return "redirect:/novel/" + novelId + "#comments";
+    }
 }

@@ -76,6 +76,7 @@
                         <div class="col-md-6 form-group">
                             <label>Author:</label>
                             <input type="text" th:field="*{author}" class="form-control">
+                            <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="text-danger"></div>
                         </div>
 
                         <!-- STATUS -->

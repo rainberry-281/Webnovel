@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bn.berrynovel.service.UserService;
 import jakarta.validation.Valid;
@@ -27,6 +29,9 @@ import com.bn.berrynovel.service.PaginationService;
 @RequestMapping("/admin/user")
 public class UserController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final String LOG_DIVIDER = "============================================================";
+
     private final ImageService imageService;
     private final UserService userService;
     private final PaginationService paginationService;
@@ -40,7 +45,25 @@ public class UserController {
     @GetMapping
     public String getUserListPage(Model model, @RequestParam(value = "page") Optional<String> pageOptional) {
         PaginationQuery paginationQuery = this.paginationService.AdminUserPagination(pageOptional, 8);
-        model.addAttribute("users", paginationQuery.getNvs().getContent());
+        List<User> users = paginationQuery.getNvs().getContent();
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n").append(LOG_DIVIDER).append("\n");
+        for (int i = 0; i < users.size(); i++) {
+            User u = users.get(i);
+            sb.append(">>>>>>>>>>> User[").append(i + 1).append("]\n")
+                    .append("id=").append(u.getId()).append("\n")
+                    .append("username=").append(u.getUsername()).append("\n")
+                    .append("email=").append(u.getEmail()).append("\n")
+                    .append("phone=").append(u.getPhoneNumber()).append("\n")
+                    .append("image=").append(u.getImage()).append("\n")
+                    .append("role=").append(u.getRole() == null ? null : u.getRole().getName()).append("\n")
+                    .append("status=").append(u.getStatus());
+            if (i < users.size() - 1)
+                sb.append("\n\n");
+        }
+        sb.append("\n").append(LOG_DIVIDER).append("\n");
+        logger.info(sb.toString());
+        model.addAttribute("users", users);
         model.addAttribute("currentPage", paginationQuery.getPage());
         model.addAttribute("totalPage", paginationQuery.getNvs().getTotalPages());
         return "admin/user/show";
@@ -80,7 +103,23 @@ public class UserController {
             return "admin/user/create";
         }
 
+        logger.info(
+                "\n{}\n>>>>>>>>>>> [CREATE USER - REQUEST]\n"
+                        + "username={}\nemail={}\nphone={}\nimage={}\nrole={}\nstatus={}\n{}\n",
+                LOG_DIVIDER,
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getImage(),
+                user.getRole() == null ? null : user.getRole().getName(),
+                user.getStatus(),
+                LOG_DIVIDER);
         this.userService.adminCreateUser(user, file);
+        logger.info("\n{}\n>>>>>>>>>>> [CREATE USER - SUCCESS] username={}, image={} created successfully\n{}\n",
+                LOG_DIVIDER,
+                user.getUsername(),
+                user.getImage(),
+                LOG_DIVIDER);
         return "redirect:/admin/user";
     }
 
@@ -106,13 +145,45 @@ public class UserController {
             return "admin/user/update";
         }
 
+        logger.info(
+                "\n{}\n>>>>>>>>>>> [UPDATE USER - REQUEST]\n"
+                        + "id={}\nusername={}\nemail={}\nphone={}\nrole={}\nstatus={}\n{}\n",
+                LOG_DIVIDER,
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getRole() == null ? null : user.getRole().getName(),
+                user.getStatus(),
+                LOG_DIVIDER);
         this.userService.updateUser(user, file);
+        logger.info("\n{}\n>>>>>>>>>>> [UPDATE USER - SUCCESS] id={}, username={} updated successfully\n{}\n",
+                LOG_DIVIDER,
+                user.getId(),
+                user.getUsername(),
+                LOG_DIVIDER);
         return "redirect:/admin/user";
     }
 
     @PostMapping("/ban/{id}")
     public String banUser(@PathVariable Long id) {
+        User beforeUser = this.userService.getUserByID(id);
+        logger.info("\n{}\n>>>>>>>>>>> [BAN USER - REQUEST]\nid={}\nusername={}\nimage={}\nstatusBefore={}\n{}\n",
+                LOG_DIVIDER,
+                id,
+                beforeUser == null ? "N/A" : beforeUser.getUsername(),
+                beforeUser == null ? null : beforeUser.getImage(),
+                beforeUser == null ? null : beforeUser.getStatus(),
+                LOG_DIVIDER);
         this.userService.softDeleteUser(id);
+        User afterUser = this.userService.getUserByID(id);
+        logger.info("\n{}\n>>>>>>>>>>> [BAN USER - SUCCESS]\nid={}\nusername={}\nimage={}\nstatusAfter={}\n{}\n",
+                LOG_DIVIDER,
+                id,
+                afterUser == null ? "N/A" : afterUser.getUsername(),
+                afterUser == null ? null : afterUser.getImage(),
+                afterUser == null ? null : afterUser.getStatus(),
+                LOG_DIVIDER);
         return "redirect:/admin/user";
     }
 

@@ -207,7 +207,7 @@ section.basic-section main {
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 8px;
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .comment-form button {
@@ -253,7 +253,7 @@ section.basic-section main {
 .comment-header {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .comment-name {
@@ -262,8 +262,32 @@ section.basic-section main {
 }
 
 .comment-time {
-    font-size: 13px;
+    font-size: 14px;
     color: #aaa;
+}
+
+.comment-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-delete-form {
+    margin: 0;
+}
+
+.comment-delete-btn {
+    border: 1px solid #e2e2e2;
+    background: #fff;
+    color: #c44;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.comment-delete-btn:hover {
+    background: #fff5f5;
 }
 
 /* COMMENT CONTENT */
@@ -272,5 +296,6 @@ section.basic-section main {
     margin-top: 5px;
     margin-left: 46px;
     color: #555;
+    font-size: 16px;
     line-height: 1.5;
 }

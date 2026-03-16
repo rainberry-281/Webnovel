@@ -43,4 +43,27 @@ public class CommentService {
 
         return this.commentRepository.save(comment);
     }
+
+    public boolean deleteComment(Long novelId, Integer commentId, String username, boolean isAdmin) {
+        Comment comment = this.commentRepository.findById(commentId)
+                .orElse(null);
+        if (comment == null || comment.getNovel() == null || comment.getNovel().getId() == null
+                || !comment.getNovel().getId().equals(novelId)) {
+            return false;
+        }
+
+        if (isAdmin) {
+            this.commentRepository.delete(comment);
+            return true;
+        }
+
+        User user = this.userService.getUserByUsername(username);
+        if (user == null || comment.getUser() == null || comment.getUser().getId() == null
+                || !comment.getUser().getId().equals(user.getId())) {
+            return false;
+        }
+
+        this.commentRepository.delete(comment);
+        return true;
+    }
 }

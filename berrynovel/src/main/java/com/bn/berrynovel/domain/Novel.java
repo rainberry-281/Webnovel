@@ -14,6 +14,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.GenerationType;
 import java.time.LocalDateTime;
 
@@ -24,12 +25,14 @@ public class Novel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
     private String title;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "novel_genre", joinColumns = @JoinColumn(name = "novel_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<Genre> genres;
 
+    @NotBlank(message = "Author is required")
     private String author;
 
     @Column(columnDefinition = "TEXT")

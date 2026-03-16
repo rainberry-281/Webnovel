@@ -119,6 +119,10 @@ public class NovelService {
         return this.genreRepository.findAllOrderByNameAsc();
     }
 
+    public Optional<Genre> getGenreById(int id) {
+        return this.genreRepository.findById(id);
+    }
+
     public List<Genre> getActiveGenres() {
         return this.genreRepository.findActiveOrderByNameAsc();
     }

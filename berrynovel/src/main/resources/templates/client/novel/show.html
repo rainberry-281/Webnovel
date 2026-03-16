@@ -190,8 +190,17 @@
                                     <div class="comment-header">
                                         <span class="comment-name"
                                             th:text="${comment.user != null ? (comment.user.username != null and !#strings.isEmpty(comment.user.username) ? comment.user.username : 'Unknown') : 'Unknown'}"></span>
-                                        <span class="comment-time"
-                                            th:text="${comment.createdAt != null ? #temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                                        <div class="comment-actions">
+                                            <span class="comment-time"
+                                                th:text="${comment.createdAt != null ? #temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                                            <form method="post" class="comment-delete-form"
+                                                th:if="${#authorization.expression('hasRole(''ADMIN'')') or (#authentication != null and comment.user != null and comment.user.username == #authentication.name)}"
+                                                th:action="@{/novel/{novelId}/comment/{commentId}/delete(novelId=${novel.id},commentId=${comment.id})}">
+                                                <input type="hidden" th:name="${_csrf.parameterName}"
+                                                    th:value="${_csrf.token}" />
+                                                <button type="submit" class="comment-delete-btn">Xóa</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
