@@ -33,7 +33,6 @@ body {
 input {
     width: 100%;
     padding: 12px 10px;
-    justify-items: center;
     border-radius: 12px;
     border: 1px solid #ccc;
     font-size: 1.2rem;

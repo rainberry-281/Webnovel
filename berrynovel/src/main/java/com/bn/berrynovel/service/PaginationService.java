@@ -123,6 +123,22 @@ public class PaginationService {
         return new PaginationQuery<>(page, users);
     }
 
+    public PaginationQuery<User> AdminUserPagination(Optional<String> pageOptinal, int size, String keyword) {
+        int page = 1;
+        try {
+            if (pageOptinal.isPresent()) {
+                page = Integer.parseInt(pageOptinal.get());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Page<User> users = this.userService.findByUsernameContaining(keyword, pageable);
+
+        return new PaginationQuery<>(page, users);
+    }
+
     public PaginationQuery<Genre> AdminGenrePagination(Optional<String> pageOptinal, int size) {
         int page = 1;
         try {

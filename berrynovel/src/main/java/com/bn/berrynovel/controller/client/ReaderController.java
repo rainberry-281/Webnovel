@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
@@ -16,6 +20,9 @@ import com.bn.berrynovel.service.NovelService;
 @Controller
 @RequestMapping("/reader")
 public class ReaderController {
+    private static final Logger logger = LoggerFactory.getLogger(ReaderController.class);
+    private static final String LOG_DIVIDER = "============================================================";
+
     private final NovelService novelService;
     private final LibraryService libraryService;
 
@@ -26,12 +33,24 @@ public class ReaderController {
 
     @GetMapping("/{novelID}/{chapterID}")
     public String getReaderPage(@PathVariable Long novelID, @PathVariable Long chapterID, Model model,
-            Authentication authentication) {
+            Authentication authentication, HttpServletRequest request) {
         Chapter chapter = this.novelService.getChapterById(chapterID);
 
         Novel novel = this.novelService.getNovelById(novelID)
 
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
+
+        logger.info(
+                "\n{}\n>>>>>>>>>>> [READER - ACCESS]\nnovelId={}\nnovelTitle={}\nchapterId={}\nchapterTitle={}\npath={}\nuser={}\n{}\n",
+                LOG_DIVIDER,
+                novelID,
+                novel.getTitle(),
+                chapterID,
+                chapter == null ? null : chapter.getTitle(),
+                request.getRequestURI(),
+                authentication == null ? "anonymous" : authentication.getName(),
+                LOG_DIVIDER);
+
         List<Chapter> chapters = this.novelService.getChaptersByNovelId(novelID);
 
         Chapter prev = null;

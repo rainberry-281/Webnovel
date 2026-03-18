@@ -43,8 +43,12 @@ public class UserController {
     }
 
     @GetMapping
-    public String getUserListPage(Model model, @RequestParam(value = "page") Optional<String> pageOptional) {
-        PaginationQuery paginationQuery = this.paginationService.AdminUserPagination(pageOptional, 8);
+    public String getUserListPage(Model model,
+            @RequestParam(value = "page") Optional<String> pageOptional,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        PaginationQuery paginationQuery = this.paginationService.AdminUserPagination(pageOptional, 8,
+                normalizedKeyword);
         List<User> users = paginationQuery.getNvs().getContent();
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append(LOG_DIVIDER).append("\n");
@@ -66,6 +70,7 @@ public class UserController {
         model.addAttribute("users", users);
         model.addAttribute("currentPage", paginationQuery.getPage());
         model.addAttribute("totalPage", paginationQuery.getNvs().getTotalPages());
+        model.addAttribute("keyword", normalizedKeyword);
         return "admin/user/show";
     }
 

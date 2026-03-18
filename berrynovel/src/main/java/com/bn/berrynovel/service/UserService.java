@@ -87,6 +87,14 @@ public class UserService {
         return this.userRepository.findAll(pageable);
     }
 
+    public Page<User> findByUsernameContaining(String keyword, Pageable pageable) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        if (normalizedKeyword.isEmpty()) {
+            return this.userRepository.findAll(pageable);
+        }
+        return this.userRepository.findByUsernameContainingIgnoreCase(normalizedKeyword, pageable);
+    }
+
     public User getUserByID(Long id) {
         return this.userRepository.findFirstById(id);
     }

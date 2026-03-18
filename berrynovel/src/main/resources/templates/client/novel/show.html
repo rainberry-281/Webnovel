@@ -110,8 +110,8 @@
                     <div class="intro-card p-4 p-md-5">
                         <h4 class="fw-bold mb-4">Giới thiệu</h4>
 
-                        <p th:utext="${novel.description}" class="intro-text" id="introText">
-                        </p>
+                        <div th:utext="${novel.description}" class="intro-text" id="introText">
+                        </div>
 
                         <button id="toggleBtn">Xem thêm</button>
                     </div>
@@ -221,6 +221,46 @@
 
     <script th:src="@{/client/js/navitigation.js}"></script>
 
+    <script>
+        const btn = document.getElementById("toggleBtn");
+        const text = document.getElementById("introText");
+
+        if (btn && text) {
+            text.classList.remove("expanded");
+            btn.innerText = "Xem thêm";
+
+            // Check if text needs truncation
+            const checkIfTruncationNeeded = () => {
+                const actualHeight = text.scrollHeight;
+                const maxHeight = 120;
+
+                if (actualHeight > maxHeight) {
+                    btn.style.display = "block";
+                } else {
+                    text.classList.remove("expanded");
+                    btn.innerText = "Xem thêm";
+                    btn.style.display = "none";
+                }
+            };
+
+            // Initial check
+            setTimeout(checkIfTruncationNeeded, 100);
+
+            // Toggle functionality
+            btn.addEventListener("click", function () {
+                text.classList.toggle("expanded");
+
+                if (text.classList.contains("expanded")) {
+                    btn.innerText = "Thu gọn";
+                } else {
+                    btn.innerText = "Xem thêm";
+                }
+            });
+
+            // Check again on window resize
+            window.addEventListener("resize", checkIfTruncationNeeded);
+        }
+    </script>
 </body>
 
 </html>

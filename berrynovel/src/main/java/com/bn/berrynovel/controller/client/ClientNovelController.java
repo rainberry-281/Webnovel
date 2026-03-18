@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bn.berrynovel.service.CommentService;
 import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
@@ -25,6 +28,8 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/")
 public class ClientNovelController {
+    private static final Logger logger = LoggerFactory.getLogger(ClientNovelController.class);
+    private static final String LOG_DIVIDER = "============================================================";
     private final NovelService novelService;
     private final PaginationService paginationService;
     private final LibraryService libraryService;
@@ -101,13 +106,34 @@ public class ClientNovelController {
                 ? List.of()
                 : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim).distinct()
                         .toList();
+
+        logger.info(
+                "\n{}\n>>>>>>>>>>> [SEARCH NOVEL - REQUEST]\nkeyword={}\npage={}\ngenres={}\ntypes={}\nprogresses={}\n{}\n",
+                LOG_DIVIDER,
+                normalizedKeyword,
+                pageOptional.orElse("1"),
+                selectedGenres,
+                selectedTypes,
+                selectedProgresses,
+                LOG_DIVIDER);
+
         if (normalizedKeyword.isEmpty() && selectedGenres.isEmpty() && selectedTypes.isEmpty()
                 && selectedProgresses.isEmpty()) {
+            logger.info("\n{}\n>>>>>>>>>>> [SEARCH NOVEL - EMPTY FILTER]\nredirect=/category\n{}\n",
+                    LOG_DIVIDER,
+                    LOG_DIVIDER);
             return "redirect:/category";
         }
 
         PaginationQuery<Novel> nvs = this.paginationService.ClientFilterNovelPagination(pageOptional, 20,
                 normalizedKeyword, selectedGenres, selectedTypes, selectedProgresses);
+
+        logger.info("\n{}\n>>>>>>>>>>> [SEARCH NOVEL - RESULT]\ncurrentPage={}\ntotalPage={}\nresultCount={}\n{}\n",
+                LOG_DIVIDER,
+                nvs.getPage(),
+                nvs.getNvs().getTotalPages(),
+                nvs.getNvs().getContent().size(),
+                LOG_DIVIDER);
 
         model.addAttribute("novels", nvs.getNvs().getContent());
         model.addAttribute("currentPage", nvs.getPage());
@@ -130,6 +156,14 @@ public class ClientNovelController {
             @RequestParam(value = "from", required = false) Optional<String> from,
             Model model, HttpServletRequest request, Authentication authentication) {
         Novel novel = this.novelService.getNovelById(id).orElseThrow(() -> new RuntimeException("Novel not found"));
+
+        logger.info("\n{}\n>>>>>>>>>>> [NOVEL DETAIL - ACCESS]\nid={}\ntitle={}\npath={}\nuser={}\n{}\n",
+                LOG_DIVIDER,
+                id,
+                novel.getTitle(),
+                request.getRequestURI(),
+                authentication == null ? "anonymous" : authentication.getName(),
+                LOG_DIVIDER);
 
         List<Chapter> chapters = this.novelService.getChaptersByNovelId(id);
 
@@ -182,7 +216,19 @@ public class ClientNovelController {
             return "redirect:/login";
         }
 
+        logger.info("\n{}\n>>>>>>>>>>> [CREATE COMMENT - REQUEST]\nnovelId={}\nuser={}\ncontentLength={}\n{}\n",
+                LOG_DIVIDER,
+                novelId,
+                authentication.getName(),
+                content == null ? 0 : content.length(),
+                LOG_DIVIDER);
+
         this.commentService.createComment(novelId, authentication.getName(), content);
+        logger.info("\n{}\n>>>>>>>>>>> [CREATE COMMENT - SUCCESS]\nnovelId={}\nuser={}\n{}\n",
+                LOG_DIVIDER,
+                novelId,
+                authentication.getName(),
+                LOG_DIVIDER);
         return "redirect:/novel/" + novelId + "#comments";
     }
 
@@ -199,7 +245,20 @@ public class ClientNovelController {
                 .map(authority -> authority.getAuthority())
                 .anyMatch(role -> "ROLE_ADMIN".equalsIgnoreCase(role) || "ROLE_AMIN".equalsIgnoreCase(role));
 
+        logger.info("\n{}\n>>>>>>>>>>> [DELETE COMMENT - REQUEST]\nnovelId={}\ncommentId={}\nuser={}\n{}\n",
+                LOG_DIVIDER,
+                novelId,
+                commentId,
+                authentication.getName(),
+                LOG_DIVIDER);
+
         this.commentService.deleteComment(novelId, commentId, authentication.getName(), isAdmin);
+        logger.info("\n{}\n>>>>>>>>>>> [DELETE COMMENT - SUCCESS]\nnovelId={}\ncommentId={}\nuser={}\n{}\n",
+                LOG_DIVIDER,
+                novelId,
+                commentId,
+                authentication.getName(),
+                LOG_DIVIDER);
         return "redirect:/novel/" + novelId + "#comments";
     }
 }

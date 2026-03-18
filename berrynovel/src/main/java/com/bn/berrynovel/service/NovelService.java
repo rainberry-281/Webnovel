@@ -40,19 +40,14 @@ public class NovelService {
         this.filterSpecificationConverter = filterSpecificationConverter;
     }
 
-    public Novel createNovel(Novel novel, MultipartFile file) {
-        if (novel.getGenres() != null) {
-            List<Integer> genreIds = novel.getGenres().stream()
-                    .map(Genre::getId)
-                    .filter(Objects::nonNull)
-                    .toList();
-            List<Genre> managedGenres = genreIds.isEmpty()
-                    ? List.of()
-                    : this.genreRepository.findAllById(genreIds);
-            novel.setGenres(managedGenres);
-        } else {
-            novel.setGenres(List.of());
-        }
+    public Novel createNovel(Novel novel, MultipartFile file, List<Integer> genreIds) {
+        List<Integer> normalizedGenreIds = genreIds == null
+                ? List.of()
+                : genreIds.stream().filter(Objects::nonNull).toList();
+        List<Genre> managedGenres = normalizedGenreIds.isEmpty()
+                ? List.of()
+                : this.genreRepository.findAllById(normalizedGenreIds);
+        novel.setGenres(managedGenres);
 
         String imageName = "";
         if (file != null && !file.isEmpty()) {
@@ -64,7 +59,7 @@ public class NovelService {
     }
 
     @Transactional
-    public Novel updateNovel(Novel novel, MultipartFile file) {
+    public Novel updateNovel(Novel novel, MultipartFile file, List<Integer> genreIds) {
         Novel novelInDataBase = this.novelRepository.findById(novel.getId())
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
@@ -76,16 +71,13 @@ public class NovelService {
         novelInDataBase.setTitle(novel.getTitle());
         novelInDataBase.setAuthor(novel.getAuthor());
         novelInDataBase.setDescription(novel.getDescription());
-        if (novel.getGenres() != null) {
-            List<Integer> genreIds = novel.getGenres().stream()
-                    .map(Genre::getId)
-                    .filter(Objects::nonNull)
-                    .toList();
-            List<Genre> managedGenres = genreIds.isEmpty()
-                    ? List.of()
-                    : this.genreRepository.findAllById(genreIds);
-            novelInDataBase.setGenres(managedGenres);
-        }
+        List<Integer> normalizedGenreIds = genreIds == null
+                ? List.of()
+                : genreIds.stream().filter(Objects::nonNull).toList();
+        List<Genre> managedGenres = normalizedGenreIds.isEmpty()
+                ? List.of()
+                : this.genreRepository.findAllById(normalizedGenreIds);
+        novelInDataBase.setGenres(managedGenres);
         novelInDataBase.setType(novel.getType());
         novelInDataBase.setProgress(novel.getProgress());
         return this.novelRepository.save(novelInDataBase);

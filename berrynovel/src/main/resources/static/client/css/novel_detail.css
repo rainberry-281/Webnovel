@@ -31,14 +31,32 @@ h2 {
 .intro-text {
     max-height: 120px;
     overflow: hidden;
-    transition: 0.3s ease;
+    transition: max-height 0.3s ease;
     text-align: justify;
     line-height: 1.8;
     color: #555;
 }
 
 .intro-text.expanded {
-    max-height: max-content;
+    max-height: none;
+    overflow: visible;
+}
+
+#toggleBtn {
+    display: none;
+    background: #e4caf1;
+    font-weight: 500;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 15px;
+    transition: 0.3s ease;
+}
+
+#toggleBtn:hover {
+    background: #d4a5e0;
 }
 
 .fa-heart {

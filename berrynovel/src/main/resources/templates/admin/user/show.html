@@ -30,9 +30,17 @@
                     Manager User
                 </div>
 
-                <a th:href="@{/admin/user/create}" class="btn create-btn fw-bold">
-                    Create User
-                </a>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <a th:href="@{/admin/user/create}" class="btn create-btn fw-bold mb-0">
+                        Create User
+                    </a>
+
+                    <form th:action="@{/admin/user}" method="get" class="d-flex ms-auto" style="max-width: 320px;">
+                        <input type="text" name="keyword" class="form-control me-2" placeholder="Search user..."
+                            th:value="${keyword}">
+                        <button type="submit" class="btn btn-outline-secondary">Search</button>
+                    </form>
+                </div>
                 <div class="table-wrapper">
                     <table class="table user-table">
 
@@ -99,17 +107,18 @@
                     <ul class="pagination">
                         <li class="page-item">
                             <a th:class="${currentPage == 1} ? 'page-link disabled' : 'page-link'"
-                                th:href="@{/admin/user(page=${currentPage - 1})}" aria-label="Previous">
+                                th:href="@{/admin/user(page=${currentPage - 1},keyword=${keyword})}"
+                                aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item">
-                            <a th:href="@{/admin/user(page=${i})}" th:classappend="${i == currentPage} ? 'active'"
-                                class="page-link" th:text="${i}"></a>
+                            <a th:href="@{/admin/user(page=${i},keyword=${keyword})}"
+                                th:classappend="${i == currentPage} ? 'active'" class="page-link" th:text="${i}"></a>
                         </li>
                         <li class="page-item">
                             <a th:class="${currentPage == totalPage} ? 'page-link disabled' : 'page-link'"
-                                th:href="@{/admin/user(page=${currentPage + 1})}" aria-label="Next">
+                                th:href="@{/admin/user(page=${currentPage + 1},keyword=${keyword})}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

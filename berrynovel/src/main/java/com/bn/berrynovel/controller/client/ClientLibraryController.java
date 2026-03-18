@@ -2,6 +2,8 @@ package com.bn.berrynovel.controller.client;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +19,9 @@ import org.springframework.ui.Model;
 @Controller
 @RequestMapping("/library")
 public class ClientLibraryController {
+    private static final Logger logger = LoggerFactory.getLogger(ClientLibraryController.class);
+    private static final String LOG_DIVIDER = "============================================================";
+
     private final LibraryService libraryService;
 
     public ClientLibraryController(LibraryService libraryService) {
@@ -39,7 +44,17 @@ public class ClientLibraryController {
 
     @PostMapping("/toggle/{novelId}")
     public String toggleNovelInLibrary(@PathVariable("novelId") Long novelId, Authentication authentication) {
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF TOGGLE - REQUEST]\nuser={}\nnovelId={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                LOG_DIVIDER);
         this.libraryService.toggleNovelInLibrary(authentication.getName(), novelId);
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF TOGGLE - SUCCESS]\nuser={}\nnovelId={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                LOG_DIVIDER);
         return "redirect:/novel/" + novelId + "?from=library";
     }
 
@@ -47,14 +62,36 @@ public class ClientLibraryController {
     public String toggleChapterBookmark(@PathVariable("novelId") Long novelId,
             @PathVariable("chapterId") Long chapterId,
             Authentication authentication) {
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKMARK TOGGLE - REQUEST]\nuser={}\nnovelId={}\nchapterId={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                chapterId,
+                LOG_DIVIDER);
         this.libraryService.toggleChapterBookmark(authentication.getName(), novelId, chapterId);
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKMARK TOGGLE - SUCCESS]\nuser={}\nnovelId={}\nchapterId={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                chapterId,
+                LOG_DIVIDER);
         return "redirect:/reader/" + novelId + "/" + chapterId;
     }
 
     @PostMapping("/bookshelf/delete")
     public String deleteFromLibrary(@RequestParam(value = "novelIds", required = false) List<Long> novelIds,
             Authentication authentication) {
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF DELETE - REQUEST]\nuser={}\nnovelIds={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelIds,
+                LOG_DIVIDER);
         this.libraryService.deleteNovelsFromLibrary(authentication.getName(), novelIds);
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF DELETE - SUCCESS]\nuser={}\nnovelIds={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelIds,
+                LOG_DIVIDER);
         return "redirect:/library/bookshelf";
     }
 }

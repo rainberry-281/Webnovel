@@ -120,7 +120,8 @@
                             <div class="genre-box">
 
                                 <label class="genre-item" th:each="genre : ${genres}">
-                                    <input type="checkbox" name="genreIds" th:value="${genre.id}">
+                                    <input type="checkbox" name="genreIds" th:value="${genre.id}"
+                                        th:checked="${selectedGenreIds != null and #lists.contains(selectedGenreIds, genre.id)}">
                                     <span th:text="${genre.name}"></span>
                                 </label>
 
