@@ -83,6 +83,11 @@
         </div>
     </div>
 
+    <script th:inline="javascript">
+        const csrfToken = /*[[${_csrf.token}]]*/ "";
+        const csrfHeaderName = /*[[${_csrf.headerName}]]*/ "X-CSRF-TOKEN";
+    </script>
+
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 
     <script>
@@ -95,10 +100,14 @@
                 .then(file => new Promise((resolve, reject) => {
 
                     const data = new FormData();
+                    const headers = {};
                     data.append("upload", file);
+                    headers[csrfHeaderName] = csrfToken;
 
                     fetch("/admin/chapter/upload-image", {
                         method: "POST",
+                        headers: headers,
+                        credentials: "same-origin",
                         body: data
                     })
                         .then(response => response.json())

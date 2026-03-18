@@ -1,5 +1,7 @@
 package com.bn.berrynovel.controller.client;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -17,6 +19,7 @@ import com.bn.berrynovel.domain.User;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 @Controller
 public class ClientAccountController {
@@ -41,6 +44,7 @@ public class ClientAccountController {
         sb.append("Phone Number: ").append(user.getPhoneNumber()).append("\n");
         sb.append(LOG_DIVIDER).append("\n");
         System.out.println(sb.toString());
+
         model.addAttribute("user", user);
         return "client/profile/show";
     }
@@ -71,14 +75,18 @@ public class ClientAccountController {
             }
         }
 
-        if (bindingResult.hasErrors()) {
-            logger.warn(
-                    "\n{}\n>>>>>>>>>>> [EDIT PROFILE - VALIDATION ERROR]\nUsername: {}\nPhone Number: {}\nErrors: {}\n{}",
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        for (FieldError error : fieldErrors) {
+            logger.info(
+                    "\n{}\n>>>>>>>>>>> [EDIT PROFILE - VALIDATION ERROR]\nUsername: {}\nField: {}\nError: {}\n{}\n",
                     LOG_DIVIDER,
                     currentUser.getUsername(),
-                    user.getPhoneNumber(),
-                    bindingResult.getAllErrors(),
+                    error.getField(),
+                    error.getDefaultMessage(),
                     LOG_DIVIDER);
+        }
+
+        if (bindingResult.hasErrors()) {
             user.setImage(currentUser.getImage());
             model.addAttribute("user", user);
             return "client/profile/edit";

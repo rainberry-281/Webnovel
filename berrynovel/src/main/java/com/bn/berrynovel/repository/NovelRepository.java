@@ -20,5 +20,7 @@ public interface NovelRepository extends JpaRepository<Novel, Long>, JpaSpecific
 
     boolean existsByTitle(String title);
 
+    boolean existsByTitleAndIdNot(String title, Long id);
+
     List<Novel> findByStatus(boolean status);
 }

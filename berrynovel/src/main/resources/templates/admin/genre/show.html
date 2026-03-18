@@ -58,8 +58,9 @@
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
 
-                                    <form th:action="@{/admin/genres/genre/action/{id}(id=${genre.id})}" method="POST"
+                                    <form th:action="@{/admin/genres/action/{id}(id=${genre.id})}" method="POST"
                                         style="display:inline;">
+                                        <input type="hidden" name="page" th:value="${currentPage}">
                                         <button type="submit"
                                             th:classappend="${genre.status} ? 'btn-success' : 'btn-delete'"
                                             class="btn btn-toggle-status">
@@ -107,14 +108,15 @@
                 <span class="close-btn" onclick="closePopup()">×</span>
             </div>
 
-            <form th:action="@{/admin/genres/genre/create}" th:object="${genre}" method="POST" id="genreForm">
+            <form th:action="@{/admin/genres/create}" th:object="${genre}" method="POST" id="genreForm">
                 <div class="popup-body">
 
                     <!-- hidden id dùng cho edit -->
                     <input type="hidden" th:field="*{id}" id="genreId">
+                    <input type="hidden" name="page" th:value="${currentPage}">
 
                     <label for="genreName">Genre Name</label>
-                    <input type="text" th:field="*{name}" id="genreName" placeholder="Enter genre name" required>
+                    <input type="text" th:field="*{name}" id="genreName" placeholder="Enter genre name">
                     <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
                     <input type="hidden" name="status" value="true">
 
@@ -169,7 +171,7 @@
     <script>
         function openPopup() {
             document.getElementById("popupTitle").innerText = "Add New Genre";
-            document.getElementById("genreForm").action = "/admin/genres/genre/create";
+            document.getElementById("genreForm").action = "/admin/genres/create";
             document.getElementById("genreId").value = "";
             document.getElementById("genreName").value = "";
             document.getElementById("saveGenreBtn").innerText = "CREATE";
@@ -186,7 +188,7 @@
                 const status = row.querySelector(".status").textContent.trim() === "Active";
 
                 document.getElementById("popupTitle").innerText = "Edit Genre";
-                document.getElementById("genreForm").action = "/admin/genres/genre/update/" + id;
+                document.getElementById("genreForm").action = "/admin/genres/update/" + id;
                 document.getElementById("genreId").value = id;
                 document.getElementById("genreName").value = name;
                 document.getElementById("saveGenreBtn").innerText = "UPDATE";
@@ -213,11 +215,11 @@
 
             if (popupMode === "update" && genreId > 0) {
                 document.getElementById("popupTitle").innerText = "Edit Genre";
-                document.getElementById("genreForm").action = "/admin/genres/genre/update/" + genreId;
+                document.getElementById("genreForm").action = "/admin/genres/update/" + genreId;
                 document.getElementById("saveGenreBtn").innerText = "UPDATE";
             } else {
                 document.getElementById("popupTitle").innerText = "Add New Genre";
-                document.getElementById("genreForm").action = "/admin/genres/genre/create";
+                document.getElementById("genreForm").action = "/admin/genres/create";
                 document.getElementById("saveGenreBtn").innerText = "CREATE";
             }
 

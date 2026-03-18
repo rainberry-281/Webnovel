@@ -38,7 +38,7 @@
             <a class="rd_sd-button_item" th:href="@{/novel/{id}(id=${novel.id})}"><i class="fas fa-home"></i></a>
             <a id="rd-info-btn" class="rd_sd-button_item"><i class="fas fa-info"></i></a>
             <form sec:authorize="isAuthenticated()"
-                th:action="@{/library/bookmark/toggle/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${chapter.id})}"
+                th:action="@{/bookshelf/bookmark/toggle/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${chapter.id})}"
                 method="post" class="bookmark-toggle-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <button type="submit" class="rd_sd-button_item"

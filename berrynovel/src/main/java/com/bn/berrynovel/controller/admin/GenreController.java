@@ -38,9 +38,18 @@ public class GenreController {
         this.paginationService = paginationService;
     }
 
+    private String buildGenreListRedirect(Optional<String> pageOptional) {
+        if (pageOptional.isPresent() && !pageOptional.get().isBlank()) {
+            return "redirect:/admin/genres?page=" + pageOptional.get();
+        }
+        return "redirect:/admin/genres";
+    }
+
     private void loadGenreListPageData(Model model, Optional<String> pageOptional, Genre genreForm) {
+
         PaginationQuery paginationQuery = this.paginationService.AdminGenrePagination(pageOptional, 8);
         List<Genre> genres = paginationQuery.getNvs().getContent();
+
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append(LOG_DIVIDER).append("\n");
         for (int i = 0; i < genres.size(); i++) {
@@ -68,16 +77,21 @@ public class GenreController {
         return "admin/genre/show";
     }
 
-    @PostMapping("/genre/create")
+    @PostMapping("/create")
     public String createGenre(@ModelAttribute("genre") @Valid Genre genre, BindingResult bindingResult,
+            @RequestParam(value = "page", required = false) Optional<String> pageOptional,
             Model model) {
 
         if (this.novelService.checkGenreNameExists(genre.getName())) {
             bindingResult.rejectValue("name", "error.genre", "Genre name already exists");
         }
 
+        if (genre.getName() == null || genre.getName().trim().isEmpty()) {
+            bindingResult.rejectValue("name", "error.genre", "Genre name cannot be empty");
+        }
+
         if (bindingResult.hasErrors()) {
-            loadGenreListPageData(model, Optional.of("1"), genre);
+            loadGenreListPageData(model, pageOptional, genre);
             model.addAttribute("openGenrePopup", true);
             model.addAttribute("popupMode", "create");
             return "admin/genre/show";
@@ -88,25 +102,33 @@ public class GenreController {
                 genre.getName(),
                 genre.getStatus(),
                 LOG_DIVIDER);
+
         this.novelService.saveGenre(genre);
+
         logger.info("\n{}\n>>>>>>>>>>> [CREATE GENRE - SUCCESS] name={} created successfully\n{}\n",
                 LOG_DIVIDER,
                 genre.getName(),
                 LOG_DIVIDER);
-        return "redirect:/admin/genres";
+        return buildGenreListRedirect(pageOptional);
     }
 
-    @PostMapping("/genre/update/{id}")
+    @PostMapping("/update/{id}")
     public String updateGenre(@PathVariable Integer id, @ModelAttribute("genre") @Valid Genre genre,
-            BindingResult bindingResult, Model model) {
+            BindingResult bindingResult,
+            @RequestParam(value = "page", required = false) Optional<String> pageOptional,
+            Model model) {
         genre.setId(id);
 
         if (this.novelService.checkGenreNameExists(genre.getName())) {
             bindingResult.rejectValue("name", "error.genre", "Genre name already exists");
         }
 
+        if (genre.getName() == null || genre.getName().trim().isEmpty()) {
+            bindingResult.rejectValue("name", "error.genre", "Genre name cannot be empty");
+        }
+
         if (bindingResult.hasErrors()) {
-            loadGenreListPageData(model, Optional.of("1"), genre);
+            loadGenreListPageData(model, pageOptional, genre);
             model.addAttribute("openGenrePopup", true);
             model.addAttribute("popupMode", "update");
             return "admin/genre/show";
@@ -118,17 +140,23 @@ public class GenreController {
                 genre.getName(),
                 genre.getStatus(),
                 LOG_DIVIDER);
+
         this.novelService.updateGenre(genre);
+
         logger.info("\n{}\n>>>>>>>>>>> [UPDATE GENRE - SUCCESS] id={}, name={} updated successfully\n{}\n",
                 LOG_DIVIDER,
                 genre.getId(),
                 genre.getName(),
                 LOG_DIVIDER);
-        return "redirect:/admin/genres";
+
+        return buildGenreListRedirect(pageOptional);
+
     }
 
-    @PostMapping("/genre/action/{id}")
-    public String toggleGenreStatus(@PathVariable Integer id) {
+    @PostMapping("/action/{id}")
+    public String toggleGenreStatus(@PathVariable Integer id,
+            @RequestParam(value = "page", required = false) Optional<String> pageOptional) {
+
         Optional<Genre> beforeGenreOptional = this.novelService.getGenreById(id);
         logger.info("\n{}\n>>>>>>>>>>> [TOGGLE GENRE STATUS - REQUEST]\nid={}\nname={}\nstatusBefore={}\n{}\n",
                 LOG_DIVIDER,
@@ -136,7 +164,9 @@ public class GenreController {
                 beforeGenreOptional.map(Genre::getName).orElse("N/A"),
                 beforeGenreOptional.map(Genre::getStatus).orElse(null),
                 LOG_DIVIDER);
+
         this.novelService.actionGenre(id);
+
         Optional<Genre> afterGenreOptional = this.novelService.getGenreById(id);
         logger.info("\n{}\n>>>>>>>>>>> [TOGGLE GENRE STATUS - SUCCESS]\nid={}\nname={}\nstatusAfter={}\n{}\n",
                 LOG_DIVIDER,
@@ -144,6 +174,6 @@ public class GenreController {
                 afterGenreOptional.map(Genre::getName).orElse("N/A"),
                 afterGenreOptional.map(Genre::getStatus).orElse(null),
                 LOG_DIVIDER);
-        return "redirect:/admin/genres";
+        return buildGenreListRedirect(pageOptional);
     }
 }

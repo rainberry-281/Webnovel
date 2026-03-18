@@ -50,16 +50,19 @@ public class ClientNovelController {
             @RequestParam(value = "genres", required = false) List<Integer> genres,
             @RequestParam(value = "types", required = false) List<String> types,
             @RequestParam(value = "progresses", required = false) List<String> progresses) {
+
         String normalizedKeyword = keyword == null ? "" : keyword.trim();
         List<Integer> selectedGenres = genres == null
                 ? List.of()
                 : genres.stream().filter(g -> g != null && g > 0).distinct().toList();
         List<String> selectedTypes = types == null
                 ? List.of()
-                : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim).distinct().toList();
+                : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim)
+                        .distinct().toList();
         List<String> selectedProgresses = progresses == null
                 ? List.of()
-                : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim).distinct()
+                : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim)
+                        .distinct()
                         .toList();
 
         PaginationQuery<Novel> nvs;
@@ -101,10 +104,12 @@ public class ClientNovelController {
                 : genres.stream().filter(g -> g != null && g > 0).distinct().toList();
         List<String> selectedTypes = types == null
                 ? List.of()
-                : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim).distinct().toList();
+                : types.stream().filter(t -> t != null && !t.trim().isEmpty()).map(String::trim)
+                        .distinct().toList();
         List<String> selectedProgresses = progresses == null
                 ? List.of()
-                : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim).distinct()
+                : progresses.stream().filter(p -> p != null && !p.trim().isEmpty()).map(String::trim)
+                        .distinct()
                         .toList();
 
         logger.info(
@@ -155,7 +160,8 @@ public class ClientNovelController {
     public String getNovelDetailPage(@PathVariable("id") Long id,
             @RequestParam(value = "from", required = false) Optional<String> from,
             Model model, HttpServletRequest request, Authentication authentication) {
-        Novel novel = this.novelService.getNovelById(id).orElseThrow(() -> new RuntimeException("Novel not found"));
+        Novel novel = this.novelService.getNovelById(id)
+                .orElseThrow(() -> new RuntimeException("Novel not found"));
 
         logger.info("\n{}\n>>>>>>>>>>> [NOVEL DETAIL - ACCESS]\nid={}\ntitle={}\npath={}\nuser={}\n{}\n",
                 LOG_DIVIDER,
@@ -187,7 +193,7 @@ public class ClientNovelController {
                     if (refererLower.contains("/library")
                             || refererLower.contains("/bookshelf")
                             || refererLower.contains("/bookmark")) {
-                        return "library";
+                        return "bookshelf";
                     }
                     return "home";
                 });
@@ -198,11 +204,11 @@ public class ClientNovelController {
         model.addAttribute("latestChapter", latest);
         model.addAttribute("breadcrumbFrom", breadcrumbFrom);
         model.addAttribute("comments", this.commentService.getCommentsByNovelId(id));
-        boolean inLibrary = authentication != null
+        boolean inBookshelf = authentication != null
                 && authentication.isAuthenticated()
                 && !"anonymousUser".equals(authentication.getName())
-                && this.libraryService.isNovelInLibrary(authentication.getName(), id);
-        model.addAttribute("inLibrary", inLibrary);
+                && this.libraryService.isNovelInBookshelf(authentication.getName(), id);
+        model.addAttribute("inBookshelf", inBookshelf);
 
         return "client/novel/show";
     }
@@ -224,6 +230,7 @@ public class ClientNovelController {
                 LOG_DIVIDER);
 
         this.commentService.createComment(novelId, authentication.getName(), content);
+
         logger.info("\n{}\n>>>>>>>>>>> [CREATE COMMENT - SUCCESS]\nnovelId={}\nuser={}\n{}\n",
                 LOG_DIVIDER,
                 novelId,
@@ -243,7 +250,8 @@ public class ClientNovelController {
 
         boolean isAdmin = authentication.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())
-                .anyMatch(role -> "ROLE_ADMIN".equalsIgnoreCase(role) || "ROLE_AMIN".equalsIgnoreCase(role));
+                .anyMatch(role -> "ROLE_ADMIN".equalsIgnoreCase(role)
+                        || "ROLE_AMIN".equalsIgnoreCase(role));
 
         logger.info("\n{}\n>>>>>>>>>>> [DELETE COMMENT - REQUEST]\nnovelId={}\ncommentId={}\nuser={}\n{}\n",
                 LOG_DIVIDER,
@@ -253,6 +261,7 @@ public class ClientNovelController {
                 LOG_DIVIDER);
 
         this.commentService.deleteComment(novelId, commentId, authentication.getName(), isAdmin);
+
         logger.info("\n{}\n>>>>>>>>>>> [DELETE COMMENT - SUCCESS]\nnovelId={}\ncommentId={}\nuser={}\n{}\n",
                 LOG_DIVIDER,
                 novelId,

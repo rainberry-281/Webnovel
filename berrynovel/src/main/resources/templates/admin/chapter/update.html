@@ -96,6 +96,8 @@
 
     <script th:inline="javascript">
         let chapterContent = /*[[${chapter.content}]]*/ "";
+        const csrfToken = /*[[${_csrf.token}]]*/ "";
+        const csrfHeaderName = /*[[${_csrf.headerName}]]*/ "X-CSRF-TOKEN";
     </script>
 
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
@@ -109,10 +111,14 @@
             return this.loader.file.then(file => new Promise((resolve, reject) => {
 
                 const data = new FormData();
+                const headers = {};
                 data.append("upload", file);
+                headers[csrfHeaderName] = csrfToken;
 
                 fetch("/admin/chapter/upload-image", {
                     method: "POST",
+                    headers: headers,
+                    credentials: "same-origin",
                     body: data
                 })
                     .then(res => res.json())

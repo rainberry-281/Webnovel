@@ -45,6 +45,7 @@ public class UserService {
     public User adminCreateUser(User user, MultipartFile file) {
         Role roleInDataBase = this.roleRepository.findByName(user.getRole().getName());
         user.setRole(roleInDataBase);
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         String imageName = "defaultavatar.png";

@@ -59,7 +59,8 @@ public class NovelService {
     }
 
     @Transactional
-    public Novel updateNovel(Novel novel, MultipartFile file, List<Integer> genreIds) {
+    public Novel updateNovel(Long id, Novel novel, MultipartFile file, List<Integer> genreIds) {
+        novel.setId(id);
         Novel novelInDataBase = this.novelRepository.findById(novel.getId())
                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
@@ -123,8 +124,8 @@ public class NovelService {
         return this.genreRepository.findAll(pageable);
     }
 
-    public void saveGenre(Genre genre) {
-        this.genreRepository.save(genre);
+    public Genre saveGenre(Genre genre) {
+        return this.genreRepository.save(genre);
     }
 
     public void actionGenre(int id) {
@@ -292,7 +293,7 @@ public class NovelService {
     public List<Novel> getHomepageCompletedNovels() {
         String filter = "status : true and progress : 'COMPLETED' and genres.status : true";
         Specification<Novel> specification = this.filterSpecificationConverter.convert(filter);
-        Pageable pageable = PageRequest.of(0, 100);
+        Pageable pageable = PageRequest.of(0, 10);
         return this.novelRepository.findAll(specification, pageable).getContent().stream()
                 .filter(novel -> novel.getGenres() != null && !novel.getGenres().isEmpty())
                 .filter(novel -> novel.getGenres().stream().allMatch(Genre::getStatus))
@@ -307,7 +308,7 @@ public class NovelService {
     public List<Novel> getHomepageOriginalNovels() {
         String filter = "status : true and type : 'ORIGINAL' and genres.status : true";
         Specification<Novel> specification = this.filterSpecificationConverter.convert(filter);
-        Pageable pageable = PageRequest.of(0, 100);
+        Pageable pageable = PageRequest.of(0, 10);
         return this.novelRepository.findAll(specification, pageable).getContent().stream()
                 .filter(novel -> novel.getGenres() != null && !novel.getGenres().isEmpty())
                 .filter(novel -> novel.getGenres().stream().allMatch(Genre::getStatus))
@@ -322,7 +323,7 @@ public class NovelService {
     public List<Novel> getHomepageTranslatedNovels() {
         String filter = "status : true and type : 'TRANSLATION' and genres.status : true";
         Specification<Novel> specification = this.filterSpecificationConverter.convert(filter);
-        Pageable pageable = PageRequest.of(0, 100);
+        Pageable pageable = PageRequest.of(0, 10);
         return this.novelRepository.findAll(specification, pageable).getContent().stream()
                 .filter(novel -> novel.getGenres() != null && !novel.getGenres().isEmpty())
                 .filter(novel -> novel.getGenres().stream().allMatch(Genre::getStatus))
@@ -353,6 +354,14 @@ public class NovelService {
 
     public boolean checkTitleExists(String title) {
         return this.novelRepository.existsByTitle(title);
+    }
+
+    public boolean checkTitleExistsForUpdate(String title, Long id) {
+        return this.novelRepository.existsByTitleAndIdNot(title, id);
+    }
+
+    public boolean hasAtLeastOneGenre(List<Integer> genreIds) {
+        return genreIds != null && genreIds.stream().anyMatch(Objects::nonNull);
     }
 
     public boolean checkGenreNameExists(String name) {

@@ -17,7 +17,7 @@ import com.bn.berrynovel.service.LibraryService;
 import org.springframework.ui.Model;
 
 @Controller
-@RequestMapping("/library")
+@RequestMapping({ "/bookshelf", "/library" })
 public class ClientLibraryController {
     private static final Logger logger = LoggerFactory.getLogger(ClientLibraryController.class);
     private static final String LOG_DIVIDER = "============================================================";
@@ -29,9 +29,9 @@ public class ClientLibraryController {
     }
 
     @GetMapping({ "", "/", "/bookshelf" })
-    public String GetLibraryPage(Model model, Authentication authentication) {
+    public String getBookshelfPage(Model model, Authentication authentication) {
         String username = authentication.getName();
-        model.addAttribute("libraryItems", this.libraryService.getBookshelfItems(username));
+        model.addAttribute("bookshelfItems", this.libraryService.getBookshelfItems(username));
         return "client/library/bookshelf";
     }
 
@@ -43,19 +43,22 @@ public class ClientLibraryController {
     }
 
     @PostMapping("/toggle/{novelId}")
-    public String toggleNovelInLibrary(@PathVariable("novelId") Long novelId, Authentication authentication) {
+    public String toggleNovelInBookshelf(@PathVariable("novelId") Long novelId, Authentication authentication) {
+
         logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF TOGGLE - REQUEST]\nuser={}\nnovelId={}\n{}\n",
                 LOG_DIVIDER,
                 authentication.getName(),
                 novelId,
                 LOG_DIVIDER);
-        this.libraryService.toggleNovelInLibrary(authentication.getName(), novelId);
+
+        this.libraryService.toggleNovelInBookshelf(authentication.getName(), novelId);
+
         logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF TOGGLE - SUCCESS]\nuser={}\nnovelId={}\n{}\n",
                 LOG_DIVIDER,
                 authentication.getName(),
                 novelId,
                 LOG_DIVIDER);
-        return "redirect:/novel/" + novelId + "?from=library";
+        return "redirect:/novel/" + novelId + "?from=bookshelf";
     }
 
     @PostMapping("/bookmark/toggle/{novelId}/{chapterId}")
@@ -78,20 +81,20 @@ public class ClientLibraryController {
         return "redirect:/reader/" + novelId + "/" + chapterId;
     }
 
-    @PostMapping("/bookshelf/delete")
-    public String deleteFromLibrary(@RequestParam(value = "novelIds", required = false) List<Long> novelIds,
+    @PostMapping({ "/delete", "/bookshelf/delete" })
+    public String deleteFromBookshelf(@RequestParam(value = "novelIds", required = false) List<Long> novelIds,
             Authentication authentication) {
         logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF DELETE - REQUEST]\nuser={}\nnovelIds={}\n{}\n",
                 LOG_DIVIDER,
                 authentication.getName(),
                 novelIds,
                 LOG_DIVIDER);
-        this.libraryService.deleteNovelsFromLibrary(authentication.getName(), novelIds);
+        this.libraryService.deleteNovelsFromBookshelf(authentication.getName(), novelIds);
         logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF DELETE - SUCCESS]\nuser={}\nnovelIds={}\n{}\n",
                 LOG_DIVIDER,
                 authentication.getName(),
                 novelIds,
                 LOG_DIVIDER);
-        return "redirect:/library/bookshelf";
+        return "redirect:/bookshelf";
     }
 }

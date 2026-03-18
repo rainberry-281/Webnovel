@@ -60,6 +60,7 @@ public class NovelController {
         PaginationQuery paginationQuery = this.paginationService.AdminNovelPagination(pageOptional, 8,
                 normalizedKeyword);
         List<Novel> novels = paginationQuery.getNvs().getContent();
+
         StringBuilder sb = new StringBuilder();
         sb.append("\n").append(LOG_DIVIDER).append("\n");
         for (int i = 0; i < novels.size(); i++) {
@@ -76,6 +77,7 @@ public class NovelController {
         }
         sb.append("\n").append(LOG_DIVIDER).append("\n");
         logger.info(sb.toString());
+
         model.addAttribute("novels", novels);
 
         model.addAttribute("currentPage", paginationQuery.getPage());
@@ -106,12 +108,17 @@ public class NovelController {
             novelBindingResult.rejectValue("title", "error.novel", "Title already exists");
         }
 
+        boolean hasGenre = this.novelService.hasAtLeastOneGenre(genreIds);
+        if (!hasGenre) {
+            model.addAttribute("genreError", "Please select at least one genre");
+        }
+
         List<FieldError> errors = novelBindingResult.getFieldErrors();
         for (FieldError error : errors) {
             System.out.println("\n\n>>>>>" + error.getObjectName() + " - " + error.getDefaultMessage() + "\n\n");
         }
 
-        if (novelBindingResult.hasErrors()) {
+        if (novelBindingResult.hasErrors() || !hasGenre) {
             model.addAttribute("genres", this.novelService.getAllGenres());
             model.addAttribute("selectedGenreIds", genreIds == null ? Collections.emptyList() : genreIds);
             return "admin/novel/create";
@@ -143,7 +150,9 @@ public class NovelController {
                 novel.getUser() == null ? null : novel.getUser().getId(),
                 novel.getCreatedAt(),
                 LOG_DIVIDER);
+
         this.novelService.createNovel(novel, file, genreIds);
+
         logger.info("\n{}\n>>>>>>>>>>> [CREATE NOVEL - SUCCESS] title={}, image={} created successfully\n{}\n",
                 LOG_DIVIDER,
                 novel.getTitle(),
@@ -169,16 +178,22 @@ public class NovelController {
             @RequestParam(value = "images", required = false) MultipartFile file,
             @RequestParam(value = "genreIds", required = false) List<Integer> genreIds,
             Model model) {
-        novel.setId(id);
-        if (this.novelService.checkTitleExists(novel.getTitle())) {
+
+        if (this.novelService.checkTitleExistsForUpdate(novel.getTitle(), id)) {
             novelBindingResult.rejectValue("title", "error.novel", "Title already exists");
         }
 
-        if (novelBindingResult.hasErrors()) {
+        boolean hasGenre = this.novelService.hasAtLeastOneGenre(genreIds);
+        if (!hasGenre) {
+            model.addAttribute("genreError", "Please select at least one genre");
+        }
+
+        if (novelBindingResult.hasErrors() || !hasGenre) {
             model.addAttribute("genres", this.novelService.getAllGenres());
             model.addAttribute("selectedGenreIds", genreIds == null ? Collections.emptyList() : genreIds);
             return "admin/novel/update";
         }
+
         logger.info(
                 "\n{}\n>>>>>>>>>>> [UPDATE NOVEL - REQUEST]\n"
                         + "id={}\ntitle={}\nauthor={}\ntype={}\nprogress={}\nstatus={}\ngenres={}\n{}\n",
@@ -191,18 +206,23 @@ public class NovelController {
                 novel.getStatus(),
                 novel.getGenres() == null ? List.of() : novel.getGenres().stream().map(Genre::getName).toList(),
                 LOG_DIVIDER);
-        this.novelService.updateNovel(novel, file, genreIds);
+
+        this.novelService.updateNovel(id, novel, file, genreIds);
+
         logger.info("\n{}\n>>>>>>>>>>> [UPDATE NOVEL - SUCCESS] id={}, title={} updated successfully\n{}\n",
                 LOG_DIVIDER,
                 novel.getId(),
                 novel.getTitle(),
                 LOG_DIVIDER);
+
         return "redirect:/admin/novel";
     }
 
     @PostMapping("/toggle-status/{id}")
     public String toggleNovelStatus(@PathVariable Long id) {
+
         Optional<Novel> beforeNovelOptional = this.novelService.getNovelById(id);
+
         logger.info("\n{}\n>>>>>>>>>>> [TOGGLE STATUS - REQUEST]\nid={}\ntitle={}\nimage={}\nstatusBefore={}\n{}\n",
                 LOG_DIVIDER,
                 id,
@@ -210,7 +230,9 @@ public class NovelController {
                 beforeNovelOptional.map(Novel::getImage).orElse(null),
                 beforeNovelOptional.map(Novel::getStatus).orElse(null),
                 LOG_DIVIDER);
+
         this.novelService.toggleNovelStatus(id);
+
         Optional<Novel> afterNovelOptional = this.novelService.getNovelById(id);
         logger.info("\n{}\n>>>>>>>>>>> [TOGGLE STATUS - SUCCESS]\nid={}\ntitle={}\nimage={}\nstatusAfter={}\n{}\n",
                 LOG_DIVIDER,

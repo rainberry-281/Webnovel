@@ -37,6 +37,7 @@ public class HomepageController {
         model.addAttribute("completedNovels", this.novelService.getHomepageCompletedNovels());
         model.addAttribute("novels", this.novelService.getHomepageOriginalNovels());
         model.addAttribute("translatedNovels", this.novelService.getHomepageTranslatedNovels());
+
         return "client/homepage/show";
     }
 
@@ -81,11 +82,14 @@ public class HomepageController {
                 LOG_DIVIDER);
 
         this.userService.createUserByClient(registerDTO);
+
         logger.info("\n{}\n>>>>>>>>>>> [REGISTER - SUCCESS] username={} created successfully\n{}\n",
                 LOG_DIVIDER,
                 registerDTO.getUsername(),
                 LOG_DIVIDER);
+
         return "redirect:/login";
+
     }
 
     @GetMapping("/login")

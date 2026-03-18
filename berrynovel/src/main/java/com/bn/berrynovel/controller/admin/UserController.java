@@ -119,7 +119,9 @@ public class UserController {
                 user.getRole() == null ? null : user.getRole().getName(),
                 user.getStatus(),
                 LOG_DIVIDER);
+
         this.userService.adminCreateUser(user, file);
+
         logger.info("\n{}\n>>>>>>>>>>> [CREATE USER - SUCCESS] username={}, image={} created successfully\n{}\n",
                 LOG_DIVIDER,
                 user.getUsername(),
@@ -161,7 +163,9 @@ public class UserController {
                 user.getRole() == null ? null : user.getRole().getName(),
                 user.getStatus(),
                 LOG_DIVIDER);
+
         this.userService.updateUser(user, file);
+
         logger.info("\n{}\n>>>>>>>>>>> [UPDATE USER - SUCCESS] id={}, username={} updated successfully\n{}\n",
                 LOG_DIVIDER,
                 user.getId(),
@@ -180,7 +184,9 @@ public class UserController {
                 beforeUser == null ? null : beforeUser.getImage(),
                 beforeUser == null ? null : beforeUser.getStatus(),
                 LOG_DIVIDER);
+
         this.userService.softDeleteUser(id);
+
         User afterUser = this.userService.getUserByID(id);
         logger.info("\n{}\n>>>>>>>>>>> [BAN USER - SUCCESS]\nid={}\nusername={}\nimage={}\nstatusAfter={}\n{}\n",
                 LOG_DIVIDER,

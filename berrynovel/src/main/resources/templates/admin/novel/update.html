@@ -115,6 +115,8 @@
                                     <span th:text="${genre.name}"></span>
                                 </label>
                             </div>
+
+                            <div th:if="${genreError}" class="text-danger mt-2" th:text="${genreError}"></div>
                         </div>
                     </div>
 

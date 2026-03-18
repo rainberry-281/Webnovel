@@ -39,7 +39,7 @@ public class LibraryService {
         this.bookmarkRepository = bookmarkRepository;
     }
 
-    public void addNovelToLibrary(String username, Long novelId) {
+    public void addNovelToBookshelf(String username, Long novelId) {
         User user = this.userRepository.findByUsername(username);
         if (user == null) {
             throw new RuntimeException("User not found");
@@ -61,22 +61,22 @@ public class LibraryService {
     }
 
     @Transactional
-    public void toggleNovelInLibrary(String username, Long novelId) {
+    public void toggleNovelInBookshelf(String username, Long novelId) {
         User user = this.userRepository.findByUsername(username);
         if (user == null) {
             throw new RuntimeException("User not found");
         }
 
-        boolean inLibrary = this.bookshelfRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId);
-        if (inLibrary) {
+        boolean inBookshelf = this.bookshelfRepository.existsByUser_IdAndNovel_Id(user.getId(), novelId);
+        if (inBookshelf) {
             this.bookshelfRepository.deleteByUser_IdAndNovel_Id(user.getId(), novelId);
             return;
         }
 
-        this.addNovelToLibrary(username, novelId);
+        this.addNovelToBookshelf(username, novelId);
     }
 
-    public boolean isNovelInLibrary(String username, Long novelId) {
+    public boolean isNovelInBookshelf(String username, Long novelId) {
         User user = this.userRepository.findByUsername(username);
         if (user == null) {
             return false;
@@ -115,7 +115,7 @@ public class LibraryService {
     }
 
     @Transactional
-    public int deleteNovelsFromLibrary(String username, List<Long> novelIds) {
+    public int deleteNovelsFromBookshelf(String username, List<Long> novelIds) {
         if (novelIds == null || novelIds.isEmpty()) {
             return 0;
         }
