@@ -71,7 +71,9 @@ public class ClientLibraryController {
                 novelId,
                 chapterId,
                 LOG_DIVIDER);
+
         this.libraryService.toggleChapterBookmark(authentication.getName(), novelId, chapterId);
+
         logger.info("\n{}\n>>>>>>>>>>> [BOOKMARK TOGGLE - SUCCESS]\nuser={}\nnovelId={}\nchapterId={}\n{}\n",
                 LOG_DIVIDER,
                 authentication.getName(),
@@ -89,7 +91,9 @@ public class ClientLibraryController {
                 authentication.getName(),
                 novelIds,
                 LOG_DIVIDER);
+
         this.libraryService.deleteNovelsFromBookshelf(authentication.getName(), novelIds);
+
         logger.info("\n{}\n>>>>>>>>>>> [BOOKSHELF DELETE - SUCCESS]\nuser={}\nnovelIds={}\n{}\n",
                 LOG_DIVIDER,
                 authentication.getName(),

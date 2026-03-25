@@ -18,8 +18,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.bn.berrynovel.domain.Genre;
 import com.bn.berrynovel.domain.PaginationQuery;
@@ -27,9 +25,6 @@ import com.bn.berrynovel.domain.PaginationQuery;
 @Controller
 @RequestMapping("/admin/genres")
 public class GenreController {
-    private static final Logger logger = LoggerFactory.getLogger(GenreController.class);
-    private static final String LOG_DIVIDER = "============================================================";
-
     private final NovelService novelService;
     private final PaginationService paginationService;
 
@@ -49,21 +44,6 @@ public class GenreController {
 
         PaginationQuery paginationQuery = this.paginationService.AdminGenrePagination(pageOptional, 8);
         List<Genre> genres = paginationQuery.getNvs().getContent();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n").append(LOG_DIVIDER).append("\n");
-        for (int i = 0; i < genres.size(); i++) {
-            Genre genre = genres.get(i);
-            sb.append(">>>>>>>>>>> Genre[").append(i + 1).append("]\n")
-                    .append("id=").append(genre.getId()).append("\n")
-                    .append("name=").append(genre.getName()).append("\n")
-                    .append("status=").append(genre.getStatus());
-            if (i < genres.size() - 1) {
-                sb.append("\n\n");
-            }
-        }
-        sb.append("\n").append(LOG_DIVIDER).append("\n");
-        logger.info(sb.toString());
 
         model.addAttribute("genres", genres);
         model.addAttribute("currentPage", paginationQuery.getPage());
@@ -97,18 +77,7 @@ public class GenreController {
             return "admin/genre/show";
         }
 
-        logger.info("\n{}\n>>>>>>>>>>> [CREATE GENRE - REQUEST]\nname={}\nstatus={}\n{}\n",
-                LOG_DIVIDER,
-                genre.getName(),
-                genre.getStatus(),
-                LOG_DIVIDER);
-
         this.novelService.saveGenre(genre);
-
-        logger.info("\n{}\n>>>>>>>>>>> [CREATE GENRE - SUCCESS] name={} created successfully\n{}\n",
-                LOG_DIVIDER,
-                genre.getName(),
-                LOG_DIVIDER);
         return buildGenreListRedirect(pageOptional);
     }
 
@@ -134,20 +103,7 @@ public class GenreController {
             return "admin/genre/show";
         }
 
-        logger.info("\n{}\n>>>>>>>>>>> [UPDATE GENRE - REQUEST]\nid={}\nname={}\nstatus={}\n{}\n",
-                LOG_DIVIDER,
-                genre.getId(),
-                genre.getName(),
-                genre.getStatus(),
-                LOG_DIVIDER);
-
         this.novelService.updateGenre(genre);
-
-        logger.info("\n{}\n>>>>>>>>>>> [UPDATE GENRE - SUCCESS] id={}, name={} updated successfully\n{}\n",
-                LOG_DIVIDER,
-                genre.getId(),
-                genre.getName(),
-                LOG_DIVIDER);
 
         return buildGenreListRedirect(pageOptional);
 
@@ -157,23 +113,7 @@ public class GenreController {
     public String toggleGenreStatus(@PathVariable Integer id,
             @RequestParam(value = "page", required = false) Optional<String> pageOptional) {
 
-        Optional<Genre> beforeGenreOptional = this.novelService.getGenreById(id);
-        logger.info("\n{}\n>>>>>>>>>>> [TOGGLE GENRE STATUS - REQUEST]\nid={}\nname={}\nstatusBefore={}\n{}\n",
-                LOG_DIVIDER,
-                id,
-                beforeGenreOptional.map(Genre::getName).orElse("N/A"),
-                beforeGenreOptional.map(Genre::getStatus).orElse(null),
-                LOG_DIVIDER);
-
         this.novelService.actionGenre(id);
-
-        Optional<Genre> afterGenreOptional = this.novelService.getGenreById(id);
-        logger.info("\n{}\n>>>>>>>>>>> [TOGGLE GENRE STATUS - SUCCESS]\nid={}\nname={}\nstatusAfter={}\n{}\n",
-                LOG_DIVIDER,
-                id,
-                afterGenreOptional.map(Genre::getName).orElse("N/A"),
-                afterGenreOptional.map(Genre::getStatus).orElse(null),
-                LOG_DIVIDER);
         return buildGenreListRedirect(pageOptional);
     }
 }

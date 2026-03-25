@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import org.springframework.security.core.Authentication;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.domain.Novel;
@@ -35,9 +33,6 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/admin/novel")
 public class NovelController {
-
-    private static final Logger logger = LoggerFactory.getLogger(NovelController.class);
-    private static final String LOG_DIVIDER = "============================================================";
 
     private final NovelService novelService;
     private final ImageService imageService;
@@ -60,23 +55,6 @@ public class NovelController {
         PaginationQuery paginationQuery = this.paginationService.AdminNovelPagination(pageOptional, 8,
                 normalizedKeyword);
         List<Novel> novels = paginationQuery.getNvs().getContent();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n").append(LOG_DIVIDER).append("\n");
-        for (int i = 0; i < novels.size(); i++) {
-            Novel n = novels.get(i);
-            sb.append(">>>>>>>>>>> Novel[").append(i + 1).append("]\n")
-                    .append("id=").append(n.getId()).append("\n")
-                    .append("title=").append(n.getTitle()).append("\n")
-                    .append("author=").append(n.getAuthor()).append("\n")
-                    .append("image=").append(n.getImage()).append("\n")
-                    .append("status=").append(n.getStatus()).append("\n")
-                    .append("createdAt=").append(n.getCreatedAt());
-            if (i < novels.size() - 1)
-                sb.append("\n\n");
-        }
-        sb.append("\n").append(LOG_DIVIDER).append("\n");
-        logger.info(sb.toString());
 
         model.addAttribute("novels", novels);
 
@@ -136,28 +114,8 @@ public class NovelController {
         }
 
         novel.setCreatedAt(LocalDateTime.now());
-        logger.info(
-                "\n{}\n>>>>>>>>>>> [CREATE NOVEL - REQUEST]\n"
-                        + "title={}\nauthor={}\nimage={}\ntype={}\nprogress={}\nstatus={}\ngenres={}\nuploaderId={}\ncreatedAt={}\n{}\n",
-                LOG_DIVIDER,
-                novel.getTitle(),
-                novel.getAuthor(),
-                novel.getImage(),
-                novel.getType(),
-                novel.getProgress(),
-                novel.getStatus(),
-                novel.getGenres() == null ? List.of() : novel.getGenres().stream().map(Genre::getName).toList(),
-                novel.getUser() == null ? null : novel.getUser().getId(),
-                novel.getCreatedAt(),
-                LOG_DIVIDER);
 
         this.novelService.createNovel(novel, file, genreIds);
-
-        logger.info("\n{}\n>>>>>>>>>>> [CREATE NOVEL - SUCCESS] title={}, image={} created successfully\n{}\n",
-                LOG_DIVIDER,
-                novel.getTitle(),
-                novel.getImage(),
-                LOG_DIVIDER);
         return "redirect:/admin/novel";
     }
 
@@ -194,26 +152,7 @@ public class NovelController {
             return "admin/novel/update";
         }
 
-        logger.info(
-                "\n{}\n>>>>>>>>>>> [UPDATE NOVEL - REQUEST]\n"
-                        + "id={}\ntitle={}\nauthor={}\ntype={}\nprogress={}\nstatus={}\ngenres={}\n{}\n",
-                LOG_DIVIDER,
-                novel.getId(),
-                novel.getTitle(),
-                novel.getAuthor(),
-                novel.getType(),
-                novel.getProgress(),
-                novel.getStatus(),
-                novel.getGenres() == null ? List.of() : novel.getGenres().stream().map(Genre::getName).toList(),
-                LOG_DIVIDER);
-
         this.novelService.updateNovel(id, novel, file, genreIds);
-
-        logger.info("\n{}\n>>>>>>>>>>> [UPDATE NOVEL - SUCCESS] id={}, title={} updated successfully\n{}\n",
-                LOG_DIVIDER,
-                novel.getId(),
-                novel.getTitle(),
-                LOG_DIVIDER);
 
         return "redirect:/admin/novel";
     }
@@ -221,26 +160,7 @@ public class NovelController {
     @PostMapping("/toggle-status/{id}")
     public String toggleNovelStatus(@PathVariable Long id) {
 
-        Optional<Novel> beforeNovelOptional = this.novelService.getNovelById(id);
-
-        logger.info("\n{}\n>>>>>>>>>>> [TOGGLE STATUS - REQUEST]\nid={}\ntitle={}\nimage={}\nstatusBefore={}\n{}\n",
-                LOG_DIVIDER,
-                id,
-                beforeNovelOptional.map(Novel::getTitle).orElse("N/A"),
-                beforeNovelOptional.map(Novel::getImage).orElse(null),
-                beforeNovelOptional.map(Novel::getStatus).orElse(null),
-                LOG_DIVIDER);
-
         this.novelService.toggleNovelStatus(id);
-
-        Optional<Novel> afterNovelOptional = this.novelService.getNovelById(id);
-        logger.info("\n{}\n>>>>>>>>>>> [TOGGLE STATUS - SUCCESS]\nid={}\ntitle={}\nimage={}\nstatusAfter={}\n{}\n",
-                LOG_DIVIDER,
-                id,
-                afterNovelOptional.map(Novel::getTitle).orElse("N/A"),
-                afterNovelOptional.map(Novel::getImage).orElse(null),
-                afterNovelOptional.map(Novel::getStatus).orElse(null),
-                LOG_DIVIDER);
         return "redirect:/admin/novel";
     }
 }
