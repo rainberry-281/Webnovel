@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.repository.ChapterRepository;
+import com.bn.berrynovel.service.ImageService;
 import com.bn.berrynovel.service.NovelService;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 public class ChapterController {
     private final NovelService novelService;
     private final ChapterRepository chapterRepository;
+    private final ImageService imageService;
 
-    public ChapterController(NovelService novelService, ChapterRepository chapterRepository) {
+    public ChapterController(NovelService novelService, ChapterRepository chapterRepository,
+            ImageService imageService) {
         this.novelService = novelService;
         this.chapterRepository = chapterRepository;
+        this.imageService = imageService;
     }
 
     // @GetMapping("/create/{novelId}")
@@ -117,17 +120,7 @@ public class ChapterController {
     @PostMapping("/upload-image")
     @ResponseBody
     public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile file) throws IOException {
-
-        String uploadDir = System.getProperty("user.dir")
-                + "/src/main/resources/static/images/chapter/";
-        String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-
-        File dir = new File(uploadDir);
-        if (!dir.exists())
-            dir.mkdirs();
-
-        File dest = new File(uploadDir + fileName);
-        file.transferTo(dest);
+        String fileName = this.imageService.handleImage(file, "chapter");
 
         Map<String, Object> result = new HashMap<>();
         result.put("url", "/images/chapter/" + fileName);
