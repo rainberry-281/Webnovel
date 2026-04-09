@@ -46,6 +46,9 @@ public class Novel {
 
     private boolean status = true;
 
+    @Enumerated(EnumType.STRING)
+    private NovelHot hot = NovelHot.NOT_HOT;
+
     String image;
 
     private LocalDateTime createdAt;
@@ -140,5 +143,13 @@ public class Novel {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public NovelHot getHot() {
+        return hot;
+    }
+
+    public void setHot(NovelHot hot) {
+        this.hot = hot;
     }
 }

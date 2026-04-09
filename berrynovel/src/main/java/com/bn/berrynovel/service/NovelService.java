@@ -23,6 +23,8 @@ import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.repository.ChapterRepository;
 import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 
+import com.bn.berrynovel.domain.NovelHot;
+
 @Service
 public class NovelService {
     private final NovelRepository novelRepository;
@@ -81,6 +83,7 @@ public class NovelService {
         novelInDataBase.setGenres(managedGenres);
         novelInDataBase.setType(novel.getType());
         novelInDataBase.setProgress(novel.getProgress());
+        novelInDataBase.setHot(novel.getHot());
         return this.novelRepository.save(novelInDataBase);
     }
 
@@ -98,6 +101,37 @@ public class NovelService {
             return this.novelRepository.findAll(pageable);
         }
         return this.novelRepository.findByTitleContainingIgnoreCase(normalizedKeyword, pageable);
+    }
+
+    public Page<Novel> findByHot(NovelHot hot, Pageable pageable) {
+        return this.novelRepository.findByHot(hot, pageable);
+    }
+
+    public Page<Novel> adminSearch(String keyword, String hotValue, Pageable pageable) {
+        String normalizedKeyword = keyword == null ? "" : keyword.trim();
+        String normalizedHot = hotValue == null ? "" : hotValue.trim();
+
+        NovelHot hot = null;
+        if (!normalizedHot.isEmpty()) {
+            try {
+                hot = NovelHot.valueOf(normalizedHot);
+            } catch (IllegalArgumentException e) {
+                // invalid value, ignore
+            }
+        }
+
+        boolean hasKeyword = !normalizedKeyword.isEmpty();
+        boolean hasHot = hot != null;
+
+        if (hasKeyword && hasHot) {
+            return this.novelRepository.findByHotAndTitleContainingIgnoreCase(hot, normalizedKeyword, pageable);
+        } else if (hasHot) {
+            return this.novelRepository.findByHot(hot, pageable);
+        } else if (hasKeyword) {
+            return this.novelRepository.findByTitleContainingIgnoreCase(normalizedKeyword, pageable);
+        } else {
+            return this.novelRepository.findAll(pageable);
+        }
     }
 
     // public List<Novel> getActiveNovels() {

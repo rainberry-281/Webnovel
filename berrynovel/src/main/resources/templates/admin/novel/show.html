@@ -37,7 +37,17 @@
                         Create Novel
                     </a>
 
+                    <div class="d-flex gap-2">
+                        <a th:href="@{/admin/novel(keyword=${keyword})}" class="btn btn-outline-secondary"
+                            th:classappend="${#strings.isEmpty(hot)} ? 'active' : ''">All</a>
+                        <a th:href="@{/admin/novel(hot='HOT',keyword=${keyword})}" class="btn btn-outline-danger"
+                            th:classappend="${hot == 'HOT'} ? 'active' : ''">HOT</a>
+                        <a th:href="@{/admin/novel(hot='NOT_HOT',keyword=${keyword})}" class="btn btn-outline-secondary"
+                            th:classappend="${hot == 'NOT_HOT'} ? 'active' : ''">Not Hot</a>
+                    </div>
+
                     <form th:action="@{/admin/novel}" method="get" class="d-flex ms-auto" style="max-width: 320px;">
+                        <input type="hidden" name="hot" th:value="${hot}">
                         <input type="text" name="keyword" class="form-control me-2" placeholder="Search novel..."
                             th:value="${keyword}">
                         <button type="submit" class="btn btn-outline-secondary">Search</button>
@@ -55,6 +65,7 @@
                                 <th>Novel Name</th>
                                 <th>Author</th>
                                 <th>UploaderID</th>
+                                <th>Hot</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -71,6 +82,8 @@
                                 <td th:text="${novel.author}"></td>
 
                                 <td th:text="${novel.user?.id ?: '-'}"></td>
+
+                                <td th:text="${novel.hot.displayName}"></td>
 
                                 <td class="status" th:text="${novel.status ? 'Active' : 'Inactive'}"></td>
 
@@ -115,18 +128,19 @@
                     <ul class="pagination">
                         <li class="page-item">
                             <a th:class="${currentPage == 1} ? 'page-link disabled' : 'page-link'"
-                                th:href="@{/admin/novel(page=${currentPage - 1},keyword=${keyword})}"
+                                th:href="@{/admin/novel(page=${currentPage - 1},keyword=${keyword},hot=${hot})}"
                                 aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                         <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item">
-                            <a th:href="@{/admin/novel(page=${i},keyword=${keyword})}"
+                            <a th:href="@{/admin/novel(page=${i},keyword=${keyword},hot=${hot})}"
                                 th:classappend="${i == currentPage} ? 'active'" class="page-link" th:text="${i}"></a>
                         </li>
                         <li class="page-item">
                             <a th:class="${currentPage == totalPage} ? 'page-link disabled' : 'page-link'"
-                                th:href="@{/admin/novel(page=${currentPage + 1},keyword=${keyword})}" aria-label="Next">
+                                th:href="@{/admin/novel(page=${currentPage + 1},keyword=${keyword},hot=${hot})}"
+                                aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

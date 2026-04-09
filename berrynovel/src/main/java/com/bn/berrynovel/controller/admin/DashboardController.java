@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.bn.berrynovel.repository.UserRepository;
 import com.bn.berrynovel.repository.NovelRepository;
 import com.bn.berrynovel.repository.GenreRepository;
+import com.bn.berrynovel.domain.NovelHot;
 
 @Controller
 @RequestMapping("/admin")
@@ -29,6 +30,8 @@ public class DashboardController {
         model.addAttribute("userCount", this.userRepository.count());
         model.addAttribute("novelCount", this.novelRepository.count());
         model.addAttribute("genreCount", this.genreRepository.count());
+        model.addAttribute("hotNovelCount",
+                this.novelRepository.countByHot(NovelHot.HOT));
         return "admin/dashboard/show";
     }
 }

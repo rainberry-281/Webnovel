@@ -15,6 +15,14 @@
 
     <link rel="stylesheet" th:href="@{/client/css/font.css}">
 
+    <style>
+        .hotnovel {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -55,7 +63,10 @@
 
                             <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
                                 alt="Tên truyện">
-
+                            <div class="hotnovel" style="">
+                                <span th:if="${novel.hot != null and novel.hot.name() == 'HOT'}"
+                                    class="badge bg-danger">HOT</span>
+                            </div>
                             <div class="overlay">
                                 <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
 
@@ -78,6 +89,10 @@
                         <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
                             <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
                                 alt="Tên truyện">
+                            <div class="hotnovel">
+                                <span th:if="${novel.hot != null and novel.hot.name() == 'HOT'}"
+                                    class="badge bg-danger">HOT</span>
+                            </div>
                             <div class="overlay">
                                 <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
                                 <small class="text-light" th:text="'Tác giả: ' + ${novel.author}"></small>
@@ -99,6 +114,12 @@
                         <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
                             <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
                                 alt="Tên truyện">
+
+                            <div class="hotnovel">
+                                <span th:if="${novel.hot != null and novel.hot.name() == 'HOT'}"
+                                    class="badge bg-danger">HOT</span>
+                            </div>
+
                             <div class="overlay">
                                 <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
                                 <small class="text-light" th:text="'Tác giả: ' + ${novel.author}"></small>

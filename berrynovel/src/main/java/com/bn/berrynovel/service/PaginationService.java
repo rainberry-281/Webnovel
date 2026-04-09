@@ -52,6 +52,16 @@ public class PaginationService {
         return paginate(pageOptinal, size, pageable -> this.novelService.findByTitleContaining(keyword, pageable));
     }
 
+    public PaginationQuery<Novel> AdminNovelHotPagination(Optional<String> pageOptinal, int size,
+            com.bn.berrynovel.domain.NovelHot hot) {
+        return paginate(pageOptinal, size, pageable -> this.novelService.findByHot(hot, pageable));
+    }
+
+    public PaginationQuery<Novel> AdminNovelSearch(Optional<String> pageOptinal, int size, String keyword,
+            String hot) {
+        return paginate(pageOptinal, size, pageable -> this.novelService.adminSearch(keyword, hot, pageable));
+    }
+
     public PaginationQuery<Novel> ClientNovelPagination(Optional<String> pageOptinal, int size) {
         return paginate(pageOptinal, size, this.novelService::findActiveNovelsWithActiveGenres);
     }

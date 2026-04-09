@@ -105,6 +105,19 @@
                             </div>
                         </div>
 
+                        <!-- HOT -->
+                        <div class="col-md-6 form-group select-role">
+                            <label>Hot</label>
+                            <div class="select-wrapper">
+                                <select class="form-control" th:field="*{hot}">
+                                    <option th:each="h : ${T(com.bn.berrynovel.domain.NovelHot).values()}"
+                                        th:value="${h}" th:text="${h.displayName}">
+                                    </option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                        </div>
+
                         <!-- GENRE -->
                         <div class="form-group genre-group">
                             <label>Genre</label>

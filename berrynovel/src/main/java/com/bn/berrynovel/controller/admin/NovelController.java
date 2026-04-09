@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.domain.Novel;
+import com.bn.berrynovel.domain.NovelHot;
 import com.bn.berrynovel.domain.PaginationQuery;
 import com.bn.berrynovel.domain.Genre;
 import com.bn.berrynovel.domain.User;
@@ -50,19 +51,21 @@ public class NovelController {
     @GetMapping
     public String getNovelListPage(Model model,
             @RequestParam(value = "page") Optional<String> pageOptional,
-            @RequestParam(value = "keyword", required = false) String keyword) {
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "hot", required = false) String hot) {
         String normalizedKeyword = keyword == null ? "" : keyword.trim();
-        PaginationQuery paginationQuery = this.paginationService.AdminNovelPagination(pageOptional, 8,
-                normalizedKeyword);
+        String normalizedHot = hot == null ? "" : hot.trim();
+
+        PaginationQuery<Novel> paginationQuery = this.paginationService.AdminNovelSearch(pageOptional, 8,
+                normalizedKeyword, normalizedHot);
+
         List<Novel> novels = paginationQuery.getNvs().getContent();
 
         model.addAttribute("novels", novels);
-
         model.addAttribute("currentPage", paginationQuery.getPage());
-
         model.addAttribute("totalPage", paginationQuery.getNvs().getTotalPages());
-
         model.addAttribute("keyword", normalizedKeyword);
+        model.addAttribute("hot", normalizedHot);
 
         return "admin/novel/show";
     }
