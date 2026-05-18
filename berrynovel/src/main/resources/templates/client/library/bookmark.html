@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,7 @@
                 <div class="col-12 col-lg-3 float-end">
                     <section class="private-tabs">
                         <header>
-                            <h4 class="section-name">Tài khoản</h4>
+                            <h4 class="section-name">Account</h4>
                             <span class="user-name" sec:authentication="name"></span>
                         </header>
                         <ul class="user-private-tabs">
@@ -63,12 +63,11 @@
                 <div class="col-12 col-lg-9 float-start">
                     <section class="bookmark-section">
                         <header class="sect-header">
-                            <span class="sect-title">Danh sách đánh dấu</span>
+                            <span class="sect-title">Bookmarks</span>
                         </header>
 
                         <main class="sect-body" style="padding: 10px; display: block;">
-                            <p class="text-muted" th:if="${#lists.isEmpty(bookmarkItems)}">Chưa có chapter nào được
-                                bookmark.</p>
+                            <p class="text-muted" th:if="${#lists.isEmpty(bookmarkItems)}">No bookmarked chapters yet.</p>
 
                             <article class="bookmark-item clear" th:each="item : ${bookmarkItems}">
                                 <div class="series-cover">
@@ -91,8 +90,10 @@
                                     <ul class="bookmarks-list clear">
                                         <li th:each="chapter : ${item.chapters}">
                                             <div class="chapter-title">
-                                                <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${item.novel.id},chapterId=${chapter.id})}"
-                                                    th:text="${chapter.title}"></a>
+                                                <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${item.novel.id},chapterId=${chapter.chapter.id},from='bookmark')}"
+                                                    th:text="${chapter.chapter.title}"></a>
+                                                <small class="text-muted" th:if="${chapter.linePosition != null}"
+                                                    th:text="${' - line ' + (chapter.linePosition + 1)}"></small>
                                             </div>
                                         </li>
                                     </ul>

@@ -9,7 +9,7 @@ import com.bn.berrynovel.service.UserService;
 
 @Service
 public class RegisterValidator implements ConstraintValidator<RegisterChecked, RegisterDTO> {
-    // RegisterDTO là kiểu dữ liệu đc kiểm tra
+    // RegisterDTO is the data type being validated.
     private final UserService userService;
 
     public RegisterValidator(UserService userService) {
@@ -24,19 +24,16 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecked, R
         if (!user.getPassword().equals(user.getConfirmPassword())) {
             context.buildConstraintViolationWithTemplate("ComfirmPassword doesn't fit")
                     .addPropertyNode("confirmPassword")
-                    // addPropertyNode("confirmPassword"): Lỗi sẽ được áp dụng vào trường
-                    // confirmPassword trong đối tượng RegisterDTO.
-                    // Điều này có nghĩa là lỗi sẽ liên kết với trường confirmPassword, không phải
-                    // với password hay email.
+                    // addPropertyNode("confirmPassword"): attach the error to confirmPassword
+                    // in the RegisterDTO object, not password or email.
                     .addConstraintViolation() // ?
                     .disableDefaultConstraintViolation();
-            // Dùng để tắt thông báo lỗi mặc định, chỉ hiển thị thông báo tùy chỉnh do ta
-            // định nghĩa.
+            // Disable the default error message and show only the custom message.
             valid = false;
         }
 
         // Additional validations can be added here
-        // check email có từng tồn tại hay không
+        // Check whether the email already exists.
         if (this.userService.checkEmailExists(user.getEmail())) {
             context.buildConstraintViolationWithTemplate("Email already exists")
                     .addPropertyNode("email")
@@ -45,7 +42,7 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecked, R
             valid = false;
         }
 
-        // check username có tồn tại hay không
+        // Check whether the username already exists.
         if (this.userService.checkUsernameExists(user.getUsername())) {
             context.buildConstraintViolationWithTemplate("Username already exists")
                     .addPropertyNode("username")

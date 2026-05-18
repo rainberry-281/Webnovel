@@ -2,14 +2,13 @@ package com.bn.berrynovel.domain.dto;
 
 import java.util.List;
 
-import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
 
 public class BookmarkNovelDTO {
     private final Novel novel;
-    private final List<Chapter> chapters;
+    private final List<BookmarkChapterDTO> chapters;
 
-    public BookmarkNovelDTO(Novel novel, List<Chapter> chapters) {
+    public BookmarkNovelDTO(Novel novel, List<BookmarkChapterDTO> chapters) {
         this.novel = novel;
         this.chapters = chapters;
     }
@@ -18,7 +17,7 @@ public class BookmarkNovelDTO {
         return novel;
     }
 
-    public List<Chapter> getChapters() {
+    public List<BookmarkChapterDTO> getChapters() {
         return chapters;
     }
 }

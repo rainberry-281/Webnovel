@@ -105,13 +105,13 @@
 
             <div class="popup-header">
                 <h2 class="fw-semibold" id="popupTitle">Add New Genre</h2>
-                <span class="close-btn" onclick="closePopup()">×</span>
+                <span class="close-btn" onclick="closePopup()">&times;</span>
             </div>
 
             <form th:action="@{/admin/genres/create}" th:object="${genre}" method="POST" id="genreForm">
                 <div class="popup-body">
 
-                    <!-- hidden id dùng cho edit -->
+                    <!-- hidden id for editing -->
                     <input type="hidden" th:field="*{id}" id="genreId">
                     <input type="hidden" name="page" th:value="${currentPage}">
 

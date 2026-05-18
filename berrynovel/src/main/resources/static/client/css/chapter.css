@@ -270,3 +270,62 @@ ul {
     pointer-events: none;
     cursor: not-allowed;
 }
+
+.bm-paragraph {
+    position: relative;
+}
+
+.bm-line-indicator {
+    position: absolute;
+    left: -28px;
+    top: 2px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c85f3b;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: auto;
+    cursor: default;
+    z-index: 10;
+}
+
+.bm-line-indicator.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.bm-line-indicator:hover::after {
+    content: "Your bookmark position";
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 11px;
+    white-space: nowrap;
+    padding: 3px 8px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+#chapter-content {
+    padding-left: 36px !important;
+}
+
+@media (max-width: 576px) {
+    .bm-line-indicator {
+        left: 2px;
+        top: -18px;
+        font-size: 11px;
+    }
+
+    #chapter-content {
+        padding-left: 16px !important;
+    }
+}

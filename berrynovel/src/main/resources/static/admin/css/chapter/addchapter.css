@@ -54,7 +54,7 @@ h4 {
     font-weight: 600;
 }
 
-/* nút back */
+/* back button */
 .btn-back {
     margin-top: 15px;
     background: #f06b6b;
@@ -75,7 +75,7 @@ h4 {
     flex-direction: column;
 }
 
-/* phần scroll */
+/* scroll area */
 .chapter-tree {
     flex: 1;
     overflow-y: auto;

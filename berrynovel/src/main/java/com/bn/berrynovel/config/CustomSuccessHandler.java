@@ -31,10 +31,10 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         Map<String, String> roleTargetUrlMap = new HashMap<>();
         roleTargetUrlMap.put("ROLE_USER", "/");
         roleTargetUrlMap.put("ROLE_ADMIN", "/admin");
-        /* Phân quyền */
+        /* Role-based routing */
 
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        /* Lấy ra các quyền mà user có sau khi login thành công */
+        /* Get the user's authorities after a successful login. */
         for (final GrantedAuthority grantedAuthority : authorities) {
             String authorityName = grantedAuthority.getAuthority();
 
@@ -52,9 +52,9 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        /* Xóa đi lỗi đăng nhập nếu trước đó người dùng login không thành công */
+        /* Clear the previous login error after a successful login. */
 
-        String username = authentication.getName(); // Bug tại đây
+        String username = authentication.getName(); // Issue starts here.
         User user = this.userService.getUserByUsername(username);
 
         if (user != null) {
@@ -68,8 +68,8 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             // session.setAttribute("sum", sum);
 
             /*
-             * Ở Front-end lấy ra thông tin từ session :
-             * <p>Xin chào, ${sessionScope.fullName}</p>
+             * Front-end session access example:
+             * <p>Hello, ${sessionScope.fullName}</p>
              * <p>Email: ${sessionScope.email}</p>
              */
         }
@@ -84,7 +84,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
-        redirectStrategy.sendRedirect(request, response, targetUrl); /* Đổi hướng trang */
+        redirectStrategy.sendRedirect(request, response, targetUrl); /* Redirect page */
         clearAuthenticationAttributes(request, authentication);
     }
 

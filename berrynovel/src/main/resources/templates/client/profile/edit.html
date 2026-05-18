@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -30,7 +30,7 @@
 
                         <div class="card-header theme-gradient-bg text-white p-4 rounded-top-3">
                             <h4 class="mb-0">
-                                <i class="bi bi-person-badge-fill me-2"></i> Hồ sơ cá nhân
+                                <i class="bi bi-person-badge-fill me-2"></i> Edit profile
                             </h4>
                         </div>
 
@@ -78,7 +78,7 @@
                                         <div class="col-md-12 mb-3">
                                             <label class="form-label fw-bold">Avatar:</label>
 
-                                            <!-- lưu ảnh cũ -->
+                                            <!-- keep existing image -->
                                             <input type="hidden" id="currentImage" th:value="*{image}" th:if="*{image}"
                                                 th:data-imagepath="@{/images/avatar/}">
 

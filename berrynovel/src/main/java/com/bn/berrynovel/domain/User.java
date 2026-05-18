@@ -29,7 +29,7 @@ public class User {
     private Role role;
 
     @NotNull
-    @Size(min = 6, message = "Tên đăng nhập không hợp lệ")
+    @Size(min = 6, message = "Invalid username")
     private String username;
 
     @NotNull
@@ -38,8 +38,8 @@ public class User {
 
     private String fullName;
 
-    @NotBlank(message = "Cần nhập email")
-    @Email(message = "email không hợp lệ")
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email")
     private String email;
 
     private String phoneNumber;

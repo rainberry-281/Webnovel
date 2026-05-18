@@ -7,7 +7,7 @@ public class StrongPasswordValidator implements ConstraintValidator<StrongPasswo
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        // kiểm tra sring email có ký tự in hoa, ký tự đặc biệt và số
+        // Check that the password has uppercase, lowercase, and numeric characters.
         return value.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$");
     }
 }

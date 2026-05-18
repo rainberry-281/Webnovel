@@ -115,13 +115,13 @@ body {
     cursor: pointer;
 }
 
-/* INTRODUCTION (TÓM TẮT TRUYỆN) */
+/* INTRODUCTION (NOVEL SUMMARY) */
 
 textarea.form-control {
     height: 180px;
-    /* lớn hơn */
+    /* larger */
     resize: vertical;
-    /* cho phép kéo */
+    /* allow resizing */
     padding: 12px;
     line-height: 1.6;
     font-size: 1.25rem;

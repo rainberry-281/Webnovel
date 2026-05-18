@@ -16,7 +16,7 @@
 }
 
 
-/* Icon dâu */
+/* Strawberry icon */
 
 .logo img {
     width: 32px;
@@ -25,7 +25,7 @@
 }
 
 
-/* Chữ berryNovel */
+/* berryNovel text */
 
 .logo span {
     font-family: "Segoe UI", system-ui, sans-serif;
@@ -33,7 +33,7 @@
 }
 
 
-/* Hover nhẹ cho navbar */
+/* Light navbar hover */
 
 .logo:hover {
     opacity: 0.85;

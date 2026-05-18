@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -37,15 +37,13 @@
 
             <a class="rd_sd-button_item" th:href="@{/novel/{id}(id=${novel.id})}"><i class="fas fa-home"></i></a>
             <a id="rd-info-btn" class="rd_sd-button_item"><i class="fas fa-info"></i></a>
-            <form sec:authorize="isAuthenticated()"
-                th:action="@{/bookshelf/bookmark/toggle/{novelId}/{chapterId}(novelId=${novel.id},chapterId=${chapter.id})}"
-                method="post" class="bookmark-toggle-form">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <button type="submit" class="rd_sd-button_item"
-                    th:title="${isBookmarked} ? 'Bỏ bookmark chapter' : 'Bookmark chapter'">
+            <div sec:authorize="isAuthenticated()" class="bookmark-toggle-form">
+                <button type="button" id="bookmark-btn" class="rd_sd-button_item"
+                    th:attr="data-novel-id=${novel.id},data-chapter-id=${chapter.id},data-bookmarked=${isBookmarked},data-csrf=${_csrf.token},data-csrf-param=${_csrf.parameterName}"
+                    th:title="${isBookmarked} ? 'Remove chapter bookmark' : 'Bookmark chapter'">
                     <i th:class="${isBookmarked} ? 'fas fa-bookmark' : 'far fa-bookmark'"></i>
                 </button>
-            </form>
+            </div>
 
             <a sec:authorize="!isAuthenticated()" class="rd_sd-button_item" th:href="@{/login}">
                 <i class="far fa-bookmark"></i>
@@ -63,7 +61,7 @@
             <main class="rdtoggle_body animation fade-in-left-big">
                 <header class="rd_sidebar-header">
                     <a th:href="@{/novel/{id}(id=${novel.id})}" class="novel-image">
-                        <img th:src="@{/images/novel/{image}(image=${novel.image})}" alt="Ảnh bìa">
+                        <img th:src="@{/images/novel/{image}(image=${novel.image})}" alt="Cover image">
                     </a>
 
                     <div class="rd_sidebar-name">
@@ -160,6 +158,199 @@
         });
     </script>
 
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const content = document.getElementById("chapter-content");
+            if (!content) return;
+
+            const savedKey = /*[[${savedParagraphKey}]]*/ null;
+            const savedPosition = /*[[${savedLinePosition}]]*/ null;
+            const isInitiallyBookmarked = /*[[${isBookmarked}]]*/ false;
+            const fromBookmark = new URLSearchParams(window.location.search).get("from") === "bookmark";
+            const INDICATOR_ID = "bm-indicator-icon";
+
+            function getParagraphs() {
+                const paragraphs = Array.from(content.querySelectorAll("p, div.paragraph"));
+                return paragraphs.length ? paragraphs : [content];
+            }
+
+            function escapeSelectorValue(value) {
+                if (value == null) return "";
+                return window.CSS && CSS.escape ? CSS.escape(String(value)) : String(value).replace(/"/g, "\\\"");
+            }
+
+            function prepareParagraphs() {
+                getParagraphs().forEach((paragraph, index) => {
+                    if (!paragraph.dataset.key) {
+                        paragraph.dataset.key = "p-" + index;
+                    }
+                    paragraph.classList.add("bm-paragraph");
+                });
+            }
+
+            function findBookmarkTarget(paragraphKey, linePosition) {
+                let target = null;
+                if (paragraphKey) {
+                    target = content.querySelector('[data-key="' + escapeSelectorValue(paragraphKey) + '"]');
+                }
+                if (!target && linePosition != null) {
+                    target = getParagraphs()[Number(linePosition)] || null;
+                }
+                return target;
+            }
+
+            function removeBookmarkIndicator(immediate) {
+                const icon = document.getElementById(INDICATOR_ID);
+                if (!icon) return;
+
+                if (immediate) {
+                    icon.remove();
+                    return;
+                }
+
+                icon.classList.remove("visible");
+                setTimeout(() => icon.remove(), 300);
+            }
+
+            function renderBookmarkIndicator(paragraphKey, linePosition) {
+                removeBookmarkIndicator(true);
+
+                if (paragraphKey == null && linePosition == null) return;
+
+                const target = findBookmarkTarget(paragraphKey, linePosition);
+                if (!target) return;
+
+                const icon = document.createElement("span");
+                icon.id = INDICATOR_ID;
+                icon.className = "bm-line-indicator";
+                icon.innerHTML = '<i class="fas fa-bookmark"></i>';
+                icon.setAttribute("title", "Your bookmark position");
+
+                target.appendChild(icon);
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => icon.classList.add("visible"));
+                });
+            }
+
+            function scrollToSavedPosition() {
+                const target = findBookmarkTarget(savedKey, savedPosition);
+                if (target) {
+                    target.scrollIntoView({ behavior: "smooth", block: "start" });
+                    return;
+                }
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+
+            function getCurrentBookmarkPosition() {
+                const paragraphs = getParagraphs();
+                let bestIndex = 0;
+
+                for (let i = 0; i < paragraphs.length; i++) {
+                    const rect = paragraphs[i].getBoundingClientRect();
+                    if (rect.top >= 0) {
+                        bestIndex = i;
+                        break;
+                    }
+                    if (rect.bottom > 0) {
+                        bestIndex = i;
+                    }
+                }
+
+                const target = paragraphs[bestIndex] || content;
+                return {
+                    linePosition: bestIndex,
+                    paragraphKey: target.dataset.key || ("p-" + bestIndex)
+                };
+            }
+
+            async function postBookmarkAction(url, params, csrf, csrfParam) {
+                const body = new URLSearchParams(params || {});
+                if (csrf && csrfParam) {
+                    body.set(csrfParam, csrf);
+                }
+
+                return fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+                        "X-CSRF-TOKEN": csrf || ""
+                    },
+                    body
+                });
+            }
+
+            prepareParagraphs();
+
+            if (isInitiallyBookmarked) {
+                renderBookmarkIndicator(savedKey, savedPosition);
+            }
+
+            if (fromBookmark) {
+                if (document.readyState === "complete") {
+                    scrollToSavedPosition();
+                } else {
+                    window.addEventListener("load", scrollToSavedPosition, { once: true });
+                }
+            }
+
+            const btn = document.getElementById("bookmark-btn");
+            if (!btn) return;
+
+            btn.addEventListener("click", async function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                if (btn.dataset.loading === "true") return;
+                btn.dataset.loading = "true";
+                btn.disabled = true;
+
+                const novelId = btn.dataset.novelId;
+                const chapterId = btn.dataset.chapterId;
+                const csrf = btn.dataset.csrf;
+                const csrfParam = btn.dataset.csrfParam;
+                const icon = btn.querySelector("i");
+                const isBookmarked = btn.dataset.bookmarked === "true";
+
+                try {
+                    if (isBookmarked) {
+                        const res = await postBookmarkAction(
+                            `/bookshelf/bookmark/delete/${novelId}/${chapterId}`,
+                            {},
+                            csrf,
+                            csrfParam
+                        );
+                        if (!res.ok) throw new Error("Delete bookmark failed");
+
+                        btn.dataset.bookmarked = "false";
+                        btn.setAttribute("title", "Bookmark chapter");
+                        if (icon) icon.className = "far fa-bookmark";
+                        removeBookmarkIndicator(false);
+                        return;
+                    }
+
+                    const current = getCurrentBookmarkPosition();
+                    const res = await postBookmarkAction(
+                        `/bookshelf/bookmark/upsert/${novelId}/${chapterId}`,
+                        current,
+                        csrf,
+                        csrfParam
+                    );
+                    if (!res.ok) throw new Error("Save bookmark failed");
+
+                    btn.dataset.bookmarked = "true";
+                    btn.setAttribute("title", "Remove chapter bookmark");
+                    if (icon) icon.className = "fas fa-bookmark";
+                    renderBookmarkIndicator(current.paragraphKey, current.linePosition);
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    btn.dataset.loading = "false";
+                    btn.disabled = false;
+                }
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
@@ -167,7 +358,7 @@
 
             document.addEventListener("click", function (e) {
 
-                // nếu click vào sidebar thì không toggle
+                // Do not toggle when clicking inside the sidebar.
                 if (e.target.closest(".rd_sidebar")) return;
 
                 icons.classList.toggle("show");

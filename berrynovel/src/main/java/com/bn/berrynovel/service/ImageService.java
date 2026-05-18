@@ -31,12 +31,12 @@ public class ImageService {
         try {
             bytes = file.getBytes();
 
-            // Dẫn đến lưu file ảnh
+            // Save the image file.
             File dir = new File(rootPath + File.separator + target);
             if (!dir.exists())
                 dir.mkdirs();
 
-            // Lấy tên file ảnh và path của file ảnh
+            // Build the image file name and path.
             finalName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
             File serverFile = new File(dir.getAbsolutePath() + File.separator + finalName);
 
@@ -53,8 +53,7 @@ public class ImageService {
         return finalName;
     }
 
-    // Phục vụ cho việc xóa người dùng hoặc cập nhật ảnh thì xóa luôn file ảnh trên
-    // ổ cứng
+    // Delete the image file from disk when deleting a user or updating an image.
     public boolean deleteImage(String fileName, String target) {
         String uploadDir = getRootPath() + File.separator + target + File.separator;
         Path path = Paths.get(uploadDir + fileName);
@@ -78,12 +77,12 @@ public class ImageService {
         try {
             bytes = file.getBytes();
 
-            // Dẫn đến lưu file ảnh
+            // Save the image file.
             File dir = new File(rootPath + File.separator + target);
             if (!dir.exists())
                 dir.mkdirs();
 
-            // Lấy tên file ảnh và path của file ảnh
+            // Build the image file name and path.
             String genreName = (novel.getGenres() != null && !novel.getGenres().isEmpty())
                     ? novel.getGenres().get(0).getName()
                     : "novel";

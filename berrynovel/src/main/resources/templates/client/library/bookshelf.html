@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta charset="UTF-8">
@@ -26,7 +26,7 @@
                 <div class="col-12 col-lg-3 float-end">
                     <section class="private-tabs">
                         <header>
-                            <h4 class="section-name">Tài khoản</h4>
+                            <h4 class="section-name">Account</h4>
                             <span class="user-name" sec:authentication="name"></span>
                         </header>
                         <ul class="user-private-tabs">
@@ -64,8 +64,8 @@
 
                         <div class="pad-bottom-20" style="padding-bottom: 20px;">
                             <div class="delete-button-container d-flex justify-content-start" style>
-                                <button class="btn btn-danger rounded-pill fw-bold px-3" type="submit">Xóa đã
-                                    chọn</button>
+                                <button class="btn btn-danger rounded-pill fw-bold px-3" type="submit">Delete
+                                    selected</button>
                             </div>
                         </div>
 
@@ -73,12 +73,12 @@
                             <tbody>
                                 <tr>
                                     <th style="width: 2rem;"></th>
-                                    <th class="col-10 col-md-8">Tên truyện</th>
-                                    <th class="none table-cell-m col-md-4">Mới nhất</th>
+                                    <th class="col-10 col-md-8">Novel title</th>
+                                    <th class="none table-cell-m col-md-4">Latest chapter</th>
                                 </tr>
 
                                 <tr th:if="${#lists.isEmpty(bookshelfItems)}">
-                                    <td colspan="3" class="text-center py-4">Chưa có truyện trong thư viện.</td>
+                                    <td colspan="3" class="text-center py-4">No novels in your library yet.</td>
                                 </tr>
 
                                 <tr th:each="item : ${bookshelfItems}">
@@ -106,7 +106,7 @@
                                             th:text="${item.newestChapter.title}"></a>
                                         <small class="volume-name" th:if="${item.newestChapter != null}"
                                             th:text="${#temporals.format(item.newestChapter.createdAt, 'dd/MM/yyyy')}"></small>
-                                        <span th:if="${item.newestChapter == null}">Chưa có chương</span>
+                                        <span th:if="${item.newestChapter == null}">No chapters yet</span>
                                     </td>
                                 </tr>
                             </tbody>

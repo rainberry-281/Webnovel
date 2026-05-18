@@ -10,11 +10,11 @@ import jakarta.validation.constraints.NotBlank;
 public class RegisterDTO {
     public String fullName;
 
-    @NotBlank(message = "Tên đăng nhập không được để trống")
+    @NotBlank(message = "Username is required")
     public String username;
 
-    @Email(message = "Email không hợp lệ")
-    @NotBlank(message = "Email không được để trống")
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Email is required")
     public String email;
 
     public String phoneNumber;

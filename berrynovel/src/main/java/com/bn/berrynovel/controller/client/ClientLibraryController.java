@@ -5,12 +5,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bn.berrynovel.service.LibraryService;
 
@@ -81,6 +83,57 @@ public class ClientLibraryController {
                 chapterId,
                 LOG_DIVIDER);
         return "redirect:/reader/" + novelId + "/" + chapterId;
+    }
+
+    @PostMapping("/bookmark/upsert/{novelId}/{chapterId}")
+    @ResponseBody
+    public ResponseEntity<String> upsertChapterBookmark(@PathVariable("novelId") Long novelId,
+            @PathVariable("chapterId") Long chapterId,
+            @RequestParam(value = "linePosition", required = false) Integer linePosition,
+            @RequestParam(value = "paragraphKey", required = false) String paragraphKey,
+            Authentication authentication) {
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKMARK UPSERT - REQUEST]\nuser={}\nnovelId={}\nchapterId={}\nlinePosition={}\nparagraphKey={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                chapterId,
+                linePosition,
+                paragraphKey,
+                LOG_DIVIDER);
+
+        this.libraryService.upsertChapterBookmark(authentication.getName(), novelId, chapterId, linePosition,
+                paragraphKey);
+
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKMARK UPSERT - SUCCESS]\nuser={}\nnovelId={}\nchapterId={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                chapterId,
+                LOG_DIVIDER);
+        return ResponseEntity.ok("OK");
+    }
+
+    @PostMapping("/bookmark/delete/{novelId}/{chapterId}")
+    @ResponseBody
+    public ResponseEntity<String> deleteChapterBookmark(@PathVariable("novelId") Long novelId,
+            @PathVariable("chapterId") Long chapterId,
+            Authentication authentication) {
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKMARK DELETE - REQUEST]\nuser={}\nnovelId={}\nchapterId={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                chapterId,
+                LOG_DIVIDER);
+
+        this.libraryService.deleteChapterBookmark(authentication.getName(), novelId, chapterId);
+
+        logger.info("\n{}\n>>>>>>>>>>> [BOOKMARK DELETE - SUCCESS]\nuser={}\nnovelId={}\nchapterId={}\n{}\n",
+                LOG_DIVIDER,
+                authentication.getName(),
+                novelId,
+                chapterId,
+                LOG_DIVIDER);
+        return ResponseEntity.ok("OK");
     }
 
     @PostMapping({ "/delete", "/bookshelf/delete" })

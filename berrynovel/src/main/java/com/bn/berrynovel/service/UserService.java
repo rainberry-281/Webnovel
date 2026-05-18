@@ -50,7 +50,7 @@ public class UserService {
 
         String imageName = "defaultavatar.png";
         if (file != null && !file.isEmpty()) {
-            // Nếu người dùng có upload ảnh
+            // If the user uploaded an image.
             imageName = this.imageService.handleImage(file, "avatar");
         }
         user.setImage(imageName);

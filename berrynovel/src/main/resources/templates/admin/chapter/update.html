@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -29,7 +29,7 @@
 
         .ck-editor__editable img {
             max-width: 400px !important;
-            /* kích thước tối đa */
+            /* maximum image size */
             height: auto;
             display: block;
             margin: 15px auto;
@@ -147,7 +147,7 @@
             .then(newEditor => {
                 editor = newEditor;
 
-                // set nội dung từ database vào editor
+                // Set database content in the editor.
                 if (chapterContent) {
                     editor.setData(chapterContent);
                 }

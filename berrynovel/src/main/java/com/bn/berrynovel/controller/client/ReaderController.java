@@ -81,6 +81,15 @@ public class ReaderController {
                 && !"anonymousUser".equals(authentication.getName())
                 && this.libraryService.isChapterBookmarked(authentication.getName(), chapterID);
         model.addAttribute("isBookmarked", isBookmarked);
+
+        Integer savedLinePosition = null;
+        String savedParagraphKey = null;
+        if (isBookmarked) {
+            savedLinePosition = this.libraryService.getBookmarkLinePosition(authentication.getName(), chapterID);
+            savedParagraphKey = this.libraryService.getBookmarkParagraphKey(authentication.getName(), chapterID);
+        }
+        model.addAttribute("savedLinePosition", savedLinePosition);
+        model.addAttribute("savedParagraphKey", savedParagraphKey);
         return "/client/reader/show";
     }
 

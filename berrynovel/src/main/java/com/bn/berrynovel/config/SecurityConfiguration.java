@@ -25,7 +25,7 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Để mã hóa password cho người dùng
+        // Encode user passwords.
         return new BCryptPasswordEncoder();
     }
 
@@ -65,7 +65,7 @@ public class SecurityConfiguration {
                                 DispatcherType.INCLUDE)
                         .permitAll()
                         .requestMatchers("/", "/home", "/login", "/register", "/novel/**", "/reader/**", "/category/**",
-                                "/client/**",
+                                "/client/**", "/search/**",
                                 "/css/**", "/js/**",
                                 "/images/**", "/vendor/**")
                         .permitAll()

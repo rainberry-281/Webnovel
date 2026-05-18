@@ -211,7 +211,7 @@
                 console.error(error);
             });
 
-        // sync data trước khi submit
+        // Sync editor data before form submit.
         document.querySelector("form").addEventListener("submit", function () {
             document.querySelector("#novelDescription").value = editor.getData();
         });

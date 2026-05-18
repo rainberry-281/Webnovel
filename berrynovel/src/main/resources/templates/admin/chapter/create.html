@@ -27,7 +27,7 @@
 
         .ck-editor__editable img {
             max-width: 400px !important;
-            /* kích thước tối đa */
+            /* maximum image size */
             height: auto;
             display: block;
             margin: 15px auto;
@@ -140,7 +140,7 @@
                 console.error(error);
             });
 
-        // sync dữ liệu trước khi submit form
+        // Sync editor data before form submit.
         document.querySelector("form").addEventListener("submit", function () {
             document.querySelector("#chapterContent").value = editor.getData();
         });

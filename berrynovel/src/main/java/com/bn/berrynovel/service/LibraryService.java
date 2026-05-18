@@ -13,6 +13,7 @@ import com.bn.berrynovel.domain.Bookmark;
 import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.domain.User;
+import com.bn.berrynovel.domain.dto.BookmarkChapterDTO;
 import com.bn.berrynovel.domain.dto.BookmarkNovelDTO;
 import com.bn.berrynovel.domain.dto.BookshelfItemDTO;
 import com.bn.berrynovel.repository.BookmarkRepository;
@@ -163,6 +164,55 @@ public class LibraryService {
         this.bookmarkRepository.save(bookmark);
     }
 
+    @Transactional
+    public void upsertChapterBookmark(String username, Long novelId, Long chapterId,
+            Integer linePosition, String paragraphKey) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        Chapter chapter = this.chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+
+        if (chapter.getNovel() == null || chapter.getNovel().getId() == null
+                || !chapter.getNovel().getId().equals(novelId)) {
+            throw new RuntimeException("Chapter does not belong to novel");
+        }
+
+        Bookmark bookmark = this.bookmarkRepository
+                .findByUser_IdAndChapter_Id(user.getId(), chapterId)
+                .orElseGet(() -> {
+                    Bookmark newBookmark = new Bookmark();
+                    newBookmark.setUser(user);
+                    newBookmark.setNovel(chapter.getNovel());
+                    newBookmark.setChapter(chapter);
+                    return newBookmark;
+                });
+
+        bookmark.setLinePosition(normalizeLinePosition(linePosition));
+        bookmark.setParagraphKey(normalizeParagraphKey(paragraphKey));
+        this.bookmarkRepository.save(bookmark);
+    }
+
+    @Transactional
+    public void deleteChapterBookmark(String username, Long novelId, Long chapterId) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            return;
+        }
+
+        Chapter chapter = this.chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+
+        if (chapter.getNovel() == null || chapter.getNovel().getId() == null
+                || !chapter.getNovel().getId().equals(novelId)) {
+            throw new RuntimeException("Chapter does not belong to novel");
+        }
+
+        this.bookmarkRepository.deleteByUser_IdAndChapter_Id(user.getId(), chapterId);
+    }
+
     public boolean isChapterBookmarked(String username, Long chapterId) {
         User user = this.userRepository.findByUsername(username);
         if (user == null) {
@@ -172,13 +222,32 @@ public class LibraryService {
         return this.bookmarkRepository.existsByUser_IdAndChapter_Id(user.getId(), chapterId);
     }
 
+    public Integer getBookmarkLinePosition(String username, Long chapterId) {
+        Bookmark bookmark = this.getChapterBookmark(username, chapterId);
+        return bookmark == null ? null : bookmark.getLinePosition();
+    }
+
+    public String getBookmarkParagraphKey(String username, Long chapterId) {
+        Bookmark bookmark = this.getChapterBookmark(username, chapterId);
+        return bookmark == null ? null : bookmark.getParagraphKey();
+    }
+
+    private Bookmark getChapterBookmark(String username, Long chapterId) {
+        User user = this.userRepository.findByUsername(username);
+        if (user == null) {
+            return null;
+        }
+
+        return this.bookmarkRepository.findByUser_IdAndChapter_Id(user.getId(), chapterId).orElse(null);
+    }
+
     public List<BookmarkNovelDTO> getBookmarkItems(String username) {
         User user = this.userRepository.findByUsername(username);
         if (user == null) {
             return List.of();
         }
 
-        java.util.LinkedHashMap<Long, java.util.List<Chapter>> groupedChapters = new java.util.LinkedHashMap<>();
+        java.util.LinkedHashMap<Long, java.util.List<BookmarkChapterDTO>> groupedChapters = new java.util.LinkedHashMap<>();
         java.util.LinkedHashMap<Long, Novel> novelsById = new java.util.LinkedHashMap<>();
 
         this.bookmarkRepository.findByUser_IdOrderByCreatedAtDesc(user.getId())
@@ -189,7 +258,8 @@ public class LibraryService {
                     Long id = bookmark.getNovel().getId();
                     novelsById.putIfAbsent(id, bookmark.getNovel());
                     groupedChapters.computeIfAbsent(id, key -> new java.util.ArrayList<>())
-                            .add(bookmark.getChapter());
+                            .add(new BookmarkChapterDTO(bookmark.getChapter(), bookmark.getLinePosition(),
+                                    bookmark.getParagraphKey()));
                 });
 
         return novelsById.entrySet().stream()
@@ -204,5 +274,19 @@ public class LibraryService {
                 && novel.getGenres() != null
                 && !novel.getGenres().isEmpty()
                 && novel.getGenres().stream().allMatch(genre -> genre != null && genre.getStatus());
+    }
+
+    private Integer normalizeLinePosition(Integer linePosition) {
+        if (linePosition == null || linePosition < 0) {
+            return null;
+        }
+        return linePosition;
+    }
+
+    private String normalizeParagraphKey(String paragraphKey) {
+        if (paragraphKey == null || paragraphKey.isBlank()) {
+            return null;
+        }
+        return paragraphKey.length() > 255 ? paragraphKey.substring(0, 255) : paragraphKey;
     }
 }
