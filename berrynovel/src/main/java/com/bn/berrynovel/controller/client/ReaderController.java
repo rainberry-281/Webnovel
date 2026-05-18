@@ -16,6 +16,7 @@ import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
+import com.bn.berrynovel.service.ReadCountService;
 
 @Controller
 @RequestMapping("/reader")
@@ -25,10 +26,12 @@ public class ReaderController {
 
     private final NovelService novelService;
     private final LibraryService libraryService;
+    private final ReadCountService readCountService;
 
-    public ReaderController(NovelService novelService, LibraryService libraryService) {
+    public ReaderController(NovelService novelService, LibraryService libraryService, ReadCountService readCountService) {
         this.novelService = novelService;
         this.libraryService = libraryService;
+        this.readCountService = readCountService;
     }
 
     @GetMapping("/{novelID}/{chapterID}")
@@ -50,6 +53,11 @@ public class ReaderController {
                 request.getRequestURI(),
                 authentication == null ? "anonymous" : authentication.getName(),
                 LOG_DIVIDER);
+
+        if (chapter.getNovel() != null && chapter.getNovel().getId() != null
+                && chapter.getNovel().getId().equals(novelID)) {
+            this.readCountService.recordChapterRead(novelID, chapterID, authentication, request);
+        }
 
         List<Chapter> chapters = this.novelService.getChaptersByNovelId(novelID);
 

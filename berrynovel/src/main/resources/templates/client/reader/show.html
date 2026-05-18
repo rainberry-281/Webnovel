@@ -82,6 +82,8 @@
                         <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id}, chapterId=${chap.id})}"
                             th:text="${chap.title}">
                         </a>
+                        <small th:if="${chap.readCount != null and chap.readCount > 0}" class="text-muted ms-2"
+                            th:text="${'(' + #numbers.formatInteger(chap.readCount, 1, 'COMMA') + ' reads)'}"></small>
                     </li>
                 </ul>
                 <!-- </ul> -->

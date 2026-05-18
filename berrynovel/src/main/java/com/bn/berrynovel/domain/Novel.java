@@ -49,6 +49,9 @@ public class Novel {
     @Enumerated(EnumType.STRING)
     private NovelHot hot = NovelHot.NOT_HOT;
 
+    @Column(name = "total_read_count", nullable = false, columnDefinition = "BIGINT NOT NULL DEFAULT 0")
+    private Long totalReadCount = 0L;
+
     String image;
 
     private LocalDateTime createdAt;
@@ -151,5 +154,13 @@ public class Novel {
 
     public void setHot(NovelHot hot) {
         this.hot = hot;
+    }
+
+    public Long getTotalReadCount() {
+        return totalReadCount;
+    }
+
+    public void setTotalReadCount(Long totalReadCount) {
+        this.totalReadCount = totalReadCount;
     }
 }

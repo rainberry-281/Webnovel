@@ -50,7 +50,11 @@
                 <div class="col-lg-9">
                     <div class="row mt-3">
                         <div class="info-card p-4 h-100">
-                            <h2 class="fw-bold mb-3" th:text="${novel.title}"></h2>
+                            <h2 class="fw-bold mb-3">
+                                <span th:text="${novel.title}"></span>
+                                <span th:if="${novel.hot != null and novel.hot.name() == 'HOT'}"
+                                    class="badge bg-danger ms-2">HOT</span>
+                            </h2>
 
                             <div class="mb-3">
                                 <span th:each="genre : ${novel.genres}" class="badge bg-secondary me-1"
@@ -63,6 +67,10 @@
                             <div class="col-md-6"><strong>Progress:</strong>
                                 <span class="text-success"
                                     th:text="${novel.progress != null ? novel.progress.displayName : 'Unknown'}"></span>
+                            </div>
+                            <div class="col-md-6"><strong>Reads:</strong>
+                                <span
+                                    th:text="${#numbers.formatInteger(novel.totalReadCount != null ? novel.totalReadCount : 0, 1, 'COMMA')}">0</span>
                             </div>
                             <div class="col-md-6"><strong>Last Updated:</strong>
                                 <span

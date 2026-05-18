@@ -30,6 +30,9 @@ public class Chapter {
 
     private LocalDateTime createdAt;
 
+    @Column(name = "read_count", nullable = false, columnDefinition = "BIGINT NOT NULL DEFAULT 0")
+    private Long readCount = 0L;
+
     @ManyToOne
     @JoinColumn(name = "novel_id")
     private Novel novel;
@@ -80,6 +83,14 @@ public class Chapter {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getReadCount() {
+        return readCount;
+    }
+
+    public void setReadCount(Long readCount) {
+        this.readCount = readCount;
     }
 
 }

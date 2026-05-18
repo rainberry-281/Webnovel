@@ -83,7 +83,7 @@
 
                                 <td th:text="${novel.user?.id ?: '-'}"></td>
 
-                                <td th:text="${novel.hot.displayName}"></td>
+                                <td th:text="${novel.hot != null ? novel.hot.displayName : 'No'}"></td>
 
                                 <td class="status" th:text="${novel.status ? 'Active' : 'Inactive'}"></td>
 

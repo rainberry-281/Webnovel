@@ -114,7 +114,12 @@
 
                         <!-- Hot -->
                         <div class="col-md-6 form-group select-role">
-                            <label>Hot</label>
+                            <label>Hot
+                                <small class="text-muted d-block fw-normal">
+                                    User pages show this saved value. Reads can automatically set it to Hot when the
+                                    threshold is reached.
+                                </small>
+                            </label>
 
                             <div class="select-wrapper">
                                 <select class="form-control" th:field="*{hot}">

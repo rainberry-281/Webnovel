@@ -2,7 +2,9 @@ package com.bn.berrynovel.repository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.bn.berrynovel.domain.Chapter;
 
@@ -19,4 +21,8 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     Chapter findLastChapter(Long novelId);
 
     List<Chapter> findByNovelId(Long novelId);
+
+    @Modifying
+    @Query("UPDATE Chapter c SET c.readCount = COALESCE(c.readCount, 0) + 1 WHERE c.id = :chapterId")
+    void incrementReadCount(@Param("chapterId") Long chapterId);
 }

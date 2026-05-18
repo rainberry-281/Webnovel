@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,9 @@ public class NovelService {
     private final ImageService imageService;
     private final FilterSpecificationConverter filterSpecificationConverter;
 
+    @Value("${hot.novel.read-threshold:10}")
+    private long hotReadThreshold;
+
     public NovelService(NovelRepository novelRepository, GenreRepository genreRepository, ImageService imageService,
             ChapterRepository chapterRepository, FilterSpecificationConverter filterSpecificationConverter) {
         this.novelRepository = novelRepository;
@@ -43,6 +47,10 @@ public class NovelService {
     }
 
     public Novel createNovel(Novel novel, MultipartFile file, List<Integer> genreIds) {
+        if (novel.getHot() == null) {
+            novel.setHot(NovelHot.NOT_HOT);
+        }
+
         List<Integer> normalizedGenreIds = genreIds == null
                 ? List.of()
                 : genreIds.stream().filter(Objects::nonNull).toList();
@@ -83,7 +91,7 @@ public class NovelService {
         novelInDataBase.setGenres(managedGenres);
         novelInDataBase.setType(novel.getType());
         novelInDataBase.setProgress(novel.getProgress());
-        novelInDataBase.setHot(novel.getHot());
+        novelInDataBase.setHot(novel.getHot() == null ? NovelHot.NOT_HOT : novel.getHot());
         return this.novelRepository.save(novelInDataBase);
     }
 
@@ -192,6 +200,22 @@ public class NovelService {
 
     public Page<Novel> findActiveNovels(Pageable pageable) {
         return this.novelRepository.findByStatus(true, pageable);
+    }
+
+    public List<Novel> getMostReadNovels(int limit) {
+        Pageable pageable = PageRequest.of(0, limit);
+        return this.novelRepository.findByStatusTrueOrderByTotalReadCountDesc(pageable);
+    }
+
+    public boolean isHot(Novel novel) {
+        if (novel == null) {
+            return false;
+        }
+        return NovelHot.HOT.equals(novel.getHot());
+    }
+
+    public long getHotThreshold() {
+        return this.hotReadThreshold;
     }
 
     public List<Novel> searchVisibleNovels(String keyword, List<Integer> genreIds, List<String> typeValues,
