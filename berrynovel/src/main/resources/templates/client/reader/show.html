@@ -37,6 +37,10 @@
 
             <a class="rd_sd-button_item" th:href="@{/novel/{id}(id=${novel.id})}"><i class="fas fa-home"></i></a>
             <a id="rd-info-btn" class="rd_sd-button_item"><i class="fas fa-info"></i></a>
+            <button type="button" id="tts-toggle-btn" class="rd_sd-button_item"
+                title="Open text-to-speech reader">
+                <i class="fas fa-volume-up"></i>
+            </button>
             <div sec:authorize="isAuthenticated()" class="bookmark-toggle-form">
                 <button type="button" id="bookmark-btn" class="rd_sd-button_item"
                     th:attr="data-novel-id=${novel.id},data-chapter-id=${chapter.id},data-bookmarked=${isBookmarked},data-csrf=${_csrf.token},data-csrf-param=${_csrf.parameterName}"
@@ -78,12 +82,11 @@
 
                 <!-- <ul id="chap_list" class="unstyled"> -->
                 <ul class="sub-chap_list unstyled">
-                    <li th:each="chap : ${chapters}" th:classappend="${chap.id == chapter.id} ? ' current'">
+                    <li th:each="chap : ${chapters}" th:attr="data-chapter-id=${chap.id}"
+                        th:classappend="${chap.id == chapter.id} ? ' current'">
                         <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id}, chapterId=${chap.id})}"
                             th:text="${chap.title}">
                         </a>
-                        <small th:if="${chap.readCount != null and chap.readCount > 0}" class="text-muted ms-2"
-                            th:text="${'(' + #numbers.formatInteger(chap.readCount, 1, 'COMMA') + ' reads)'}"></small>
                     </li>
                 </ul>
                 <!-- </ul> -->
@@ -91,6 +94,48 @@
         </section>
 
         <div class="black-click"></div>
+
+        <div id="tts-reader-panel" class="tts-reader-panel" aria-hidden="true">
+            <div class="tts-reader-header">
+                <span class="tts-reader-title">Text-to-Speech Reader</span>
+                <button type="button" id="tts-close-btn" class="tts-close-btn" title="Close">&times;</button>
+            </div>
+
+            <p id="tts-unsupported" class="tts-unsupported" style="display:none;">
+                Text-to-speech is not supported in this browser.
+            </p>
+
+            <div id="tts-reader-controls" class="tts-reader-controls">
+                <button type="button" id="tts-play-btn" class="tts-player-button tts-player-button--primary">
+                    <i class="fas fa-play"></i> Listen
+                </button>
+                <button type="button" id="tts-pause-btn" class="tts-player-button" disabled>
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button type="button" id="tts-resume-btn" class="tts-player-button" disabled>
+                    <i class="fas fa-play-circle"></i> Resume
+                </button>
+                <button type="button" id="tts-stop-btn" class="tts-player-button" disabled>
+                    <i class="fas fa-stop"></i> Stop
+                </button>
+
+                <label class="tts-control-label">
+                    Voice
+                    <select id="tts-voice-select" class="tts-voice-select">
+                        <option value="">Loading voices...</option>
+                    </select>
+                </label>
+
+                <label class="tts-control-label tts-rate-label">
+                    Speed
+                    <span id="tts-rate-value" class="tts-rate-value">1.0x</span>
+                    <input id="tts-rate-input" class="tts-rate-input" type="range" min="0.5" max="2" step="0.1"
+                        value="1">
+                </label>
+
+                <span id="tts-progress" class="tts-progress"></span>
+            </div>
+        </div>
 
         <div class="container">
             <div class="row">
@@ -156,6 +201,19 @@
             const current = document.querySelector(".rd_sidebar li.current");
             if (current) {
                 current.scrollIntoView({ block: "center" });
+            }
+        });
+    </script>
+
+    <script th:src="@{/client/js/reading-history.js}"></script>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            const novelId = /*[[${novel.id}]]*/ null;
+            const currentChapterId = /*[[${chapter.id}]]*/ null;
+
+            if (window.BerryReadingHistory) {
+                window.BerryReadingHistory.markCurrentChapterAsRead(novelId, currentChapterId, ".sub-chap_list");
             }
         });
     </script>
@@ -368,6 +426,8 @@
 
         });
     </script>
+
+    <script th:src="@{/client/js/tts-reader.js}"></script>
 </body>
 
 </html>

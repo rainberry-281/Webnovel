@@ -153,6 +153,14 @@ section.basic-section main {
     background-color: #f0f0f0;
 }
 
+.list-chapters li.chapter-read {
+    background-color: #f0f0f0;
+}
+
+.list-chapters li.chapter-read .chapter-name a {
+    color: #777;
+}
+
 .list-chapters li .chapter-name {
     padding-right: 86px;
     overflow: hidden;
