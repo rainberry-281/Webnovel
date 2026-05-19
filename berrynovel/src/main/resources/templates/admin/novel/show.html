@@ -43,7 +43,7 @@
                         <a th:href="@{/admin/novel(hot='HOT',keyword=${keyword})}" class="btn btn-outline-danger"
                             th:classappend="${hot == 'HOT'} ? 'active' : ''">HOT</a>
                         <a th:href="@{/admin/novel(hot='NOT_HOT',keyword=${keyword})}" class="btn btn-outline-secondary"
-                            th:classappend="${hot == 'NOT_HOT'} ? 'active' : ''">Not Hot</a>
+                            th:classappend="${hot == 'NOT_HOT'} ? 'active' : ''">Normal</a>
                     </div>
 
                     <form th:action="@{/admin/novel}" method="get" class="d-flex ms-auto" style="max-width: 320px;">

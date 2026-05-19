@@ -14,11 +14,25 @@
 }
 
 .nav-link:hover {
-    color: #e74c3c;
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-.nav-link.active {
-    color: #e74c3c;
+.nav-link.active,
+.navbar .nav-item>a.active,
+.dropdown-item.active {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 700;
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: rgba(161, 140, 209, 0.12);
 }
 
 #mainNavbar {

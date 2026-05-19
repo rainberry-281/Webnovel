@@ -151,6 +151,49 @@
                     <div id="chapter-content" class="long-text text-justify" style="padding: 30px 0"
                         th:utext="${chapter.content}">
                     </div>
+
+                    <section id="comments" class="chapter-comments mt-4">
+                        <h3 class="chapter-comments-title">Comments</h3>
+
+                        <form sec:authorize="isAuthenticated()" class="chapter-comment-form"
+                            th:action="@{/reader/{novelId}/{chapterId}/comments(novelId=${novel.id}, chapterId=${chapter.id})}"
+                            method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <textarea name="content" class="chapter-comment-textarea" rows="3" maxlength="2000"
+                                required placeholder="Write a comment..."></textarea>
+                            <div class="chapter-comment-actions">
+                                <button type="submit" class="chapter-comment-submit">Post Comment</button>
+                            </div>
+                        </form>
+
+                        <div sec:authorize="!isAuthenticated()" class="chapter-comment-login">
+                            <a th:href="@{/login}">Log in</a> to comment.
+                        </div>
+
+                        <div class="chapter-comment-list">
+                            <div th:if="${#lists.isEmpty(chapterComments)}" class="chapter-comment-empty">
+                                No comments yet.
+                            </div>
+                            <div class="chapter-comment-item" th:each="comment : ${chapterComments}">
+                                <div class="chapter-comment-avatar-wrapper">
+                                    <img class="chapter-comment-avatar"
+                                        th:src="@{/images/avatar/{image}(image=${comment.user != null and comment.user.image != null and !#strings.isEmpty(comment.user.image) ? comment.user.image : 'defaultavatar.png'},v=${#dates.createNow().time})}"
+                                        alt="Avatar">
+                                </div>
+
+                                <div class="chapter-comment-body">
+                                    <div class="chapter-comment-header">
+                                        <span class="chapter-comment-author"
+                                            th:text="${comment.user != null ? (comment.user.username != null and !#strings.isEmpty(comment.user.username) ? comment.user.username : 'Unknown') : 'Unknown'}"></span>
+                                        <span class="chapter-comment-time"
+                                            th:text="${comment.createdAt != null ? #temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                                    </div>
+
+                                    <div class="chapter-comment-content" th:text="${comment.content}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

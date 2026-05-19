@@ -10,4 +10,8 @@ import com.bn.berrynovel.domain.Comment;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> findByNovel_IdOrderByCreatedAtDesc(Long novelId);
+
+    List<Comment> findByChapter_IdOrderByCreatedAtDesc(Long chapterId);
+
+    List<Comment> findByNovel_IdAndChapterIsNullOrderByCreatedAtDesc(Long novelId);
 }

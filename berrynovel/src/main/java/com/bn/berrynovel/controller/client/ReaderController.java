@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 import java.util.List;
@@ -14,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import com.bn.berrynovel.domain.Chapter;
 import com.bn.berrynovel.domain.Novel;
+import com.bn.berrynovel.service.CommentService;
 import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.service.ReadCountService;
@@ -27,11 +30,14 @@ public class ReaderController {
     private final NovelService novelService;
     private final LibraryService libraryService;
     private final ReadCountService readCountService;
+    private final CommentService commentService;
 
-    public ReaderController(NovelService novelService, LibraryService libraryService, ReadCountService readCountService) {
+    public ReaderController(NovelService novelService, LibraryService libraryService, ReadCountService readCountService,
+            CommentService commentService) {
         this.novelService = novelService;
         this.libraryService = libraryService;
         this.readCountService = readCountService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/{novelID}/{chapterID}")
@@ -98,7 +104,22 @@ public class ReaderController {
         }
         model.addAttribute("savedLinePosition", savedLinePosition);
         model.addAttribute("savedParagraphKey", savedParagraphKey);
+        model.addAttribute("chapterComments", this.commentService.getCommentsByChapterId(chapterID));
         return "/client/reader/show";
+    }
+
+    @PostMapping("/{novelID}/{chapterID}/comments")
+    public String createChapterComment(@PathVariable Long novelID,
+            @PathVariable Long chapterID,
+            @RequestParam("content") String content,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getName())) {
+            return "redirect:/login";
+        }
+
+        this.commentService.createChapterComment(novelID, chapterID, authentication.getName(), content);
+        return "redirect:/reader/" + novelID + "/" + chapterID + "#comments";
     }
 
 }

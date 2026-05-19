@@ -11,6 +11,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.FetchType;
 
 @Entity
 @Table(name = "Comments")
@@ -30,6 +31,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "novel_id")
     private Novel novel;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chapter_id")
+    private Chapter chapter;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -64,6 +69,14 @@ public class Comment {
 
     public void setNovel(Novel novel) {
         this.novel = novel;
+    }
+
+    public Chapter getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(Chapter chapter) {
+        this.chapter = chapter;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -196,11 +196,15 @@
                                     alt="Avatar" />
                                 <div class="comment-meta">
                                     <div class="comment-header">
-                                        <span class="comment-name"
-                                            th:text="${comment.user != null ? (comment.user.username != null and !#strings.isEmpty(comment.user.username) ? comment.user.username : 'Unknown') : 'Unknown'}"></span>
-                                        <div class="comment-actions">
+                                        <div>
+                                            <span class="comment-name"
+                                                th:text="${comment.user != null ? (comment.user.username != null and !#strings.isEmpty(comment.user.username) ? comment.user.username : 'Unknown') : 'Unknown'}"></span>
                                             <span class="comment-time"
                                                 th:text="${comment.createdAt != null ? #temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></span>
+                                        </div>
+                                        <div class="comment-actions">
+                                            <!-- <span class="comment-time"
+                                                th:text="${comment.createdAt != null ? #temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></span> -->
                                             <form method="post" class="comment-delete-form"
                                                 th:if="${#authorization.expression('hasRole(''ADMIN'')') or (#authentication != null and comment.user != null and comment.user.username == #authentication.name)}"
                                                 th:action="@{/novel/{novelId}/comment/{commentId}/delete(novelId=${novel.id},commentId=${comment.id})}">
@@ -213,6 +217,11 @@
                                 </div>
                             </div>
 
+                            <div class="comment-chapter-ref" th:if="${comment.chapter != null}">
+                                <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${novel.id}, chapterId=${comment.chapter.id})}"
+                                    th:text="${comment.chapter.title}">
+                                </a>
+                            </div>
                             <div class="comment-text" th:text="${comment.content}"></div>
                         </div>
                     </div>

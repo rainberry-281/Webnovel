@@ -47,6 +47,16 @@
 
 .menu li.active {
     background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+    box-shadow: 0 6px 15px rgba(161, 140, 209, 0.35);
+}
+
+.menu li.active a {
+    color: #fff;
+    font-weight: 700;
+}
+
+.menu li.active:hover {
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
 }
 
 .menu i {

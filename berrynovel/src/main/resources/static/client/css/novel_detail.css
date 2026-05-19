@@ -325,3 +325,23 @@ section.basic-section main {
     font-size: 16px;
     line-height: 1.5;
 }
+
+.comment-chapter-ref {
+    margin-left: 46px;
+    margin-bottom: 2px;
+    color: #999;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.comment-chapter-ref a {
+    color: #999;
+    text-decoration: none;
+}
+
+.comment-chapter-ref a:hover {
+    color: #666;
+    text-decoration: underline;
+}

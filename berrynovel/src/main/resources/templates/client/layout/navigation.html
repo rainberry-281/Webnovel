@@ -24,17 +24,28 @@
 
             <div class="collapse navbar-collapse " id="mainNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-4">
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/category}">Category</a></li>
-                    <li class="nav-item"><a class="nav-link active" th:href="@{/bookshelf}">Library</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"
+                            th:classappend="${currentUri == '/' or currentUri == '/home' ? ' active' : ''}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/category}"
+                            th:classappend="${#strings.startsWith(currentUri, '/category') ? ' active' : ''}">Category</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/bookshelf}"
+                            th:classappend="${#strings.startsWith(currentUri, '/bookshelf') or #strings.startsWith(currentUri, '/library') ? ' active' : ''}">Library</a>
+                    </li>
                     <li class="nav-item fw-bold" sec:authorize="!isAuthenticated()">
-                        <a th:href="@{/login}">Login</a> /
-                        <a th:href="@{/register}">Register</a>
+                        <a th:href="@{/login}" th:classappend="${currentUri == '/login' ? ' active' : ''}">Login</a> /
+                        <a th:href="@{/register}"
+                            th:classappend="${currentUri == '/register' ? ' active' : ''}">Register</a>
                     </li>
 
                     <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                         <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#"
-                            data-bs-toggle="dropdown">
+                            data-bs-toggle="dropdown"
+                            th:classappend="${#strings.startsWith(currentUri, '/profile') ? ' active' : ''}">
 
                             <img th:src="@{/images/avatar/{image}(image=${(session.avatar != null and !#strings.isEmpty(session.avatar)) ? session.avatar : 'defaultavatar.png'},v=${#dates.createNow().time})}"
                                 class="rounded-circle user-avatar">
@@ -42,7 +53,8 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" th:href="@{/profile}">Profile</a></li>
+                            <li><a class="dropdown-item" th:href="@{/profile}"
+                                    th:classappend="${#strings.startsWith(currentUri, '/profile') ? ' active' : ''}">Profile</a></li>
 
                             <li>
                                 <form th:action="@{/logout}" method="post">
