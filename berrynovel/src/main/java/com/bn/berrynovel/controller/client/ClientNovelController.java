@@ -1,12 +1,15 @@
 package com.bn.berrynovel.controller.client;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.view.RedirectView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,9 @@ import com.bn.berrynovel.service.CommentService;
 import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.service.PaginationService;
+import com.bn.berrynovel.service.RatingService;
+import com.bn.berrynovel.service.UrlSlugService;
+import com.bn.berrynovel.service.UserService;
 import com.bn.berrynovel.domain.PaginationQuery;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +28,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 import com.bn.berrynovel.domain.Novel;
 import com.bn.berrynovel.domain.Chapter;
+import com.bn.berrynovel.domain.User;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,13 +41,20 @@ public class ClientNovelController {
     private final PaginationService paginationService;
     private final LibraryService libraryService;
     private final CommentService commentService;
+    private final UrlSlugService urlSlugService;
+    private final RatingService ratingService;
+    private final UserService userService;
 
     public ClientNovelController(NovelService novelService, PaginationService paginationService,
-            LibraryService libraryService, CommentService commentService) {
+            LibraryService libraryService, CommentService commentService, UrlSlugService urlSlugService,
+            RatingService ratingService, UserService userService) {
         this.novelService = novelService;
         this.paginationService = paginationService;
         this.libraryService = libraryService;
         this.commentService = commentService;
+        this.urlSlugService = urlSlugService;
+        this.ratingService = ratingService;
+        this.userService = userService;
     }
 
     @GetMapping("/category")
@@ -157,11 +171,37 @@ public class ClientNovelController {
     }
 
     @GetMapping("/novel/{id}")
-    public String getNovelDetailPage(@PathVariable("id") Long id,
+    public RedirectView redirectLegacyNovelDetailPage(@PathVariable("id") Long id,
+            @RequestParam(value = "from", required = false) Optional<String> from,
+            HttpServletRequest request) {
+        Novel novel = findNovelOr404(id);
+        return permanentRedirect(appendQueryString(this.urlSlugService.buildNovelUrl(novel), request));
+    }
+
+    @GetMapping("/{novelSlug:\\d+-[a-z0-9-]+}")
+    public Object getNovelDetailPageBySlug(@PathVariable String novelSlug,
             @RequestParam(value = "from", required = false) Optional<String> from,
             Model model, HttpServletRequest request, Authentication authentication) {
-        Novel novel = this.novelService.getNovelById(id)
-                .orElseThrow(() -> new RuntimeException("Novel not found"));
+        Long id = this.urlSlugService.extractNovelIdFromSlug(novelSlug);
+        if (id == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Novel novel = findNovelOr404(id);
+        String canonicalNovelUrl = this.urlSlugService.buildNovelUrl(novel);
+        if (!canonicalNovelUrl.equals(getRequestPath(request))) {
+            return permanentRedirect(appendQueryString(canonicalNovelUrl, request));
+        }
+
+        return renderNovelDetailPage(novel, from, model, request, authentication);
+    }
+
+    private String renderNovelDetailPage(Novel novel,
+            Optional<String> from,
+            Model model,
+            HttpServletRequest request,
+            Authentication authentication) {
+        Long id = novel.getId();
 
         logger.info("\n{}\n>>>>>>>>>>> [NOVEL DETAIL - ACCESS]\nid={}\ntitle={}\npath={}\nuser={}\n{}\n",
                 LOG_DIVIDER,
@@ -204,23 +244,58 @@ public class ClientNovelController {
         model.addAttribute("latestChapter", latest);
         model.addAttribute("breadcrumbFrom", breadcrumbFrom);
         model.addAttribute("comments", this.commentService.getCommentsByNovelId(id));
+        model.addAttribute("canonicalNovelUrl", this.urlSlugService.buildNovelUrl(novel));
         boolean inBookshelf = authentication != null
                 && authentication.isAuthenticated()
                 && !"anonymousUser".equals(authentication.getName())
                 && this.libraryService.isNovelInBookshelf(authentication.getName(), id);
         model.addAttribute("inBookshelf", inBookshelf);
+        model.addAttribute("userRating", getUserRating(id, authentication).orElse(null));
 
         return "client/novel/show";
     }
 
-    @PostMapping("/novel/{id}/comment")
-    public String createComment(@PathVariable("id") Long novelId,
+    private Optional<Integer> getUserRating(Long novelId, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getName())) {
+            return Optional.empty();
+        }
+
+        User user = this.userService.getUserByUsername(authentication.getName());
+        if (user == null) {
+            return Optional.empty();
+        }
+
+        return this.ratingService.getUserRating(novelId, user.getId());
+    }
+
+    @PostMapping("/{novelSlug:\\d+-[a-z0-9-]+}/comment")
+    public String createCommentBySlug(@PathVariable String novelSlug,
             @RequestParam("content") String content,
+            Authentication authentication) {
+        Long novelId = this.urlSlugService.extractNovelIdFromSlug(novelSlug);
+        if (novelId == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return createComment(novelId, content, authentication);
+    }
+
+    @PostMapping("/novel/{id}/comment")
+    public String createLegacyComment(@PathVariable("id") Long novelId,
+            @RequestParam("content") String content,
+            Authentication authentication) {
+        return createComment(novelId, content, authentication);
+    }
+
+    private String createComment(Long novelId,
+            String content,
             Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()
                 || "anonymousUser".equals(authentication.getName())) {
             return "redirect:/login";
         }
+
+        Novel novel = findNovelOr404(novelId);
 
         logger.info("\n{}\n>>>>>>>>>>> [CREATE COMMENT - REQUEST]\nnovelId={}\nuser={}\ncontentLength={}\n{}\n",
                 LOG_DIVIDER,
@@ -236,17 +311,36 @@ public class ClientNovelController {
                 novelId,
                 authentication.getName(),
                 LOG_DIVIDER);
-        return "redirect:/novel/" + novelId + "#comments";
+        return "redirect:" + this.urlSlugService.buildNovelUrl(novel) + "#comments";
+    }
+
+    @PostMapping("/{novelSlug:\\d+-[a-z0-9-]+}/comment/{commentId}/delete")
+    public String deleteCommentBySlug(@PathVariable String novelSlug,
+            @PathVariable("commentId") Integer commentId,
+            Authentication authentication) {
+        Long novelId = this.urlSlugService.extractNovelIdFromSlug(novelSlug);
+        if (novelId == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return deleteComment(novelId, commentId, authentication);
     }
 
     @PostMapping("/novel/{novelId}/comment/{commentId}/delete")
-    public String deleteComment(@PathVariable("novelId") Long novelId,
+    public String deleteLegacyComment(@PathVariable("novelId") Long novelId,
             @PathVariable("commentId") Integer commentId,
+            Authentication authentication) {
+        return deleteComment(novelId, commentId, authentication);
+    }
+
+    private String deleteComment(Long novelId,
+            Integer commentId,
             Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()
                 || "anonymousUser".equals(authentication.getName())) {
             return "redirect:/login";
         }
+
+        Novel novel = findNovelOr404(novelId);
 
         boolean isAdmin = authentication.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())
@@ -268,6 +362,34 @@ public class ClientNovelController {
                 commentId,
                 authentication.getName(),
                 LOG_DIVIDER);
-        return "redirect:/novel/" + novelId + "#comments";
+        return "redirect:" + this.urlSlugService.buildNovelUrl(novel) + "#comments";
+    }
+
+    private Novel findNovelOr404(Long id) {
+        return this.novelService.getNovelById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    private RedirectView permanentRedirect(String url) {
+        RedirectView redirectView = new RedirectView(url);
+        redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+        return redirectView;
+    }
+
+    private String appendQueryString(String url, HttpServletRequest request) {
+        String queryString = request.getQueryString();
+        if (queryString == null || queryString.isBlank()) {
+            return url;
+        }
+        return url + "?" + queryString;
+    }
+
+    private String getRequestPath(HttpServletRequest request) {
+        String contextPath = request.getContextPath();
+        String requestUri = request.getRequestURI();
+        if (contextPath == null || contextPath.isBlank() || !requestUri.startsWith(contextPath)) {
+            return requestUri;
+        }
+        return requestUri.substring(contextPath.length());
     }
 }

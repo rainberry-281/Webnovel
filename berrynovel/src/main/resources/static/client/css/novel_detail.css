@@ -345,3 +345,83 @@ section.basic-section main {
     color: #666;
     text-decoration: underline;
 }
+
+/* STAR RATING */
+
+.rating-section {
+    line-height: 1.6;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.rating-stars-display {
+    display: inline-flex;
+    gap: 2px;
+    min-width: 82px;
+    font-size: 18px;
+}
+
+.rating-text {
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.star-filled,
+.star-half {
+    color: #f5a623;
+}
+
+.star-half {
+    opacity: 0.55;
+}
+
+.star-empty {
+    color: #ccc;
+}
+
+.rating-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.rating-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.star-widget {
+    display: inline-flex;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.star-widget .star {
+    color: #ddd;
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: color 0.15s ease, transform 0.1s ease;
+    user-select: none;
+}
+
+.star-widget .star:hover,
+.star-widget .star.active {
+    color: #f5a623;
+    transform: scale(1.12);
+}
+
+.rating-feedback {
+    color: #28a745;
+    font-size: 0.85rem;
+    min-height: 1.2em;
+}
+
+.rating-feedback.is-error {
+    color: #c44;
+}

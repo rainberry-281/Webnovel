@@ -79,7 +79,7 @@
                                 </div>
 
                                 <div class="series-title">
-                                    <a th:href="@{/novel/{id}(id=${item.novel.id},from='bookshelf')}" class=""
+                                    <a th:href="@{/{novelSlug}(novelSlug=${@urlSlugService.buildNovelSlug(item.novel)},from='bookshelf')}" class=""
                                         th:text="${item.novel.title}"></a>
                                     <span class="bm-toggle_symbol" style="cursor: pointer">
                                         <i class="fas fa-chevron-down"></i>
@@ -90,7 +90,7 @@
                                     <ul class="bookmarks-list clear">
                                         <li th:each="chapter : ${item.chapters}">
                                             <div class="chapter-title">
-                                                <a th:href="@{/reader/{novelId}/{chapterId}(novelId=${item.novel.id},chapterId=${chapter.chapter.id},from='bookmark')}"
+                                                <a th:href="@{/{novelSlug}/{chapterSlug}(novelSlug=${@urlSlugService.buildNovelSlug(item.novel)},chapterSlug=${@urlSlugService.buildChapterSlug(chapter.chapter)},from='bookmark')}"
                                                     th:text="${chapter.chapter.title}"></a>
                                                 <small class="text-muted" th:if="${chapter.linePosition != null}"
                                                     th:text="${' - line ' + (chapter.linePosition + 1)}"></small>

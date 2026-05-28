@@ -120,7 +120,8 @@
                     </p>
 
                     <div class="novel-list row row-cols-2 row-cols-md-3 row-cols-lg-5 g-4">
-                        <a th:each="novel : ${novels}" th:href="@{/novel/{id}(id=${novel.id},from='category')}"
+                        <a th:each="novel : ${novels}"
+                            th:href="@{/{novelSlug}(novelSlug=${@urlSlugService.buildNovelSlug(novel)},from='category')}"
                             class="">
                             <div class="card border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
                                 <img th:src="@{'/images/novel/' + ${novel.image}}" class="card-img-top"

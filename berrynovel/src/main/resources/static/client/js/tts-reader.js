@@ -1,6 +1,6 @@
 /**
  * Floating text-to-speech reader for chapter pages.
- * Uses the browser Web Speech API only.
+ * Uses Web Speech API for browser-based audio synthesis.
  */
 (function () {
     "use strict";
@@ -12,7 +12,6 @@
     let toggleBtn;
     let closeBtn;
     let panel;
-    let controls;
     let unsupportedMessage;
     let playBtn;
     let pauseBtn;
@@ -23,9 +22,11 @@
     let rateValue;
     let progressEl;
     let chapterContent;
-    let isSupported = false;
+    let chapterId;
+    let browserTtsSupported = false;
 
     const state = {
+        mode: null,
         isSpeaking: false,
         isPaused: false,
         chunks: [],
@@ -39,7 +40,6 @@
         toggleBtn = document.getElementById("tts-toggle-btn");
         closeBtn = document.getElementById("tts-close-btn");
         panel = document.getElementById("tts-reader-panel");
-        controls = document.getElementById("tts-reader-controls");
         unsupportedMessage = document.getElementById("tts-unsupported");
         playBtn = document.getElementById("tts-play-btn");
         pauseBtn = document.getElementById("tts-pause-btn");
@@ -50,10 +50,11 @@
         rateValue = document.getElementById("tts-rate-value");
         progressEl = document.getElementById("tts-progress");
         chapterContent = document.getElementById("chapter-content");
+        chapterId = panel ? panel.dataset.chapterId : null;
 
         if (!toggleBtn || !panel || !chapterContent) return;
 
-        isSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
+        browserTtsSupported = "speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
 
         toggleBtn.addEventListener("click", function (event) {
             event.preventDefault();
@@ -74,15 +75,15 @@
         }
 
         bindControlStopPropagation();
+        populateVoiceOptions([]);
 
-        if (!isSupported) {
-            showUnsupportedState();
-            return;
-        }
-
-        loadVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = loadVoices;
+        if (browserTtsSupported) {
+            loadVoices();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = loadVoices;
+            }
+        } else {
+            showBrowserUnsupportedState();
         }
 
         playBtn.addEventListener("click", onPlay);
@@ -90,19 +91,14 @@
         resumeBtn.addEventListener("click", onResume);
         stopBtn.addEventListener("click", onStop);
 
-        voiceSelect.addEventListener("change", function () {
-            const voices = speechSynthesis.getVoices();
-            state.currentVoice = voices[voiceSelect.value] || null;
-        });
+        voiceSelect.addEventListener("change", updateSelectedVoice);
 
         rateInput.addEventListener("input", function () {
             state.currentRate = parseFloat(rateInput.value);
             rateValue.textContent = state.currentRate.toFixed(1) + "x";
         });
 
-        window.addEventListener("beforeunload", function () {
-            speechSynthesis.cancel();
-        });
+        window.addEventListener("beforeunload", stopAllPlayback);
     });
 
     function bindControlStopPropagation() {
@@ -125,9 +121,8 @@
     function showPanel() {
         panel.classList.add("open");
         panel.setAttribute("aria-hidden", "false");
-
-        if (!isSupported) {
-            showUnsupportedState();
+        if (!browserTtsSupported) {
+            showBrowserUnsupportedState();
         }
     }
 
@@ -136,22 +131,21 @@
         panel.setAttribute("aria-hidden", "true");
     }
 
-    function showUnsupportedState() {
-        if (unsupportedMessage) unsupportedMessage.style.display = "";
-        if (voiceSelect) {
-            voiceSelect.innerHTML = '<option value="">No browser voices available</option>';
-            voiceSelect.disabled = true;
+    function showBrowserUnsupportedState() {
+        if (unsupportedMessage) {
+            unsupportedMessage.style.display = "";
+            unsupportedMessage.textContent = "Text-to-speech is not supported in this browser.";
         }
-        if (rateInput) rateInput.disabled = true;
-        [playBtn, pauseBtn, resumeBtn, stopBtn].forEach(function (button) {
-            if (button) button.disabled = true;
-        });
-        updateProgress("Text-to-speech is not supported in this browser.");
     }
 
     function loadVoices() {
         const voices = speechSynthesis.getVoices();
-        if (!voiceSelect || !voices || voices.length === 0) return;
+        if (!voiceSelect || !voices) return;
+        populateVoiceOptions(voices);
+    }
+
+    function populateVoiceOptions(voices) {
+        if (!voiceSelect) return;
 
         const previousValue = voiceSelect.value;
         voiceSelect.innerHTML = "";
@@ -166,16 +160,27 @@
             const originalIndex = voices.indexOf(voice);
             const option = document.createElement("option");
             option.value = String(originalIndex);
-            option.textContent = voice.name + " (" + voice.lang + ")";
+            option.dataset.type = "browser";
+            option.textContent = "Browser: " + voice.name + " (" + voice.lang + ")";
             voiceSelect.appendChild(option);
         });
 
-        if (previousValue && voices[previousValue]) {
+        if (previousValue && Array.from(voiceSelect.options).some(option => option.value === previousValue)) {
             voiceSelect.value = previousValue;
-        } else if (voiceSelect.options.length > 0) {
-            voiceSelect.selectedIndex = 0;
+        } else {
+            voiceSelect.value = "0";
         }
 
+        updateSelectedVoice();
+    }
+
+    function updateSelectedVoice() {
+        if (!voiceSelect || !voiceSelect.selectedOptions.length || !browserTtsSupported) {
+            state.currentVoice = null;
+            return;
+        }
+
+        const voices = speechSynthesis.getVoices();
         state.currentVoice = voices[voiceSelect.value] || null;
     }
 
@@ -269,7 +274,7 @@
     }
 
     function speakChunk(index) {
-        if (!state.isSpeaking) return;
+        if (!state.isSpeaking || state.mode !== "browser") return;
 
         if (index >= state.chunks.length) {
             onFinished();
@@ -277,7 +282,7 @@
         }
 
         state.currentChunkIndex = index;
-        updateProgress("Part " + (index + 1) + " / " + state.chunks.length);
+        updateProgress("Browser voice part " + (index + 1) + " / " + state.chunks.length);
         highlightChunk(index);
 
         const chunk = state.chunks[index];
@@ -298,12 +303,11 @@
         speechSynthesis.speak(utterance);
     }
 
-    function onPlay(event) {
-        event.stopPropagation();
-        state.isSpeaking = false;
-        state.isPaused = false;
-        speechSynthesis.cancel();
-        clearHighlight();
+    function playBrowserTts() {
+        if (!browserTtsSupported) {
+            updateProgress("Text-to-speech is not supported in this browser.");
+            return;
+        }
 
         const content = chapterContent.innerText || chapterContent.textContent || "";
         if (!content.trim()) {
@@ -311,6 +315,7 @@
             return;
         }
 
+        state.mode = "browser";
         state.chunks = extractChunks();
         state.currentChunkIndex = 0;
         state.isSpeaking = true;
@@ -320,11 +325,22 @@
         speakChunk(0);
     }
 
+    function onPlay(event) {
+        event.stopPropagation();
+        stopAllPlayback();
+        clearHighlight();
+
+        playBrowserTts();
+    }
+
     function onPause(event) {
         event.stopPropagation();
         if (!state.isSpeaking || state.isPaused) return;
 
-        speechSynthesis.pause();
+        if (state.mode === "browser" && browserTtsSupported) {
+            speechSynthesis.pause();
+        }
+
         state.isPaused = true;
         updateButtons();
     }
@@ -333,15 +349,18 @@
         event.stopPropagation();
         if (!state.isPaused) return;
 
-        speechSynthesis.resume();
         state.isPaused = false;
+
+        if (state.mode === "browser" && browserTtsSupported) {
+            speechSynthesis.resume();
+        }
+
         updateButtons();
     }
 
     function onStop(event) {
         event.stopPropagation();
-        speechSynthesis.cancel();
-        resetState();
+        stopAllPlayback();
         updateButtons();
         updateProgress("");
     }
@@ -355,7 +374,15 @@
         }, 3000);
     }
 
+    function stopAllPlayback() {
+        if (browserTtsSupported) {
+            speechSynthesis.cancel();
+        }
+        resetState();
+    }
+
     function resetState() {
+        state.mode = null;
         state.isSpeaking = false;
         state.isPaused = false;
         state.currentChunkIndex = 0;

@@ -52,6 +52,12 @@ public class Novel {
     @Column(name = "total_read_count", nullable = false, columnDefinition = "BIGINT NOT NULL DEFAULT 0")
     private Long totalReadCount = 0L;
 
+    @Column(name = "rating_avg", nullable = false, columnDefinition = "DECIMAL(3,1) NOT NULL DEFAULT 0.0")
+    private Double ratingAvg = 0.0;
+
+    @Column(name = "rating_count", nullable = false, columnDefinition = "INT NOT NULL DEFAULT 0")
+    private Integer ratingCount = 0;
+
     String image;
 
     private LocalDateTime createdAt;
@@ -162,5 +168,21 @@ public class Novel {
 
     public void setTotalReadCount(Long totalReadCount) {
         this.totalReadCount = totalReadCount;
+    }
+
+    public Double getRatingAvg() {
+        return ratingAvg;
+    }
+
+    public void setRatingAvg(Double ratingAvg) {
+        this.ratingAvg = ratingAvg;
+    }
+
+    public Integer getRatingCount() {
+        return ratingCount;
+    }
+
+    public void setRatingCount(Integer ratingCount) {
+        this.ratingCount = ratingCount;
     }
 }

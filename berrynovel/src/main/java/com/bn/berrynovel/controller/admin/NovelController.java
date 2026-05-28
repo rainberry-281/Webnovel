@@ -52,12 +52,16 @@ public class NovelController {
     public String getNovelListPage(Model model,
             @RequestParam(value = "page") Optional<String> pageOptional,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "hot", required = false) String hot) {
+            @RequestParam(value = "hot", required = false) String hot,
+            @RequestParam(value = "sort", required = false) String sort,
+            @RequestParam(value = "direction", required = false) String direction) {
         String normalizedKeyword = keyword == null ? "" : keyword.trim();
         String normalizedHot = hot == null ? "" : hot.trim();
+        String normalizedSort = sort == null ? "" : sort.trim();
+        String normalizedDirection = direction == null ? "desc" : direction.trim();
 
         PaginationQuery<Novel> paginationQuery = this.paginationService.AdminNovelSearch(pageOptional, 8,
-                normalizedKeyword, normalizedHot);
+                normalizedKeyword, normalizedHot, normalizedSort, normalizedDirection);
 
         List<Novel> novels = paginationQuery.getNvs().getContent();
 
@@ -66,6 +70,10 @@ public class NovelController {
         model.addAttribute("totalPage", paginationQuery.getNvs().getTotalPages());
         model.addAttribute("keyword", normalizedKeyword);
         model.addAttribute("hot", normalizedHot);
+        model.addAttribute("sort", normalizedSort);
+        model.addAttribute("direction", normalizedDirection);
+        model.addAttribute("nextRatingDirection", "rating".equalsIgnoreCase(normalizedSort)
+                && "desc".equalsIgnoreCase(normalizedDirection) ? "asc" : "desc");
 
         return "admin/novel/show";
     }

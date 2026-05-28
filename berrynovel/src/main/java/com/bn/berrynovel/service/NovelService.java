@@ -402,6 +402,10 @@ public class NovelService {
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
     }
 
+    public Optional<Chapter> findChapterById(Long id) {
+        return this.chapterRepository.findById(id);
+    }
+
     public Optional<Chapter> getFirstChapter(Long novelId) {
         return Optional.ofNullable(this.chapterRepository.findFirstChapter(novelId));
     }

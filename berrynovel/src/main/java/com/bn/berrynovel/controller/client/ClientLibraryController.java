@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.bn.berrynovel.service.LibraryService;
+import com.bn.berrynovel.service.NovelService;
+import com.bn.berrynovel.service.UrlSlugService;
 
 import org.springframework.ui.Model;
 
@@ -25,9 +29,14 @@ public class ClientLibraryController {
     private static final String LOG_DIVIDER = "============================================================";
 
     private final LibraryService libraryService;
+    private final NovelService novelService;
+    private final UrlSlugService urlSlugService;
 
-    public ClientLibraryController(LibraryService libraryService) {
+    public ClientLibraryController(LibraryService libraryService, NovelService novelService,
+            UrlSlugService urlSlugService) {
         this.libraryService = libraryService;
+        this.novelService = novelService;
+        this.urlSlugService = urlSlugService;
     }
 
     @GetMapping({ "", "/", "/bookshelf" })
@@ -60,7 +69,10 @@ public class ClientLibraryController {
                 authentication.getName(),
                 novelId,
                 LOG_DIVIDER);
-        return "redirect:/novel/" + novelId + "?from=bookshelf";
+        return "redirect:" + this.urlSlugService.buildNovelUrl(
+                this.novelService.getNovelById(novelId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)))
+                + "?from=bookshelf";
     }
 
     @PostMapping("/bookmark/toggle/{novelId}/{chapterId}")
@@ -82,7 +94,11 @@ public class ClientLibraryController {
                 novelId,
                 chapterId,
                 LOG_DIVIDER);
-        return "redirect:/reader/" + novelId + "/" + chapterId;
+        return "redirect:" + this.urlSlugService.buildReaderUrl(
+                this.novelService.getNovelById(novelId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)),
+                this.novelService.findChapterById(chapterId)
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
     @PostMapping("/bookmark/upsert/{novelId}/{chapterId}")

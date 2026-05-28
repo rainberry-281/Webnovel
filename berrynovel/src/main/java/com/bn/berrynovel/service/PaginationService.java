@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -44,6 +45,14 @@ public class PaginationService {
         return new PaginationQuery<>(page, data);
     }
 
+    private <T> PaginationQuery<T> paginate(Optional<String> pageOptional, int size, Sort sort,
+            Function<Pageable, Page<T>> fetcher) {
+        int page = resolvePage(pageOptional);
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Page<T> data = fetcher.apply(pageable);
+        return new PaginationQuery<>(page, data);
+    }
+
     public PaginationQuery<Novel> AdminNovelPagination(Optional<String> pageOptinal, int size) {
         return paginate(pageOptinal, size, this.novelService::findAll);
     }
@@ -60,6 +69,25 @@ public class PaginationService {
     public PaginationQuery<Novel> AdminNovelSearch(Optional<String> pageOptinal, int size, String keyword,
             String hot) {
         return paginate(pageOptinal, size, pageable -> this.novelService.adminSearch(keyword, hot, pageable));
+    }
+
+    public PaginationQuery<Novel> AdminNovelSearch(Optional<String> pageOptinal, int size, String keyword,
+            String hot, String sort, String direction) {
+        Sort resolvedSort = resolveNovelAdminSort(sort, direction);
+        return paginate(pageOptinal, size, resolvedSort,
+                pageable -> this.novelService.adminSearch(keyword, hot, pageable));
+    }
+
+    private Sort resolveNovelAdminSort(String sort, String direction) {
+        if (!"rating".equalsIgnoreCase(sort)) {
+            return Sort.unsorted();
+        }
+
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(direction)
+                ? Sort.Direction.ASC
+                : Sort.Direction.DESC;
+        return Sort.by(sortDirection, "ratingAvg")
+                .and(Sort.by(sortDirection, "ratingCount"));
     }
 
     public PaginationQuery<Novel> ClientNovelPagination(Optional<String> pageOptinal, int size) {

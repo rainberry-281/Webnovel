@@ -1,0 +1,16 @@
+ALTER TABLE Novels
+    ADD COLUMN rating_avg DECIMAL(3,1) NOT NULL DEFAULT 0.0,
+    ADD COLUMN rating_count INT NOT NULL DEFAULT 0;
+
+CREATE TABLE novel_rating (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    novel_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    score TINYINT NOT NULL CHECK (score BETWEEN 1 AND 5),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_novel_user (novel_id, user_id),
+    INDEX idx_novel_rating_novel (novel_id),
+    CONSTRAINT fk_nr_novel FOREIGN KEY (novel_id) REFERENCES Novels(id) ON DELETE CASCADE,
+    CONSTRAINT fk_nr_user FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+);

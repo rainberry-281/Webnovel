@@ -95,14 +95,14 @@
                                         </div>
 
                                         <div class="novel-name" style="padding-left: 50px;">
-                                            <a th:href="@{/novel/{id}(id=${item.novel.id},from='bookshelf')}"
+                                            <a th:href="@{/{novelSlug}(novelSlug=${@urlSlugService.buildNovelSlug(item.novel)},from='bookshelf')}"
                                                 class="overlay" th:text="${item.novel.title}"></a>
                                         </div>
                                     </td>
 
                                     <td class="none table-cell-m">
                                         <a class="overlay" th:if="${item.newestChapter != null}"
-                                            th:href="@{/reader/{novelId}/{chapterId}(novelId=${item.novel.id},chapterId=${item.newestChapter.id})}"
+                                            th:href="@{/{novelSlug}/{chapterSlug}(novelSlug=${@urlSlugService.buildNovelSlug(item.novel)},chapterSlug=${@urlSlugService.buildChapterSlug(item.newestChapter)})}"
                                             th:text="${item.newestChapter.title}"></a>
                                         <small class="volume-name" th:if="${item.newestChapter != null}"
                                             th:text="${#temporals.format(item.newestChapter.createdAt, 'dd/MM/yyyy')}"></small>

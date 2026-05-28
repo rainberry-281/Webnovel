@@ -25,106 +25,103 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/admin/chapter")
 public class ChapterController {
-    private final NovelService novelService;
-    private final ChapterRepository chapterRepository;
-    private final ImageService imageService;
+        private final NovelService novelService;
+        private final ChapterRepository chapterRepository;
+        private final ImageService imageService;
 
-    public ChapterController(NovelService novelService, ChapterRepository chapterRepository,
-            ImageService imageService) {
-        this.novelService = novelService;
-        this.chapterRepository = chapterRepository;
-        this.imageService = imageService;
-    }
+        public ChapterController(NovelService novelService, ChapterRepository chapterRepository,
+                        ImageService imageService) {
+                this.novelService = novelService;
+                this.chapterRepository = chapterRepository;
+                this.imageService = imageService;
+        }
+        // public String listByNovel(@PathVariable("novelId") int novelId, Model model)
+        // {
+        // Novel novel = this.novelService.getNovelById(novelId)
+        // .orElseThrow(() -> new RuntimeException("Novel not found"));
 
-    // @GetMapping("/create/{novelId}")
-    // public String listByNovel(@PathVariable("novelId") int novelId, Model model)
-    // {
-    // Novel novel = this.novelService.getNovelById(novelId)
-    // .orElseThrow(() -> new RuntimeException("Novel not found"));
+        // List<Chapter> chapters = this.novelService.getChaptersByNovelId(novelId);
 
-    // List<Chapter> chapters = this.novelService.getChaptersByNovelId(novelId);
+        // model.addAttribute("novel", novel);
+        // model.addAttribute("chapters", chapters);
+        // model.addAttribute("newChapter", new Chapter());
+        // return "admin/chapter/list";
+        // }
 
-    // model.addAttribute("novel", novel);
-    // model.addAttribute("chapters", chapters);
-    // model.addAttribute("newChapter", new Chapter());
-    // return "admin/chapter/list";
-    // }
+        @GetMapping("/create/{novelId}")
+        public String createPage(@PathVariable("novelId") Long novelId, Model model) {
+                Novel novel = this.novelService.getNovelById(novelId)
+                                .orElseThrow(() -> new RuntimeException("Novel not found"));
 
-    @GetMapping("/create/{novelId}")
-    public String createPage(@PathVariable("novelId") Long novelId, Model model) {
-        Novel novel = this.novelService.getNovelById(novelId)
-                .orElseThrow(() -> new RuntimeException("Novel not found"));
+                List<Chapter> chapters = this.novelService.getChaptersByNovelId(novelId);
 
-        List<Chapter> chapters = this.novelService.getChaptersByNovelId(novelId);
+                model.addAttribute("novel", novel);
+                model.addAttribute("chapters", chapters);
+                model.addAttribute("newChapter", new Chapter());
+                return "admin/chapter/create";
+        }
 
-        model.addAttribute("novel", novel);
-        model.addAttribute("chapters", chapters);
-        model.addAttribute("newChapter", new Chapter());
-        return "admin/chapter/create";
-    }
+        @PostMapping("/create/{novelId}")
+        public String create(@PathVariable("novelId") Long novelId, Chapter chapter) {
+                Novel novel = this.novelService.getNovelById(novelId)
+                                .orElseThrow(() -> new RuntimeException("Novel not found"));
 
-    @PostMapping("/create/{novelId}")
-    public String create(@PathVariable("novelId") Long novelId, Chapter chapter) {
-        Novel novel = this.novelService.getNovelById(novelId)
-                .orElseThrow(() -> new RuntimeException("Novel not found"));
+                chapter.setNovel(novel);
+                chapter.setCreatedAt(java.time.LocalDateTime.now());
+                Chapter savedChapter = this.chapterRepository.save(chapter);
 
-        chapter.setNovel(novel);
-        chapter.setCreatedAt(java.time.LocalDateTime.now());
-        this.chapterRepository.save(chapter);
+                return "redirect:/admin/chapter/create/" + novelId;
+        }
 
-        return "redirect:/admin/chapter/create/" + novelId;
-    }
+        @GetMapping("/update/{id}")
+        public String updatePage(@PathVariable Long id, Model model) {
 
-    @GetMapping("/update/{id}")
-    public String updatePage(@PathVariable Long id, Model model) {
+                Chapter chapter = chapterRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
-        Chapter chapter = chapterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+                Novel novel = chapter.getNovel();
 
-        Novel novel = chapter.getNovel();
+                List<Chapter> chapters = this.novelService.getChaptersByNovelId(novel.getId());
 
-        List<Chapter> chapters = this.novelService.getChaptersByNovelId(novel.getId());
+                model.addAttribute("chapter", chapter);
+                model.addAttribute("novel", novel);
+                model.addAttribute("chapters", chapters);
+                return "admin/chapter/update";
+        }
 
-        model.addAttribute("chapter", chapter);
-        model.addAttribute("novel", novel);
-        model.addAttribute("chapters", chapters);
+        @PostMapping("/update/{id}")
+        public String update(@PathVariable Long id, Chapter chapter) {
 
-        return "admin/chapter/update";
-    }
+                Chapter oldChapter = chapterRepository.findById(id)
+                                .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
-    @PostMapping("/update/{id}")
-    public String update(@PathVariable Long id, Chapter chapter) {
+                oldChapter.setTitle(chapter.getTitle());
+                oldChapter.setContent(chapter.getContent());
 
-        Chapter oldChapter = chapterRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+                chapterRepository.save(oldChapter);
 
-        oldChapter.setTitle(chapter.getTitle());
-        oldChapter.setContent(chapter.getContent());
+                return "redirect:/admin/chapter/create/" + oldChapter.getNovel().getId();
+        }
 
-        chapterRepository.save(oldChapter);
+        // @PostMapping("/delete/{id}")
+        // public String delete(@PathVariable("id") Long id) {
+        // Chapter chapter = this.chapterRepository.findById(id)
+        // .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
-        return "redirect:/admin/chapter/create/" + oldChapter.getNovel().getId();
-    }
+        // int novelId = chapter.getNovel().getId();
+        // this.chapterRepository.deleteById(id);
 
-    // @PostMapping("/delete/{id}")
-    // public String delete(@PathVariable("id") Long id) {
-    // Chapter chapter = this.chapterRepository.findById(id)
-    // .orElseThrow(() -> new RuntimeException("Chapter not found"));
+        // return "redirect:/admin/chapter/create/" + novelId;
+        // }
 
-    // int novelId = chapter.getNovel().getId();
-    // this.chapterRepository.deleteById(id);
+        @PostMapping("/upload-image")
+        @ResponseBody
+        public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile file) throws IOException {
+                String fileName = this.imageService.handleImage(file, "chapter");
 
-    // return "redirect:/admin/chapter/create/" + novelId;
-    // }
+                Map<String, Object> result = new HashMap<>();
+                result.put("url", "/images/chapter/" + fileName);
 
-    @PostMapping("/upload-image")
-    @ResponseBody
-    public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile file) throws IOException {
-        String fileName = this.imageService.handleImage(file, "chapter");
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("url", "/images/chapter/" + fileName);
-
-        return result;
-    }
+                return result;
+        }
 }
