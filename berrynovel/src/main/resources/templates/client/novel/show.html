@@ -23,9 +23,9 @@
 <body>
     <div th:replace="~{client/layout/navigation :: navbar}"></div>
 
-    <div class="page-wrapper" style="padding-top: 55px;">
-        <nav aria-label="breadcrumb" class="pt-4">
-            <ol class="breadcrumb ms-3">
+    <div class="novel-breadcrumb-wrapper">
+        <nav aria-label="breadcrumb" class="novel-breadcrumb">
+            <ol class="breadcrumb mb-0">
                 <li class="breadcrumb-item"><a th:href="@{/home}" class="text-decoration-none text-dark">Homepage</a>
                 </li>
                 <li class="breadcrumb-item" th:if="${breadcrumbFrom == 'category'}">
@@ -37,9 +37,10 @@
                 <li th:text="${novel.title}" class="breadcrumb-item active" aria-current="page"></li>
             </ol>
         </nav>
+    </div>
 
+    <div class="page-wrapper">
         <div class="novel container">
-
             <div class="row align-items-stretch g-4">
                 <div class="col-lg-3">
                     <div class="cover-wrapper">
@@ -178,8 +179,7 @@
                                 <div class="similar-title text-truncate" th:text="${similar.title}"></div>
                                 <div class="similar-meta">
                                     <span th:if="${similar.ratingCount != null and similar.ratingCount > 0}">
-                                        <span
-                                            th:text="${#numbers.formatDecimal(similar.ratingAvg, 1, 1)}">0.0</span>
+                                        <span th:text="${#numbers.formatDecimal(similar.ratingAvg, 1, 1)}">0.0</span>
                                         <span>&#9733;</span>
                                         <span th:text="${'(' + similar.ratingCount + ')'}">(0)</span>
                                     </span>
@@ -232,7 +232,8 @@
                 <main class="p-3">
                     <!-- Form comment -->
                     <form sec:authorize="isAuthenticated()" class="comment-form mb-4"
-                        th:action="@{/{novelSlug}/comment(novelSlug=${@urlSlugService.buildNovelSlug(novel)})}" method="post">
+                        th:action="@{/{novelSlug}/comment(novelSlug=${@urlSlugService.buildNovelSlug(novel)})}"
+                        method="post">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <textarea class="form-control mb-2 rounded-2" rows="3" name="content"
                             placeholder="Write a comment..." required></textarea>
