@@ -159,6 +159,41 @@
                 </div>
             </div>
 
+            <section class="similar-list mt-5 rounded-4" th:if="${not #lists.isEmpty(similarNovels)}">
+                <header class="sect-header">
+                    <span class="sect-title">
+                        Similar novels
+                    </span>
+                </header>
+
+                <main class="p-3">
+                    <div class="row g-3">
+                        <div class="col-6 col-md-4 col-lg-2" th:each="similar : ${similarNovels}">
+                            <a class="similar-card text-decoration-none"
+                                th:href="@{/{novelSlug}(novelSlug=${@urlSlugService.buildNovelSlug(similar)},from='category')}">
+                                <div class="similar-cover">
+                                    <img th:src="@{/images/novel/{image}(image=${similar.image})}"
+                                        th:alt="${similar.title}">
+                                </div>
+                                <div class="similar-title text-truncate" th:text="${similar.title}"></div>
+                                <div class="similar-meta">
+                                    <span th:if="${similar.ratingCount != null and similar.ratingCount > 0}">
+                                        <span
+                                            th:text="${#numbers.formatDecimal(similar.ratingAvg, 1, 1)}">0.0</span>
+                                        <span>&#9733;</span>
+                                        <span th:text="${'(' + similar.ratingCount + ')'}">(0)</span>
+                                    </span>
+                                    <span th:if="${similar.ratingCount == null or similar.ratingCount == 0}"
+                                        th:text="${#numbers.formatInteger(similar.totalReadCount != null ? similar.totalReadCount : 0, 1, 'COMMA') + ' reads'}">
+                                        0 reads
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </main>
+            </section>
+
             <section class="volume-list mt-5 rounded-4">
                 <header class="sect-header">
                     <span class="sect-title">

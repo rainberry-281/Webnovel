@@ -19,6 +19,7 @@ import com.bn.berrynovel.service.LibraryService;
 import com.bn.berrynovel.service.NovelService;
 import com.bn.berrynovel.service.PaginationService;
 import com.bn.berrynovel.service.RatingService;
+import com.bn.berrynovel.service.RecommendationService;
 import com.bn.berrynovel.service.UrlSlugService;
 import com.bn.berrynovel.service.UserService;
 import com.bn.berrynovel.domain.PaginationQuery;
@@ -44,10 +45,11 @@ public class ClientNovelController {
     private final UrlSlugService urlSlugService;
     private final RatingService ratingService;
     private final UserService userService;
+    private final RecommendationService recommendationService;
 
     public ClientNovelController(NovelService novelService, PaginationService paginationService,
             LibraryService libraryService, CommentService commentService, UrlSlugService urlSlugService,
-            RatingService ratingService, UserService userService) {
+            RatingService ratingService, UserService userService, RecommendationService recommendationService) {
         this.novelService = novelService;
         this.paginationService = paginationService;
         this.libraryService = libraryService;
@@ -55,6 +57,7 @@ public class ClientNovelController {
         this.urlSlugService = urlSlugService;
         this.ratingService = ratingService;
         this.userService = userService;
+        this.recommendationService = recommendationService;
     }
 
     @GetMapping("/category")
@@ -251,6 +254,7 @@ public class ClientNovelController {
                 && this.libraryService.isNovelInBookshelf(authentication.getName(), id);
         model.addAttribute("inBookshelf", inBookshelf);
         model.addAttribute("userRating", getUserRating(id, authentication).orElse(null));
+        model.addAttribute("similarNovels", this.recommendationService.getSimilarNovels(id, 6));
 
         return "client/novel/show";
     }

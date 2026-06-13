@@ -51,7 +51,68 @@
             </div>
         </section>
         <!-- Novel section -->
-        <section class="container my-5">
+        <section class="container my-5" th:if="${not #lists.isEmpty(recommendedNovels)}">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold section-title" th:text="${recommendationTitle}">RECOMMENDATION</h4>
+            </div>
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2" th:each="novel : ${recommendedNovels}">
+                    <a class="novel text-decoration-none"
+                        th:href="@{/{novelSlug}(novelSlug=${@urlSlugService.buildNovelSlug(novel)},from='home')}">
+                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                            <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
+                                alt="Novel cover">
+                            <div class="hotnovel">
+                                <span th:if="${novel.hot != null and novel.hot.name() == 'HOT'}"
+                                    class="badge bg-danger">HOT</span>
+                            </div>
+                            <div class="overlay">
+                                <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
+                                <small class="text-light" th:text="'Author: ' + ${novel.author}"></small>
+                                <div class="novel-rating-line text-light"
+                                    th:if="${novel.ratingCount != null and novel.ratingCount > 0}">
+                                    <span th:text="${#numbers.formatDecimal(novel.ratingAvg, 1, 1)}">0.0</span>
+                                    <span>&#9733;</span>
+                                    <span th:text="${'(' + novel.ratingCount + ')'}">(0)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container my-5" th:if="${not #lists.isEmpty(topRatedNovels)}">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold section-title">TOP RATED</h4>
+            </div>
+            <div class="row g-4">
+                <div class="col-6 col-md-4 col-lg-3 col-xl-2" th:each="novel : ${topRatedNovels}">
+                    <a class="novel text-decoration-none"
+                        th:href="@{/{novelSlug}(novelSlug=${@urlSlugService.buildNovelSlug(novel)},from='home')}">
+                        <div class="card h-100 border-0 shadow-sm overflow-hidden" style="border-radius: 15px;">
+                            <img th:src="@{/images/novel/{image}(image=${novel.image})}" class="card-img-top"
+                                alt="Novel cover">
+                            <div class="hotnovel">
+                                <span th:if="${novel.hot != null and novel.hot.name() == 'HOT'}"
+                                    class="badge bg-danger">HOT</span>
+                            </div>
+                            <div class="overlay">
+                                <h6 class="mb-1 fw-bold text-white text-truncate" th:text="${novel.title}"></h6>
+                                <small class="text-light" th:text="'Author: ' + ${novel.author}"></small>
+                                <div class="novel-rating-line text-light">
+                                    <span th:text="${#numbers.formatDecimal(novel.ratingAvg, 1, 1)}">0.0</span>
+                                    <span>&#9733;</span>
+                                    <span th:text="${'(' + novel.ratingCount + ')'}">(0)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container my-5" th:if="${not #lists.isEmpty(novels)}">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold section-title">ORIGINAL</h4>
                 <!-- <a th:href="@{/client/category}" class="text-muted">Show more</a> -->
@@ -80,7 +141,7 @@
         </section>
 
         <!-- Translated Novel section -->
-        <section class="container my-5">
+        <section class="container my-5" th:if="${not #lists.isEmpty(translatedNovels)}">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold section-title">TRANSLATION</h4>
             </div>
@@ -106,7 +167,7 @@
         </section>
 
         <!-- Completed Novel section -->
-        <section class="container my-5">
+        <section class="container my-5" th:if="${not #lists.isEmpty(completedNovels)}">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold section-title">COMPLETED</h4>
             </div>

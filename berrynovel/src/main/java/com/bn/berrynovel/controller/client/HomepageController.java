@@ -11,11 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.bn.berrynovel.service.NovelService;
+import com.bn.berrynovel.service.RecommendationService;
 import com.bn.berrynovel.domain.dto.RegisterDTO;
 import com.bn.berrynovel.domain.User;
 
@@ -26,19 +28,40 @@ public class HomepageController {
 
     private final UserService userService;
     private final NovelService novelService;
+    private final RecommendationService recommendationService;
 
-    public HomepageController(UserService userService, NovelService novelService) {
+    public HomepageController(UserService userService, NovelService novelService,
+            RecommendationService recommendationService) {
         this.userService = userService;
         this.novelService = novelService;
+        this.recommendationService = recommendationService;
     }
 
     @GetMapping("/home")
-    public String getHomePage(Model model, HttpServletRequest request) {
+    public String getHomePage(Model model, HttpServletRequest request, Authentication authentication) {
         model.addAttribute("completedNovels", this.novelService.getHomepageCompletedNovels());
         model.addAttribute("novels", this.novelService.getHomepageOriginalNovels());
         model.addAttribute("translatedNovels", this.novelService.getHomepageTranslatedNovels());
+        loadRecommendationSection(model, authentication);
+        model.addAttribute("topRatedNovels", this.recommendationService.getTopRatedNovels(10, 6));
 
         return "client/homepage/show";
+    }
+
+    private void loadRecommendationSection(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getName())) {
+            User user = this.userService.getUserByUsername(authentication.getName());
+            if (user != null) {
+                model.addAttribute("recommendedNovels",
+                        this.recommendationService.getPersonalizedRecommendations(user.getId(), 6));
+                model.addAttribute("recommendationTitle", "RECOMMENDATION");
+                return;
+            }
+        }
+
+        model.addAttribute("recommendedNovels", this.recommendationService.getPopularNovels(7, 6));
+        model.addAttribute("recommendationTitle", "TRENDING NOW");
     }
 
     @GetMapping("/")

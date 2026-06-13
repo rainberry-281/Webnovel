@@ -73,3 +73,8 @@ body {
 .overlay h6 {
     font-size: 14px;
 }
+
+.novel-rating-line {
+    font-size: 12px;
+    margin-top: 3px;
+}

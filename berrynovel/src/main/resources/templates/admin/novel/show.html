@@ -38,11 +38,13 @@
                     </a>
 
                     <div class="d-flex gap-2">
-                        <a th:href="@{/admin/novel(keyword=${keyword},sort=${sort},direction=${direction})}" class="btn btn-outline-secondary"
+                        <a th:href="@{/admin/novel(keyword=${keyword},sort=${sort},direction=${direction})}"
+                            class="btn btn-outline-secondary"
                             th:classappend="${#strings.isEmpty(hot)} ? 'active' : ''">All</a>
-                        <a th:href="@{/admin/novel(hot='HOT',keyword=${keyword},sort=${sort},direction=${direction})}" class="btn btn-outline-danger"
-                            th:classappend="${hot == 'HOT'} ? 'active' : ''">HOT</a>
-                        <a th:href="@{/admin/novel(hot='NOT_HOT',keyword=${keyword},sort=${sort},direction=${direction})}" class="btn btn-outline-secondary"
+                        <a th:href="@{/admin/novel(hot='HOT',keyword=${keyword},sort=${sort},direction=${direction})}"
+                            class="btn btn-outline-danger" th:classappend="${hot == 'HOT'} ? 'active' : ''">HOT</a>
+                        <a th:href="@{/admin/novel(hot='NOT_HOT',keyword=${keyword},sort=${sort},direction=${direction})}"
+                            class="btn btn-outline-secondary"
                             th:classappend="${hot == 'NOT_HOT'} ? 'active' : ''">Normal</a>
                     </div>
 
@@ -94,7 +96,8 @@
                                 <td th:text="${novel.user?.id ?: '-'}"></td>
 
                                 <td>
-                                    <span th:text="${novel.ratingAvg != null ? #numbers.formatDecimal(novel.ratingAvg, 1, 1) : '0.0'}">0.0</span>
+                                    <span
+                                        th:text="${novel.ratingAvg != null ? #numbers.formatDecimal(novel.ratingAvg, 1, 1) : '0.0'}">0.0</span>
                                     <span>&#9733;</span>
                                     <span class="text-muted"
                                         th:text="${'(' + (novel.ratingCount != null ? novel.ratingCount : 0) + ')'}">(0)</span>

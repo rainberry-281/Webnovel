@@ -1,62 +1,47 @@
 package com.bn.berrynovel.service;
 
 import org.springframework.stereotype.Service;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.bn.berrynovel.config.UploadPathProvider;
 import com.bn.berrynovel.domain.Novel;
 
 @Service
 public class ImageService {
-    private static final String UPLOAD_ROOT = "uploads/images";
+    private final UploadPathProvider uploadPathProvider;
 
-    private String getRootPath() {
-        return Paths.get(System.getProperty("user.dir"), UPLOAD_ROOT).toString();
+    public ImageService(UploadPathProvider uploadPathProvider) {
+        this.uploadPathProvider = uploadPathProvider;
     }
 
     public String handleImage(MultipartFile file, String target) {
         if (file == null || file.isEmpty()) {
             return null;
         }
-        String finalName = "";
-        String rootPath = getRootPath();
-        byte[] bytes;
-        try {
-            bytes = file.getBytes();
 
-            // Save the image file.
-            File dir = new File(rootPath + File.separator + target);
-            if (!dir.exists())
-                dir.mkdirs();
-
-            // Build the image file name and path.
-            finalName = System.currentTimeMillis() + "-" + file.getOriginalFilename();
-            File serverFile = new File(dir.getAbsolutePath() + File.separator + finalName);
-
-            BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(serverFile));
-            stream.write(bytes);
-            stream.close();
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        }
-
-        return finalName;
+        String finalName = System.currentTimeMillis() + "-" + cleanFileName(file.getOriginalFilename());
+        return saveImage(file, target, finalName);
     }
 
     // Delete the image file from disk when deleting a user or updating an image.
     public boolean deleteImage(String fileName, String target) {
-        String uploadDir = getRootPath() + File.separator + target + File.separator;
-        Path path = Paths.get(uploadDir + fileName);
+        if (fileName == null || fileName.isBlank()) {
+            return false;
+        }
+
+        Path targetDirectory = getTargetDirectory(target);
+        Path path = targetDirectory.resolve(cleanFileName(fileName)).normalize();
+        if (!path.startsWith(targetDirectory)) {
+            return false;
+        }
+
         try {
             boolean deleted = Files.deleteIfExists(path);
             System.out.println("Deleted: " + path.toAbsolutePath());
@@ -71,34 +56,44 @@ public class ImageService {
         if (file == null || file.isEmpty()) {
             return null;
         }
-        String finalName = "";
-        String rootPath = getRootPath();
-        byte[] bytes;
+
+        String genreName = (novel.getGenres() != null && !novel.getGenres().isEmpty())
+                ? novel.getGenres().get(0).getName()
+                : "novel";
+        String finalName = genreName + novel.getId() + ".jpg";
+        return saveImage(file, target, finalName);
+    }
+
+    private String saveImage(MultipartFile file, String target, String finalName) {
+        Path targetDirectory = getTargetDirectory(target);
+        Path destination = targetDirectory.resolve(finalName).normalize();
+
+        if (!destination.startsWith(targetDirectory)) {
+            return "";
+        }
+
         try {
-            bytes = file.getBytes();
-
-            // Save the image file.
-            File dir = new File(rootPath + File.separator + target);
-            if (!dir.exists())
-                dir.mkdirs();
-
-            // Build the image file name and path.
-            String genreName = (novel.getGenres() != null && !novel.getGenres().isEmpty())
-                    ? novel.getGenres().get(0).getName()
-                    : "novel";
-            finalName = genreName + novel.getId() + ".jpg";
-            File serverFile = new File(dir.getAbsolutePath() + File.separator + finalName);
-
-            BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(serverFile));
-            stream.write(bytes);
-            stream.close();
-
+            Files.createDirectories(targetDirectory);
+            file.transferTo(destination);
         } catch (IOException e) {
-
             e.printStackTrace();
+            return "";
         }
 
         return finalName;
+    }
+
+    private Path getTargetDirectory(String target) {
+        return this.uploadPathProvider.getImageUploadRoot().resolve(target).normalize();
+    }
+
+    private String cleanFileName(String fileName) {
+        String cleanName = StringUtils.cleanPath(fileName == null ? "image" : fileName);
+        if (!StringUtils.hasText(cleanName)) {
+            return "image";
+        }
+
+        Path path = Paths.get(cleanName).getFileName();
+        return path == null ? "image" : path.toString();
     }
 }

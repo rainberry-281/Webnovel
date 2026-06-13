@@ -83,7 +83,7 @@ public class SecurityConfiguration {
                                                 .requestMatchers(RegexRequestMatcher
                                                                 .regexMatcher("^/\\d+-[a-z0-9-]+/c\\d+-[a-z0-9-]+$"))
                                                 .permitAll()
-                                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                                                 .anyRequest().authenticated())
 
                                 .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
@@ -100,6 +100,9 @@ public class SecurityConfiguration {
                                                 .failureUrl("/login?error")
                                                 .successHandler(customSuccessHandler())
                                                 .permitAll())
+
+                                .exceptionHandling(exceptionHandling -> exceptionHandling
+                                                .accessDeniedPage("/error/403"))
 
                                 .logout(logout -> logout
                                                 .logoutUrl("/logout")

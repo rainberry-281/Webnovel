@@ -83,23 +83,13 @@ body {
     border-bottom: 1px solid #e5e5e5;
 }
 
-/* ID + STATUS CENTER */
-
-.novel-table th:first-child,
-.novel-table td:first-child,
-.novel-table th:nth-child(5),
-.novel-table td:nth-child(5) {
-    text-align: center;
-    width: 90px;
-}
-
 /* NOVEL NAME */
 .novel-table th:nth-child(2),
 .novel-table td:nth-child(2) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 240px;
+    width: 200px;
 }
 
 /* AUTHOR */
@@ -108,15 +98,45 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 200px;
+    width: 150px;
 }
 
 /* UPLOADER */
 
 .novel-table td:nth-child(4),
 .novel-table th:nth-child(4) {
-    width: 150px;
+    width: 120px;
     text-align: center;
+}
+
+/* RATING */
+
+.novel-table th:first-child,
+.novel-table td:first-child,
+.novel-table th:nth-child(5),
+.novel-table td:nth-child(5) {
+    text-align: center;
+    width: 150px;
+}
+
+/* HOT */
+
+.novel-table th:first-child,
+.novel-table td:first-child,
+.novel-table th:nth-child(6),
+.novel-table td:nth-child(6) {
+    text-align: center;
+    width: 150px;
+}
+
+/* STATUS */
+
+.novel-table th:first-child,
+.novel-table td:first-child,
+.novel-table th:nth-child(7),
+.novel-table td:nth-child(7) {
+    text-align: center;
+    width: 150px;
 }
 
 /* ACTION */
