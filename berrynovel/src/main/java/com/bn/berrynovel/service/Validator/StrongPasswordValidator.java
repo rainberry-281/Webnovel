@@ -8,6 +8,9 @@ public class StrongPasswordValidator implements ConstraintValidator<StrongPasswo
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         // Check that the password has uppercase, lowercase, and numeric characters.
+        if (value == null) {
+            return false;
+        }
         return value.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$");
     }
 }

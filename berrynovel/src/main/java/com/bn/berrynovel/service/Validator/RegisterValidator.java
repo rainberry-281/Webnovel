@@ -18,11 +18,15 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecked, R
 
     @Override
     public boolean isValid(RegisterDTO user, ConstraintValidatorContext context) {
+        if (user == null) {
+            return true;
+        }
+
         boolean valid = true;
 
         // Check if password fields match
-        if (!user.getPassword().equals(user.getConfirmPassword())) {
-            context.buildConstraintViolationWithTemplate("ComfirmPassword doesn't fit")
+        if (user.getPassword() != null && !user.getPassword().equals(user.getConfirmPassword())) {
+            context.buildConstraintViolationWithTemplate("Confirm password does not match")
                     .addPropertyNode("confirmPassword")
                     // addPropertyNode("confirmPassword"): attach the error to confirmPassword
                     // in the RegisterDTO object, not password or email.

@@ -51,7 +51,10 @@ public class UserService {
         String imageName = "defaultavatar.png";
         if (file != null && !file.isEmpty()) {
             // If the user uploaded an image.
-            imageName = this.imageService.handleImage(file, "avatar");
+            String uploadedImageName = this.imageService.handleImage(file, "avatar");
+            if (uploadedImageName != null && !uploadedImageName.isBlank()) {
+                imageName = uploadedImageName;
+            }
         }
         user.setImage(imageName);
 
@@ -59,25 +62,54 @@ public class UserService {
     }
 
     public User updateUser(User user, MultipartFile file) {
-        User currentUser = this.userRepository.findById(user.getId()).get();
+        if (user.getId() == null) {
+            throw new IllegalArgumentException("User id is required");
+        }
 
-        currentUser.setRole(this.roleRepository.findByName(user.getRole().getName()));
+        User currentUser = this.userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found: " + user.getId()));
+
+        if (user.getRole() != null && user.getRole().getName() != null) {
+            currentUser.setRole(this.roleRepository.findByName(user.getRole().getName()));
+        }
 
         currentUser.setFullName(user.getFullName());
 
         currentUser.setPhoneNumber(user.getPhoneNumber());
 
+        updateAvatarIfProvided(currentUser, file);
+
+        return this.userRepository.save(currentUser);
+    }
+
+    public User updateProfile(String username, User user, MultipartFile file) {
+        User currentUser = this.userRepository.findByUsername(username);
+        if (currentUser == null) {
+            throw new RuntimeException("User not found: " + username);
+        }
+
+        currentUser.setFullName(user.getFullName());
+        currentUser.setPhoneNumber(user.getPhoneNumber());
+
+        updateAvatarIfProvided(currentUser, file);
+
+        return this.userRepository.save(currentUser);
+    }
+
+    private void updateAvatarIfProvided(User currentUser, MultipartFile file) {
         if (file != null && !file.isEmpty()) {
+            String imageName = this.imageService.handleImage(file, "avatar");
+            if (imageName == null || imageName.isBlank()) {
+                return;
+            }
+
             if (currentUser.getImage() != null
                     && !currentUser.getImage().isEmpty()
                     && !currentUser.getImage().equals("defaultavatar.png")) {
                 this.imageService.deleteImage(currentUser.getImage(), "avatar");
             }
-            String imageName = this.imageService.handleImage(file, "avatar");
             currentUser.setImage(imageName);
         }
-
-        return this.userRepository.save(currentUser);
     }
 
     public List<User> getUserList() {

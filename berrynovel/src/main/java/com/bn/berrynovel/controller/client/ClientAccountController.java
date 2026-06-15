@@ -35,15 +35,8 @@ public class ClientAccountController {
     public String getProfilePage(Model model, Authentication authentication) {
         String username = authentication.getName();
         User user = this.userService.getUserByUsername(username);
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n").append(LOG_DIVIDER).append("\n");
-        sb.append(">>>>>>>>>>> User Profile\n");
-        sb.append("Username: ").append(user.getUsername()).append("\n");
-        sb.append("Full Name: ").append(user.getFullName()).append("\n");
-        sb.append("Email: ").append(user.getEmail()).append("\n");
-        sb.append("Phone Number: ").append(user.getPhoneNumber()).append("\n");
-        sb.append(LOG_DIVIDER).append("\n");
-        System.out.println(sb.toString());
+        logger.debug("\n{}\n>>>>>>>>>>> [PROFILE - PAGE]\nUsername: {}\n{}\n", LOG_DIVIDER, user.getUsername(),
+                LOG_DIVIDER);
 
         model.addAttribute("user", user);
         return "client/profile/show";
@@ -103,7 +96,7 @@ public class ClientAccountController {
 
         logger.info(sb.toString());
 
-        User updateUser = this.userService.updateUser(user, file);
+        User updateUser = this.userService.updateProfile(username, user, file);
 
         logger.info(
                 "\n{}\n>>>>>>>>>>> [EDIT PROFILE - SUCCESS]\nUsername: {}\nUpdated Full Name: {}\nUpdated Phone Number: {}\n{}\n",

@@ -3,6 +3,8 @@ package com.bn.berrynovel.controller.admin;
 import com.bn.berrynovel.service.ImageService;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,7 @@ import com.bn.berrynovel.service.PaginationService;
 @Controller
 @RequestMapping("/admin/user")
 public class UserController {
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final ImageService imageService;
     private final UserService userService;
@@ -64,7 +67,7 @@ public class UserController {
             BindingResult userBindingResult, @RequestParam(value = "images", required = false) MultipartFile file) {
         List<FieldError> errors = userBindingResult.getFieldErrors();
         for (FieldError error : errors) {
-            System.out.println(">>>>" + error.getObjectName() + " - " + error.getDefaultMessage());
+            logger.debug("User validation error: {} - {}", error.getObjectName(), error.getDefaultMessage());
         }
 
         if (userService.checkUsernameExists(user.getUsername())) {

@@ -7,6 +7,8 @@ import java.nio.file.Paths;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +17,8 @@ import com.bn.berrynovel.domain.Novel;
 
 @Service
 public class ImageService {
+    private static final Logger logger = LoggerFactory.getLogger(ImageService.class);
+
     private final UploadPathProvider uploadPathProvider;
 
     public ImageService(UploadPathProvider uploadPathProvider) {
@@ -44,10 +48,10 @@ public class ImageService {
 
         try {
             boolean deleted = Files.deleteIfExists(path);
-            System.out.println("Deleted: " + path.toAbsolutePath());
+            logger.debug("Deleted image: {}", path.toAbsolutePath());
             return deleted;
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("Failed to delete image: {}", path.toAbsolutePath(), e);
             return false;
         }
     }
@@ -76,7 +80,7 @@ public class ImageService {
             Files.createDirectories(targetDirectory);
             file.transferTo(destination);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warn("Failed to save image: {}", destination.toAbsolutePath(), e);
             return "";
         }
 

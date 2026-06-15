@@ -1,8 +1,8 @@
 package com.bn.berrynovel.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +24,8 @@ import jakarta.servlet.DispatcherType;
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration {
+        static final String NOVEL_SLUG_URL_PATTERN = "^/\\d+-[a-z0-9-]+(?:\\?.*)?$";
+        static final String READER_SLUG_URL_PATTERN = "^/\\d+-[a-z0-9-]+/c\\d+-[a-z0-9-]+(?:\\?.*)?$";
 
         @Bean
         public PasswordEncoder passwordEncoder() {
@@ -78,12 +80,13 @@ public class SecurityConfiguration {
                                                                                 "/api/chapter/*/audio-status"),
                                                                 AntPathRequestMatcher.antMatcher("/audio/**"))
                                                 .permitAll()
-                                                .requestMatchers(RegexRequestMatcher.regexMatcher("^/\\d+-[a-z0-9-]+$"))
+                                                .requestMatchers(
+                                                                RegexRequestMatcher.regexMatcher(HttpMethod.GET,
+                                                                                NOVEL_SLUG_URL_PATTERN),
+                                                                RegexRequestMatcher.regexMatcher(HttpMethod.GET,
+                                                                                READER_SLUG_URL_PATTERN))
                                                 .permitAll()
-                                                .requestMatchers(RegexRequestMatcher
-                                                                .regexMatcher("^/\\d+-[a-z0-9-]+/c\\d+-[a-z0-9-]+$"))
-                                                .permitAll()
-                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                                                 .anyRequest().authenticated())
 
                                 .rememberMe(r -> r.rememberMeServices(rememberMeServices()))

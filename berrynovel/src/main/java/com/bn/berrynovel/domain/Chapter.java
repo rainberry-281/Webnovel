@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.GenerationType;
 import java.time.LocalDateTime;
 
@@ -19,6 +20,7 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Chapter title is required")
     private String title;
 
     @Column
@@ -26,6 +28,7 @@ public class Chapter {
 
     @Lob
     @Column(columnDefinition = "LONGTEXT")
+    @NotBlank(message = "Chapter content is required")
     private String content;
 
     private LocalDateTime createdAt;

@@ -16,11 +16,14 @@ import com.bn.berrynovel.repository.ChapterRepository;
 import com.bn.berrynovel.service.ImageService;
 import com.bn.berrynovel.service.NovelService;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/admin/chapter")
@@ -62,13 +65,22 @@ public class ChapterController {
         }
 
         @PostMapping("/create/{novelId}")
-        public String create(@PathVariable("novelId") Long novelId, Chapter chapter) {
+        public String create(@PathVariable("novelId") Long novelId,
+                        @ModelAttribute("newChapter") @Valid Chapter chapter,
+                        BindingResult bindingResult,
+                        Model model) {
                 Novel novel = this.novelService.getNovelById(novelId)
                                 .orElseThrow(() -> new RuntimeException("Novel not found"));
 
+                if (bindingResult.hasErrors()) {
+                        model.addAttribute("novel", novel);
+                        model.addAttribute("chapters", this.novelService.getChaptersByNovelId(novelId));
+                        return "admin/chapter/create";
+                }
+
                 chapter.setNovel(novel);
                 chapter.setCreatedAt(java.time.LocalDateTime.now());
-                Chapter savedChapter = this.chapterRepository.save(chapter);
+                this.chapterRepository.save(chapter);
 
                 return "redirect:/admin/chapter/create/" + novelId;
         }
@@ -90,10 +102,20 @@ public class ChapterController {
         }
 
         @PostMapping("/update/{id}")
-        public String update(@PathVariable Long id, Chapter chapter) {
+        public String update(@PathVariable Long id,
+                        @ModelAttribute("chapter") @Valid Chapter chapter,
+                        BindingResult bindingResult,
+                        Model model) {
 
                 Chapter oldChapter = chapterRepository.findById(id)
                                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
+
+                if (bindingResult.hasErrors()) {
+                        Novel novel = oldChapter.getNovel();
+                        model.addAttribute("novel", novel);
+                        model.addAttribute("chapters", this.novelService.getChaptersByNovelId(novel.getId()));
+                        return "admin/chapter/update";
+                }
 
                 oldChapter.setTitle(chapter.getTitle());
                 oldChapter.setContent(chapter.getContent());
@@ -116,10 +138,15 @@ public class ChapterController {
 
         @PostMapping("/upload-image")
         @ResponseBody
-        public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile file) throws IOException {
+        public Map<String, Object> uploadImage(@RequestParam("upload") MultipartFile file) {
                 String fileName = this.imageService.handleImage(file, "chapter");
 
                 Map<String, Object> result = new HashMap<>();
+                if (fileName == null || fileName.isBlank()) {
+                        result.put("error", "Upload failed");
+                        return result;
+                }
+
                 result.put("url", "/images/chapter/" + fileName);
 
                 return result;

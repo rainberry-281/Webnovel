@@ -79,9 +79,11 @@ public class HomepageController {
     public String handelRegister(@ModelAttribute("newUser") @Valid RegisterDTO registerDTO,
             BindingResult bindingResult, Model model) {
         for (FieldError error : bindingResult.getFieldErrors()) {
-            System.out.println(
-                    "\n" + LOG_DIVIDER + "\n>>>>>>>>>>>" + error.getObjectName() + " - " + error.getDefaultMessage()
-                            + "\n" + LOG_DIVIDER + "\n");
+            logger.debug("\n{}\n>>>>>>>>>>> [REGISTER - VALIDATION ERROR]\nObject: {}\nError: {}\n{}\n",
+                    LOG_DIVIDER,
+                    error.getObjectName(),
+                    error.getDefaultMessage(),
+                    LOG_DIVIDER);
         }
 
         String phone = registerDTO.getPhoneNumber();

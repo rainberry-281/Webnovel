@@ -94,11 +94,16 @@
                 <div class="form-row">
                     <label>Chapter title</label>
                     <input type="text" th:field="*{title}" class="form-control">
+                    <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
                 </div>
 
                 <div class="form-row" style="align-items:flex-start;">
                     <label>Chapter content</label>
-                    <textarea id="chapterContent" name="content"></textarea>
+                    <div style="width: 85%;">
+                        <textarea id="chapterContent" th:field="*{content}"></textarea>
+                        <div class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                        </div>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-upd">Update chapter</button>
@@ -137,6 +142,11 @@
                 })
                     .then(res => res.json())
                     .then(result => {
+                        if (result.error || !result.url) {
+                            reject(result.error || "Upload failed");
+                            return;
+                        }
+
                         resolve({
                             default: result.url
                         });

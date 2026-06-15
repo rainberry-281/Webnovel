@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Collections;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,7 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/admin/novel")
 public class NovelController {
+    private static final Logger logger = LoggerFactory.getLogger(NovelController.class);
 
     private final NovelService novelService;
     private final ImageService imageService;
@@ -104,7 +107,7 @@ public class NovelController {
 
         List<FieldError> errors = novelBindingResult.getFieldErrors();
         for (FieldError error : errors) {
-            System.out.println("\n\n>>>>>" + error.getObjectName() + " - " + error.getDefaultMessage() + "\n\n");
+            logger.debug("Novel validation error: {} - {}", error.getObjectName(), error.getDefaultMessage());
         }
 
         if (novelBindingResult.hasErrors() || !hasGenre) {
